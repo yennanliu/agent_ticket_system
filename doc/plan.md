@@ -12,7 +12,7 @@ An AI-powered ticket management system that analyzes a software project and auto
 2. **Auto-enrich** existing tickets with acceptance criteria, related files, and technical notes
 3. **Full CRUD** — view, list, edit, create, delete tickets via a simple web UI
 4. **No database or RAG** — in-memory storage persisted to a single JSON file
-5. **Simple stack** — Python + uv + FastAPI + LangGraph + plain HTML/JS
+5. **Simple stack** — Python + uv + FastAPI + LangGraph + OpenAI + plain HTML/JS
 
 ---
 
@@ -74,16 +74,19 @@ class Ticket(BaseModel):
 
 ## Repo Tools (`app/repo_tools.py`)
 
-Reads project context for the LLM agents. Supports two modes:
+Reads project context for the LLM agents. Auto-detects mode from the input:
 
-**Local path** (primary — used for `../linkedin-skill`):
-- Walk directory tree (skip `node_modules`, `.git`, `output`)
-- Read key files: `README.md`, `SKILL.md`, `CLAUDE.md`, `CHANGELOG.md`, any `.js`/`.py`/`.json` files under `skills/` and `scripts/`
+**Local path** (e.g. `../linkedin-skill` or `/Users/jliu/myproject`):
+- Walk directory tree (skip `node_modules`, `.git`, `output`, `__pycache__`)
+- Read key files: `README.md`, `SKILL.md`, `CLAUDE.md`, `CHANGELOG.md`, source files (`.js`, `.py`, `.ts`, `.json`) under relevant subdirs
 - Cap total content at ~50 KB to stay within LLM context limits
 - Return file tree summary + concatenated file contents
 
-**GitHub URL** (secondary — requires `GITHUB_TOKEN`):
-- Use `PyGithub` to fetch repo metadata, README, top-level files, and open issues
+**GitHub URL** (e.g. `https://github.com/owner/repo`):
+- Use `PyGithub` to fetch repo metadata, README, top-level file listing, and open issues (first 20)
+- Requires `GITHUB_TOKEN` in `.env` for private repos; works without it for public repos
+
+**Detection logic**: if the input starts with `http://` or `https://`, treat as GitHub URL; otherwise treat as local path.
 
 **Output**: a `RepoContext` dict with keys `name`, `file_tree`, `readme`, `file_contents`.
 
@@ -183,7 +186,8 @@ dependencies = [
     "fastapi>=0.111",
     "uvicorn[standard]>=0.29",
     "langgraph>=0.2",
-    "langchain-anthropic>=0.1",
+    "langchain-openai>=0.1",
+    "openai>=1.30",
     "pydantic>=2.7",
     "python-dotenv>=1.0",
     "pygithub>=2.3",
@@ -196,8 +200,9 @@ dependencies = [
 
 ```bash
 # .env (copy from .env.example)
-ANTHROPIC_API_KEY=sk-ant-...          # required
-GITHUB_TOKEN=ghp_...                  # optional, only for GitHub URL mode
+OPENAI_API_KEY=sk-...                 # required
+OPENAI_MODEL=gpt-4o                   # optional, defaults to gpt-4o
+GITHUB_TOKEN=ghp_...                  # optional, only needed for private GitHub repos
 ```
 
 ---
@@ -210,7 +215,7 @@ uv sync
 
 # 2. Copy and fill in env file
 cp .env.example .env
-# edit .env — add ANTHROPIC_API_KEY
+# edit .env — add OPENAI_API_KEY
 
 # 3. Start server
 uv run uvicorn main:app --reload
