@@ -21,6 +21,12 @@ uv run uvicorn main:app --reload
 open http://localhost:8000
 ```
 
+```bash
+# 5. kill app using 8000 port
+
+kill -9 $(lsof -ti :8000)
+```
+
 ## Running Tests
 
 ```bash

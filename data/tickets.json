@@ -1,0 +1,128 @@
+[
+  {
+    "id": "a4aec04e-3db8-4b50-89a5-d07e957ee3b0",
+    "title": "Translate README to Traditional Chinese",
+    "description": "Translate the existing README.md file into Traditional Chinese to match other documentation files.",
+    "status": "open",
+    "priority": "medium",
+    "labels": [
+      "docs",
+      "translation"
+    ],
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:03:26.643158Z",
+    "updated_at": "2026-05-02T08:03:26.643166Z",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": ""
+  },
+  {
+    "id": "ea242d6b-4805-4a93-8d87-c326037f3b7e",
+    "title": "Create English Version of Setup Guides",
+    "description": "Develop English versions of the setup guides currently available only in Traditional Chinese.",
+    "status": "open",
+    "priority": "high",
+    "labels": [
+      "docs",
+      "translation"
+    ],
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:03:26.644296Z",
+    "updated_at": "2026-05-02T08:03:26.644300Z",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": ""
+  },
+  {
+    "id": "67801bf1-1f31-46b6-9d31-6e8a3bc2ca16",
+    "title": "Integrate OpenAI Setup with Main Setup Script",
+    "description": "Incorporate the steps from SETUP-OPENAI.zh-TW.md into the setup-openclaw.sh script for a unified installation process.",
+    "status": "open",
+    "priority": "high",
+    "labels": [
+      "feature",
+      "integration"
+    ],
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:03:26.644824Z",
+    "updated_at": "2026-05-02T08:03:26.644825Z",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": ""
+  },
+  {
+    "id": "84312181-6d1d-4b67-8e53-af32eba3998d",
+    "title": "Add Test Cases for OpenClaw Setup Script",
+    "description": "Develop and implement test cases to ensure the setup-openclaw.sh script functions correctly on MacBook Air Intel chips.",
+    "status": "open",
+    "priority": "high",
+    "labels": [
+      "testing",
+      "feature"
+    ],
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:03:26.645060Z",
+    "updated_at": "2026-05-02T08:03:26.645061Z",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": ""
+  },
+  {
+    "id": "ee19b88f-9f6e-4d7c-9eea-ba3d8b115b92",
+    "title": "Document Telegram Integration Process",
+    "description": "Create detailed documentation for the Telegram integration process outlined in tg_integration.txt.",
+    "status": "open",
+    "priority": "medium",
+    "labels": [
+      "docs",
+      "integration"
+    ],
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:03:26.645523Z",
+    "updated_at": "2026-05-02T08:03:26.645528Z",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": ""
+  },
+  {
+    "id": "05f3c7ea-1b51-427d-a3de-705515e8f7d0",
+    "title": "Fix Open Issue #1: Test 1",
+    "description": "Address and resolve the open issue labeled as Test 1 to ensure project stability.",
+    "status": "open",
+    "priority": "medium",
+    "labels": [
+      "bug",
+      "testing"
+    ],
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:03:26.645976Z",
+    "updated_at": "2026-05-02T08:03:26.645978Z",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": ""
+  },
+  {
+    "id": "bf851421-22ec-4c14-aad9-30ee82966930",
+    "title": "Update CLAUDE.md with Latest Features",
+    "description": "Revise the CLAUDE.md file to include the latest features and updates in the OpenClaw project.",
+    "status": "open",
+    "priority": "low",
+    "labels": [
+      "docs",
+      "update"
+    ],
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:03:26.646254Z",
+    "updated_at": "2026-05-02T08:03:26.646255Z",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": ""
+  }
+]
