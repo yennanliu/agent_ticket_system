@@ -16,11 +16,22 @@ An AI-powered ticket management system that analyzes a software project and auto
 
 ---
 
+## Development Approach: TDD
+
+We follow **Red → Green → Refactor**:
+1. Write a failing test for each unit
+2. Write the minimum implementation to make it pass
+3. Refactor if needed
+
+Test runner: `pytest` + `httpx` (for async FastAPI test client). Agent nodes are tested with mocked LLM calls (no real API calls in unit tests).
+
+---
+
 ## Project Structure
 
 ```
 agent_ticket_system/
-├── pyproject.toml          # uv-managed dependencies
+├── pyproject.toml          # uv-managed dependencies (includes pytest, httpx)
 ├── main.py                 # FastAPI app: mounts static files, includes routers
 ├── .env.example            # Template for required environment variables
 ├── app/
@@ -33,6 +44,14 @@ agent_ticket_system/
 │   └── api/
 │       ├── tickets.py      # CRUD router (/api/tickets)
 │       └── agents.py       # Agent trigger router (/api/agents)
+├── tests/
+│   ├── conftest.py         # Shared fixtures (test client, sample tickets, tmp data dir)
+│   ├── test_models.py      # Ticket model validation tests
+│   ├── test_storage.py     # Storage CRUD + persistence tests
+│   ├── test_repo_tools.py  # Local path + GitHub URL reader tests (mocked)
+│   ├── test_creator.py     # Creator agent tests (LLM mocked)
+│   ├── test_enricher.py    # Enricher agent tests (LLM mocked)
+│   └── test_api.py         # Full API endpoint tests via FastAPI test client
 ├── static/
 │   └── index.html          # Frontend: ticket list, modals, auto-generate panel
 ├── data/                   # Auto-created at runtime; holds tickets.json
@@ -192,6 +211,13 @@ dependencies = [
     "python-dotenv>=1.0",
     "pygithub>=2.3",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
+    "httpx>=0.27",        # async FastAPI test client
+]
 ```
 
 ---
@@ -226,9 +252,46 @@ open http://localhost:8000
 
 ---
 
-## Verification Steps
+## TDD Implementation Order
 
-1. Server starts without errors on `http://localhost:8000`
+Each layer follows **write test → implement → pass test**:
+
+| Step | Test file | Implementation file |
+|------|-----------|---------------------|
+| 1 | `tests/test_models.py` | `app/models.py` |
+| 2 | `tests/test_storage.py` | `app/storage.py` |
+| 3 | `tests/test_repo_tools.py` | `app/repo_tools.py` |
+| 4 | `tests/test_creator.py` | `app/agents/creator.py` |
+| 5 | `tests/test_enricher.py` | `app/agents/enricher.py` |
+| 6 | `tests/test_api.py` | `app/api/tickets.py`, `app/api/agents.py`, `main.py` |
+
+### What each test file covers
+
+**`test_models.py`** — Ticket creation, default values, field validation (invalid status/priority), datetime auto-set
+
+**`test_storage.py`** — get_all returns list, get by id, create persists to file, update merges fields, delete removes entry, file reloads correctly on re-init
+
+**`test_repo_tools.py`** — local path returns RepoContext with correct keys, skips excluded dirs, caps at 50KB; GitHub URL branch uses mocked PyGithub; detection logic picks correct branch
+
+**`test_creator.py`** — graph runs end-to-end with mocked LLM returning fixture ticket drafts; tickets are saved to storage; returned IDs are valid UUIDs
+
+**`test_enricher.py`** — loads existing ticket, merges enriched fields, saves updated ticket; mocked LLM returns acceptance_criteria + technical_notes
+
+**`test_api.py`** — GET /api/tickets returns 200 + list; POST /api/tickets creates and returns ticket; PUT updates; DELETE removes; 404 on missing id; agent endpoints return created/enriched tickets (agents mocked)
+
+---
+
+## How to Run Tests
+
+```bash
+uv run pytest tests/ -v
+```
+
+---
+
+## Verification Steps (manual, after all tests pass)
+
+1. Server starts without errors: `uv run uvicorn main:app --reload`
 2. `POST /api/agents/create-from-repo` with `{"repo_path": "../linkedin-skill"}` → returns 5–10 generated tickets
 3. `GET /api/tickets` → lists all tickets with correct fields
 4. `POST /api/agents/enrich/{id}` with `{"repo_path": "../linkedin-skill"}` → ticket now has `acceptance_criteria`, `technical_notes`, `related_files`
