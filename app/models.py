@@ -31,7 +31,7 @@ class Ticket(BaseModel):
 
 class CreateTicketRequest(BaseModel):
     title: str
-    description: str
+    description: str = ""
     status: str = "open"
     priority: str = "medium"
     labels: list[str] = Field(default_factory=list)

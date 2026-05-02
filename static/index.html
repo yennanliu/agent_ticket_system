@@ -8,29 +8,37 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; color: #222; }
 
+  /* ── Header ── */
   header { background: #1a1a2e; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
   header h1 { font-size: 1.2rem; font-weight: 600; flex: 1; }
   header button { background: #4f46e5; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-size: 0.85rem; }
   header button:hover { background: #4338ca; }
 
+  /* ── Repo panel ── */
   #repo-panel { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; gap: 10px; align-items: center; }
   #repo-panel input { flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 0.9rem; }
   #repo-panel button { background: #0f766e; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
   #repo-panel button:hover { background: #0d6662; }
   #repo-panel button:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  /* ── Toast ── */
   #toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; }
   #toast.show { opacity: 1; }
   #toast.error { background: #dc2626; }
 
-  main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  /* ── Main layout ── */
+  main { padding: 24px; max-width: 1200px; margin: 0 auto; }
 
+  /* ── Table ── */
   table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
   th { background: #f8fafc; text-align: left; padding: 10px 14px; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #e2e8f0; }
   td { padding: 11px 14px; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #f8fafc; }
+  .title-cell { cursor: pointer; }
+  .title-cell:hover strong { color: #4f46e5; text-decoration: underline; }
 
+  /* ── Badges ── */
   .badge { display: inline-block; border-radius: 4px; padding: 2px 7px; font-size: 0.75rem; font-weight: 600; }
   .status-open { background: #dbeafe; color: #1d4ed8; }
   .status-in_progress { background: #fef3c7; color: #92400e; }
@@ -40,8 +48,14 @@
   .priority-low { background: #f0fdf4; color: #166534; }
   .label { background: #e0e7ff; color: #3730a3; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin-right: 3px; }
 
-  .actions { display: flex; gap: 6px; }
-  .btn-icon { background: none; border: 1px solid #e2e8f0; border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem; color: #475569; }
+  /* ── Repo chip in table ── */
+  .repo-chip { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 0.72rem; color: #64748b; background: #f1f5f9; border-radius: 3px; padding: 1px 6px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .repo-chip a { color: inherit; text-decoration: none; }
+  .repo-chip a:hover { color: #4f46e5; }
+
+  /* ── Action buttons ── */
+  .actions { display: flex; gap: 5px; flex-wrap: wrap; }
+  .btn-icon { background: none; border: 1px solid #e2e8f0; border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem; color: #475569; white-space: nowrap; }
   .btn-icon:hover { background: #f1f5f9; }
   .btn-icon.enrich { color: #7c3aed; border-color: #c4b5fd; }
   .btn-icon.enrich:hover { background: #ede9fe; }
@@ -51,11 +65,13 @@
 
   .empty { text-align: center; color: #94a3b8; padding: 48px 0; font-size: 0.95rem; }
 
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; }
+  /* ── Create/Edit modal ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: #fff; border-radius: 12px; padding: 28px; width: 480px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
   .modal h2 { font-size: 1.05rem; margin-bottom: 18px; }
   .modal label { display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 3px; margin-top: 12px; }
+  .modal .hint { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
   .modal input, .modal textarea, .modal select { width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 0.9rem; font-family: inherit; }
   .modal textarea { resize: vertical; min-height: 80px; }
   .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
@@ -65,7 +81,42 @@
   .btn-submit { background: #4f46e5; color: #fff; }
   .btn-submit:hover { background: #4338ca; }
 
+  /* ── Detail drawer ── */
+  #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 150; }
+  #detail-overlay.open { display: block; }
+  #detail-panel {
+    position: fixed; top: 0; right: -560px; width: 540px; max-width: 95vw;
+    height: 100vh; background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.12);
+    display: flex; flex-direction: column; z-index: 151;
+    transition: right 0.25s ease;
+    overflow: hidden;
+  }
+  #detail-panel.open { right: 0; }
+  #detail-header { padding: 20px 24px 16px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: flex-start; }
+  #detail-header-title { flex: 1; font-size: 1rem; font-weight: 600; line-height: 1.4; }
+  #detail-header-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; padding: 2px 6px; border-radius: 4px; }
+  #detail-header-close:hover { background: #f1f5f9; }
+  #detail-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  #detail-footer { padding: 14px 24px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; }
+
+  .detail-section { margin-bottom: 20px; }
+  .detail-section h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; margin-bottom: 8px; }
+  .detail-section p { font-size: 0.88rem; color: #334155; line-height: 1.6; white-space: pre-wrap; }
+  .detail-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .detail-meta { font-size: 0.78rem; color: #64748b; }
+  .detail-meta span { font-weight: 600; color: #334155; }
+  .detail-list { list-style: none; padding: 0; }
+  .detail-list li { font-size: 0.85rem; color: #334155; padding: 5px 0; border-bottom: 1px solid #f1f5f9; display: flex; gap: 8px; align-items: baseline; }
+  .detail-list li:last-child { border-bottom: none; }
+  .detail-list li::before { content: "•"; color: #94a3b8; flex-shrink: 0; }
+  .detail-empty { font-size: 0.82rem; color: #94a3b8; font-style: italic; }
+  .detail-repo-link { font-size: 0.82rem; color: #4f46e5; word-break: break-all; }
+  .detail-repo-link a { color: inherit; }
+  .detail-file { font-size: 0.8rem; font-family: monospace; background: #f8fafc; border-radius: 3px; padding: 1px 5px; color: #475569; }
+
+  /* ── Spinner ── */
   .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; margin-right: 6px; vertical-align: middle; }
+  .spinner.dark { border-color: rgba(79,70,229,.2); border-top-color: #4f46e5; }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -85,14 +136,16 @@
   <div id="ticket-container"></div>
 </main>
 
+<!-- Create/Edit modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <h2 id="modal-title">New Ticket</h2>
     <input type="hidden" id="modal-id" />
     <label>Title *</label>
     <input id="f-title" type="text" placeholder="Short, actionable title" />
-    <label>Description *</label>
-    <textarea id="f-desc" placeholder="What needs to be done?"></textarea>
+    <label>Description</label>
+    <textarea id="f-desc" placeholder="What needs to be done? (optional — AI can generate this via Enrich)"></textarea>
+    <p class="hint">Leave blank and use ✨ Enrich after creating to let AI fill this in.</p>
     <label>Status</label>
     <select id="f-status">
       <option value="open">Open</option>
@@ -116,11 +169,29 @@
   </div>
 </div>
 
+<!-- Detail drawer -->
+<div id="detail-overlay" onclick="closeDetail()"></div>
+<div id="detail-panel">
+  <div id="detail-header">
+    <div id="detail-header-title"></div>
+    <button id="detail-header-close" onclick="closeDetail()">✕</button>
+  </div>
+  <div id="detail-body"></div>
+  <div id="detail-footer">
+    <button class="btn-icon" id="detail-edit-btn">✏️ Edit</button>
+    <button class="btn-icon enrich" id="detail-enrich-btn">✨ Enrich</button>
+    <button class="btn-icon danger" id="detail-delete-btn">🗑️ Delete</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 const API = '/api';
 let enrichingIds = new Set();
+let currentDetailTicket = null;
+
+// ── Data ─────────────────────────────────────────────────────────────────────
 
 async function loadTickets() {
   const res = await fetch(`${API}/tickets`);
@@ -155,7 +226,7 @@ async function enrichTicket(id) {
   const source = document.getElementById('repo-input').value.trim();
   if (!source) { toast('Enter a local path or GitHub URL to enrich from', true); return; }
   enrichingIds.add(id);
-  renderEnrichBtn(id, true);
+  setEnrichLoading(id, true);
   try {
     const body = source.startsWith('http') ? { repo_url: source } : { repo_path: source };
     const res = await fetch(`${API}/agents/enrich/${id}`, {
@@ -163,21 +234,31 @@ async function enrichTicket(id) {
     });
     if (!res.ok) throw new Error(await res.text());
     toast('Ticket enriched');
-    loadTickets();
+    await loadTickets();
+    // Refresh detail panel if open for this ticket
+    if (currentDetailTicket && currentDetailTicket.id === id) {
+      const r2 = await fetch(`${API}/tickets/${id}`);
+      if (r2.ok) openDetail(await r2.json());
+    }
   } catch(e) {
     toast('Enrich failed: ' + e.message, true);
   } finally {
     enrichingIds.delete(id);
-    renderEnrichBtn(id, false);
+    setEnrichLoading(id, false);
   }
 }
 
 async function deleteTicket(id, title) {
   if (!confirm(`Delete "${title}"?`)) return;
   const res = await fetch(`${API}/tickets/${id}`, { method: 'DELETE' });
-  if (res.ok) { toast('Ticket deleted'); loadTickets(); }
-  else toast('Delete failed', true);
+  if (res.ok) {
+    toast('Ticket deleted');
+    if (currentDetailTicket && currentDetailTicket.id === id) closeDetail();
+    loadTickets();
+  } else toast('Delete failed', true);
 }
+
+// ── Create / Edit modal ───────────────────────────────────────────────────────
 
 function openCreate() {
   document.getElementById('modal-title').textContent = 'New Ticket';
@@ -192,7 +273,7 @@ function openEdit(t) {
   document.getElementById('modal-title').textContent = 'Edit Ticket';
   document.getElementById('modal-id').value = t.id;
   document.getElementById('f-title').value = t.title;
-  document.getElementById('f-desc').value = t.description;
+  document.getElementById('f-desc').value = t.description || '';
   document.getElementById('f-status').value = t.status;
   document.getElementById('f-priority').value = t.priority;
   document.getElementById('f-labels').value = (t.labels || []).join(', ');
@@ -212,13 +293,104 @@ async function submitTicket() {
     labels: document.getElementById('f-labels').value.split(',').map(s=>s.trim()).filter(Boolean),
     source_repo: document.getElementById('f-repo').value.trim(),
   };
-  if (!payload.title || !payload.description) { toast('Title and description are required', true); return; }
+  if (!payload.title) { toast('Title is required', true); return; }
   const url = id ? `${API}/tickets/${id}` : `${API}/tickets`;
   const method = id ? 'PUT' : 'POST';
   const res = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-  if (res.ok) { closeModal(); toast(id ? 'Ticket updated' : 'Ticket created'); loadTickets(); }
-  else toast('Save failed', true);
+  if (res.ok) {
+    closeModal();
+    toast(id ? 'Ticket updated' : 'Ticket created');
+    loadTickets();
+  } else toast('Save failed', true);
 }
+
+// ── Detail drawer ─────────────────────────────────────────────────────────────
+
+function openDetail(t) {
+  currentDetailTicket = t;
+
+  document.getElementById('detail-header-title').textContent = t.title;
+
+  // Footer buttons
+  document.getElementById('detail-edit-btn').onclick = () => { closeDetail(); openEdit(t); };
+  document.getElementById('detail-enrich-btn').onclick = () => enrichTicket(t.id);
+  document.getElementById('detail-delete-btn').onclick = () => deleteTicket(t.id, t.title);
+
+  // Body
+  const repoHtml = t.source_repo
+    ? (t.source_repo.startsWith('http')
+        ? `<a href="${esc(t.source_repo)}" target="_blank" rel="noopener">${esc(t.source_repo)}</a>`
+        : esc(t.source_repo))
+    : '<span class="detail-empty">—</span>';
+
+  const acHtml = (t.acceptance_criteria && t.acceptance_criteria.length)
+    ? `<ul class="detail-list">${t.acceptance_criteria.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`
+    : '<p class="detail-empty">None yet — click ✨ Enrich to generate.</p>';
+
+  const filesHtml = (t.related_files && t.related_files.length)
+    ? `<ul class="detail-list">${t.related_files.map(f=>`<li><span class="detail-file">${esc(f)}</span></li>`).join('')}</ul>`
+    : '<p class="detail-empty">None yet.</p>';
+
+  const notesHtml = t.technical_notes
+    ? `<p>${esc(t.technical_notes)}</p>`
+    : '<p class="detail-empty">None yet.</p>';
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-row">
+      <span class="badge status-${t.status}">${t.status.replace('_',' ')}</span>
+      <span class="badge priority-${t.priority}">${t.priority}</span>
+      ${(t.labels||[]).map(l=>`<span class="label">${esc(l)}</span>`).join('')}
+    </div>
+
+    <div class="detail-section">
+      <h3>Source Repo</h3>
+      <p class="detail-repo-link">${repoHtml}</p>
+    </div>
+
+    <div class="detail-section">
+      <h3>Description</h3>
+      <p>${t.description ? esc(t.description) : '<span class="detail-empty">No description — use ✨ Enrich to generate one.</span>'}</p>
+    </div>
+
+    <div class="detail-section">
+      <h3>Acceptance Criteria</h3>
+      ${acHtml}
+    </div>
+
+    <div class="detail-section">
+      <h3>Related Files</h3>
+      ${filesHtml}
+    </div>
+
+    <div class="detail-section">
+      <h3>Technical Notes</h3>
+      ${notesHtml}
+    </div>
+
+    ${t.suggested_assignee ? `
+    <div class="detail-section">
+      <h3>Suggested Assignee</h3>
+      <p>${esc(t.suggested_assignee)}</p>
+    </div>` : ''}
+
+    <div class="detail-section">
+      <h3>Timestamps</h3>
+      <p class="detail-meta">Created: <span>${fmtDateTime(t.created_at)}</span></p>
+      <p class="detail-meta" style="margin-top:4px">Updated: <span>${fmtDateTime(t.updated_at)}</span></p>
+    </div>
+  `;
+
+  document.getElementById('detail-overlay').classList.add('open');
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closeDetail() {
+  currentDetailTicket = null;
+  document.getElementById('detail-overlay').classList.remove('open');
+  document.getElementById('detail-panel').classList.remove('open');
+}
+
+// ── Table rendering ───────────────────────────────────────────────────────────
 
 function renderTable(tickets) {
   const el = document.getElementById('ticket-container');
@@ -227,31 +399,52 @@ function renderTable(tickets) {
     return;
   }
   const rows = tickets.map(t => {
-    const tJson = JSON.stringify(t).replace(/'/g, "\\'");
+    const repoChip = t.source_repo
+      ? `<div class="repo-chip" title="${esc(t.source_repo)}">
+           ${repoIcon(t.source_repo)}
+           ${t.source_repo.startsWith('http')
+             ? `<a href="${esc(t.source_repo)}" target="_blank" rel="noopener">${repoLabel(t.source_repo)}</a>`
+             : esc(t.source_repo)}
+         </div>`
+      : '';
+
     return `<tr>
-      <td><strong>${esc(t.title)}</strong>${enrichedBadge(t)}</td>
+      <td class="title-cell" onclick='openDetail(${JSON.stringify(t)})'>
+        <strong>${esc(t.title)}</strong>${enrichedBadge(t)}
+        ${repoChip}
+      </td>
       <td><span class="badge status-${t.status}">${t.status.replace('_',' ')}</span></td>
       <td><span class="badge priority-${t.priority}">${t.priority}</span></td>
       <td>${(t.labels||[]).map(l=>`<span class="label">${esc(l)}</span>`).join('')}</td>
-      <td style="color:#94a3b8;font-size:.8rem">${fmtDate(t.created_at)}</td>
-      <td class="actions" id="actions-${t.id}">
-        <button class="btn-icon" onclick='openEdit(${JSON.stringify(t)})'>&#x270F;&#xFE0F; Edit</button>
-        <button class="btn-icon enrich" id="enrich-btn-${t.id}" onclick="enrichTicket('${t.id}')">${enrichingIds.has(t.id)?'<span class="spinner"></span>Enriching…':'✨ Enrich'}</button>
-        <button class="btn-icon danger" onclick="deleteTicket('${t.id}','${esc(t.title).replace(/'/g,"\\'")}')">🗑️ Delete</button>
+      <td style="color:#94a3b8;font-size:.8rem;white-space:nowrap">${fmtDate(t.created_at)}</td>
+      <td class="actions">
+        <button class="btn-icon" onclick='openEdit(${JSON.stringify(t)})'>✏️ Edit</button>
+        <button class="btn-icon enrich" id="enrich-btn-${t.id}" onclick="enrichTicket('${t.id}')" ${enrichingIds.has(t.id)?'disabled':''}>
+          ${enrichingIds.has(t.id)?'<span class="spinner dark"></span>Enriching…':'✨ Enrich'}
+        </button>
+        <button class="btn-icon danger" onclick="deleteTicket('${t.id}','${esc(t.title).replace(/'/g,"\\'")}')">🗑️</button>
       </td>
     </tr>`;
   }).join('');
+
   el.innerHTML = `<table>
-    <thead><tr><th>Title</th><th>Status</th><th>Priority</th><th>Labels</th><th>Created</th><th>Actions</th></tr></thead>
+    <thead><tr>
+      <th>Title / Repo</th><th>Status</th><th>Priority</th><th>Labels</th><th>Created</th><th>Actions</th>
+    </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
 
-function renderEnrichBtn(id, loading) {
+function setEnrichLoading(id, loading) {
   const btn = document.getElementById(`enrich-btn-${id}`);
   if (!btn) return;
   btn.disabled = loading;
-  btn.innerHTML = loading ? '<span class="spinner"></span>Enriching…' : '✨ Enrich';
+  btn.innerHTML = loading ? '<span class="spinner dark"></span>Enriching…' : '✨ Enrich';
+  // Also update detail footer if open
+  if (currentDetailTicket && currentDetailTicket.id === id) {
+    const dbtn = document.getElementById('detail-enrich-btn');
+    if (dbtn) { dbtn.disabled = loading; dbtn.innerHTML = loading ? '<span class="spinner dark"></span>Enriching…' : '✨ Enrich'; }
+  }
 }
 
 function enrichedBadge(t) {
@@ -259,10 +452,24 @@ function enrichedBadge(t) {
     ? ' <span style="font-size:.7rem;color:#7c3aed;margin-left:4px">✨ enriched</span>' : '';
 }
 
+function repoIcon(src) {
+  return src.startsWith('http') ? '⎇' : '📁';
+}
+
+function repoLabel(url) {
+  try {
+    const parts = new URL(url).pathname.split('/').filter(Boolean);
+    return parts.length >= 2 ? parts.slice(-2).join('/') : url;
+  } catch { return url; }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function fmtDate(s) { return s ? new Date(s).toLocaleDateString() : '—'; }
+function fmtDateTime(s) { return s ? new Date(s).toLocaleString() : '—'; }
 
 function toast(msg, isError=false) {
   const el = document.getElementById('toast');
@@ -271,7 +478,9 @@ function toast(msg, isError=false) {
   setTimeout(() => el.className = '', 3000);
 }
 
+// Close modal on overlay click
 document.getElementById('modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeModal(); });
+
 loadTickets();
 </script>
 </body>

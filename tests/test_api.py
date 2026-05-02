@@ -39,6 +39,12 @@ async def test_create_ticket(client):
     assert data["id"]
 
 
+async def test_create_ticket_without_description(client):
+    r = await client.post("/api/tickets", json={"title": "No desc ticket"})
+    assert r.status_code == 201
+    assert r.json()["description"] == ""
+
+
 async def test_get_ticket(client, store, sample_ticket):
     store.create(sample_ticket)
     r = await client.get(f"/api/tickets/{sample_ticket.id}")
