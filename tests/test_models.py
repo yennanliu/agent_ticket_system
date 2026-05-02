@@ -13,6 +13,10 @@ def test_ticket_defaults():
     assert t.related_files == []
     assert t.technical_notes == ""
     assert t.suggested_assignee == ""
+    assert t.suggested_change_refs == []
+    assert t.validation_score is None
+    assert t.validation_notes == ""
+    assert t.validation_passed is None
 
 
 def test_ticket_id_is_generated():

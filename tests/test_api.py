@@ -2,18 +2,6 @@ import pytest
 from unittest.mock import patch, MagicMock
 from httpx import AsyncClient, ASGITransport
 from app.models import Ticket
-from app.storage import TicketStore
-
-
-@pytest.fixture
-def store(tmp_data_dir):
-    return TicketStore(data_dir=str(tmp_data_dir))
-
-
-@pytest.fixture
-def app_with_store(store):
-    from main import create_app
-    return create_app(store)
 
 
 @pytest.fixture
@@ -89,9 +77,36 @@ async def test_list_tickets_after_create(client):
     assert len(r.json()) == 2
 
 
+# ── HTML pages ────────────────────────────────────────────────────────────────
+
+async def test_index_page(client):
+    r = await client.get("/")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+
+
+async def test_ticket_detail_page(client, store, sample_ticket):
+    store.create(sample_ticket)
+    r = await client.get(f"/tickets/{sample_ticket.id}")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+
+
+async def test_ticket_page_nonexistent_id_still_returns_html(client):
+    r = await client.get("/tickets/nonexistent-id")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+
+
+async def test_logs_page(client):
+    r = await client.get("/logs")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+
+
 # ── Agent endpoints ───────────────────────────────────────────────────────────
 
-async def test_create_from_repo(client, store, repo_context):
+async def test_create_from_repo(client, repo_context):
     mock_tickets = [
         Ticket(title="Task A", description="Desc A", source_repo="../linkedin-skill"),
         Ticket(title="Task B", description="Desc B", source_repo="../linkedin-skill"),
@@ -108,7 +123,7 @@ async def test_create_from_repo_missing_source(client):
     assert r.status_code == 422
 
 
-async def test_enrich_ticket(client, store, sample_ticket, repo_context):
+async def test_enrich_ticket(client, store, sample_ticket):
     store.create(sample_ticket)
     enriched = sample_ticket.model_copy(update={
         "acceptance_criteria": ["AC1"],
@@ -127,3 +142,115 @@ async def test_enrich_ticket_not_found(client):
     with patch("app.api.agents.run_enricher", side_effect=ValueError("not found")):
         r = await client.post("/api/agents/enrich/bad-id", json={"repo_path": "../linkedin-skill"})
     assert r.status_code == 404
+
+
+# ── Batch enrich ──────────────────────────────────────────────────────────────
+
+async def test_enrich_batch_all(client, store, sample_ticket):
+    store.create(sample_ticket)
+    t2 = Ticket(title="T2", description="D2")
+    store.create(t2)
+    enriched_1 = sample_ticket.model_copy(update={"acceptance_criteria": ["AC1"]})
+    enriched_2 = t2.model_copy(update={"acceptance_criteria": ["AC2"]})
+    with patch("app.api.agents.run_enricher", side_effect=[enriched_1, enriched_2]):
+        r = await client.post("/api/agents/enrich-batch", json={"repo_path": "../linkedin-skill"})
+    assert r.status_code == 200
+    assert len(r.json()) == 2
+
+
+async def test_enrich_batch_selected_ids(client, store, sample_ticket):
+    store.create(sample_ticket)
+    enriched = sample_ticket.model_copy(update={"acceptance_criteria": ["AC1"]})
+    with patch("app.api.agents.run_enricher", return_value=enriched):
+        r = await client.post("/api/agents/enrich-batch", json={
+            "repo_path": "../linkedin-skill",
+            "ticket_ids": [sample_ticket.id],
+        })
+    assert r.status_code == 200
+    assert len(r.json()) == 1
+
+
+async def test_enrich_batch_missing_source(client):
+    r = await client.post("/api/agents/enrich-batch", json={})
+    assert r.status_code == 422
+
+
+async def test_enrich_batch_skips_missing_tickets(client):
+    with patch("app.api.agents.run_enricher", side_effect=ValueError("not found")):
+        r = await client.post("/api/agents/enrich-batch", json={
+            "repo_path": "../linkedin-skill",
+            "ticket_ids": ["bad-id"],
+        })
+    assert r.status_code == 200
+    assert r.json() == []
+
+
+# ── Batch create ──────────────────────────────────────────────────────────────
+
+async def test_create_batch(client):
+    r = await client.post("/api/agents/create-batch", json={
+        "titles": ["Fix bug A", "Add feature B", "Write tests C"],
+    })
+    assert r.status_code == 201
+    assert len(r.json()) == 3
+    assert r.json()[0]["title"] == "Fix bug A"
+
+
+async def test_create_batch_with_repo(client):
+    r = await client.post("/api/agents/create-batch", json={
+        "titles": ["Task 1"],
+        "repo_path": "../my-project",
+    })
+    assert r.status_code == 201
+    assert r.json()[0]["source_repo"] == "../my-project"
+
+
+async def test_create_batch_empty_titles_fails(client):
+    r = await client.post("/api/agents/create-batch", json={"titles": []})
+    assert r.status_code == 422
+
+
+# ── Validate ─────────────────────────────────────────────────────────────────
+
+async def test_validate_ticket(client, store, sample_ticket):
+    store.create(sample_ticket)
+    validated = sample_ticket.model_copy(update={
+        "validation_score": 0.8,
+        "validation_notes": "Good ticket",
+        "validation_passed": True,
+    })
+    with patch("app.api.agents.run_validator", return_value=validated):
+        r = await client.post(f"/api/agents/validate/{sample_ticket.id}")
+    assert r.status_code == 200
+    assert r.json()["validation_score"] == 0.8
+    assert r.json()["validation_passed"] is True
+
+
+async def test_validate_ticket_not_found(client):
+    with patch("app.api.agents.run_validator", side_effect=ValueError("not found")):
+        r = await client.post("/api/agents/validate/bad-id")
+    assert r.status_code == 404
+
+
+# ── Logs endpoint ─────────────────────────────────────────────────────────────
+
+async def test_get_logs_empty(client):
+    r = await client.get("/api/logs")
+    assert r.status_code == 200
+    assert r.json() == []
+
+
+async def test_get_logs_returns_entries(client, logger):
+    logger.log("enrich", "enricher", ticket_id="abc", status="success")
+    r = await client.get("/api/logs")
+    assert r.status_code == 200
+    assert len(r.json()) == 1
+    assert r.json()[0]["event"] == "enrich"
+
+
+async def test_clear_logs(client, logger):
+    logger.log("enrich", "enricher")
+    r = await client.delete("/api/logs")
+    assert r.status_code == 204
+    r2 = await client.get("/api/logs")
+    assert r2.json() == []

@@ -1,98 +1,38 @@
 [
   {
-    "id": "ea242d6b-4805-4a93-8d87-c326037f3b7e",
-    "title": "Create English Version of Setup Guides",
-    "description": "Develop English versions of the setup guides currently available only in Traditional Chinese.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "docs",
-      "translation"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:03:26.644296Z",
-    "updated_at": "2026-05-02T08:03:26.644300Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "67801bf1-1f31-46b6-9d31-6e8a3bc2ca16",
-    "title": "Integrate OpenAI Setup with Main Setup Script",
-    "description": "Incorporate the steps from SETUP-OPENAI.zh-TW.md into the setup-openclaw.sh script for a unified installation process.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "feature",
-      "integration"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:03:26.644824Z",
-    "updated_at": "2026-05-02T08:03:26.644825Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "84312181-6d1d-4b67-8e53-af32eba3998d",
-    "title": "Add Test Cases for OpenClaw Setup Script",
-    "description": "Develop and implement test cases to ensure the setup-openclaw.sh script functions correctly on MacBook Air Intel chips.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "testing",
-      "feature"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:03:26.645060Z",
-    "updated_at": "2026-05-02T08:03:26.645061Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "05f3c7ea-1b51-427d-a3de-705515e8f7d0",
-    "title": "Fix Open Issue #1: Test 1",
-    "description": "Address and resolve the open issue labeled as Test 1 to ensure project stability.",
+    "id": "64847de2-b954-4a96-884f-d0219c7c6662",
+    "title": "Translate README to japanese",
+    "description": "",
     "status": "open",
     "priority": "medium",
-    "labels": [
-      "bug",
-      "testing"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:03:26.645976Z",
-    "updated_at": "2026-05-02T08:03:26.645978Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "bf851421-22ec-4c14-aad9-30ee82966930",
-    "title": "Update CLAUDE.md with Latest Features",
-    "description": "Revise the CLAUDE.md file to include the latest features and updates in the OpenClaw project.",
-    "status": "open",
-    "priority": "low",
     "labels": [
       "docs",
       "update"
     ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:03:26.646254Z",
-    "updated_at": "2026-05-02T08:03:26.646255Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-02T08:11:41.838251Z",
+    "updated_at": "2026-05-02T08:11:51.504715Z",
+    "acceptance_criteria": [
+      "The README file is accurately translated into Japanese, maintaining the original structure and formatting.",
+      "All technical terms and code snippets are preserved and correctly translated.",
+      "Links and references within the README are updated to point to the correct Japanese versions if available.",
+      "The translated README is reviewed by a native Japanese speaker for accuracy and clarity."
+    ],
+    "related_files": [
+      "README.md",
+      "README_zh-TW.md"
+    ],
+    "technical_notes": "Ensure that the translation preserves the technical terminology used in the context of LinkedIn automation and Playwright MCP tools. Pay special attention to the translation of skill names and agent descriptions to maintain consistency with the original English version. Consider using a translation service or tool that specializes in technical documentation to ensure accuracy. Be aware of potential cultural differences in the interpretation of certain terms or phrases.",
+    "suggested_assignee": "frontend",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "651259a4-a367-40a1-8941-798dd0d4d0bf",
+    "id": "f95b3fc8-e66d-406f-8c7c-f4e92a7a9e65",
     "title": "Translate README to Traditional Chinese",
-    "description": "Create a Traditional Chinese version of the README file to improve accessibility for Chinese-speaking users.",
+    "description": "Translate the main README.md file into Traditional Chinese to ensure accessibility for Chinese-speaking users.",
     "status": "open",
     "priority": "medium",
     "labels": [
@@ -100,106 +40,65 @@
       "translation"
     ],
     "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.890972Z",
-    "updated_at": "2026-05-02T08:06:40.890979Z",
+    "created_at": "2026-05-02T08:40:24.095446Z",
+    "updated_at": "2026-05-02T08:40:24.095450Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "1c95da8f-46f4-426f-9847-a3f7391e0bfc",
-    "title": "Integrate OpenAI Setup Instructions in English",
-    "description": "Translate and integrate the SETUP-OPENAI.zh-TW.md file into an English version to cater to a broader audience.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "docs",
-      "translation"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.893133Z",
-    "updated_at": "2026-05-02T08:06:40.893138Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "b7f306f4-1435-41db-b3a2-17da1588fd54",
-    "title": "Create CLAUDE.md Documentation",
-    "description": "Develop comprehensive documentation for CLAUDE.md to explain its purpose and usage within the project.",
+    "id": "fd5a7ef5-09b5-41fe-a555-3d5ca35f0cec",
+    "title": "Add Setup Guide for MacBook Air M1 Chips",
+    "description": "Extend the setup guide to include instructions for MacBook Air models with M1 chips, ensuring compatibility and ease of use.",
     "status": "open",
     "priority": "high",
     "labels": [
+      "feature",
       "docs"
     ],
     "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.894176Z",
-    "updated_at": "2026-05-02T08:06:40.894178Z",
+    "created_at": "2026-05-02T08:40:24.096840Z",
+    "updated_at": "2026-05-02T08:40:24.096845Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "f78d9194-47f5-4cf7-a221-eeffc7572aed",
-    "title": "Test setup-openclaw.sh Script",
-    "description": "Conduct thorough testing of the setup-openclaw.sh script to ensure it functions correctly on MacBook Air with Intel chips.",
+    "id": "a4c780f0-54f8-4b10-b68d-ef972bc7b8dd",
+    "title": "Create Automated Test for setup-openclaw.sh",
+    "description": "Develop an automated test script to verify the functionality of setup-openclaw.sh, ensuring it executes correctly on supported systems.",
     "status": "open",
     "priority": "high",
     "labels": [
-      "bug",
+      "ci",
       "testing"
     ],
     "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.894958Z",
-    "updated_at": "2026-05-02T08:06:40.894959Z",
+    "created_at": "2026-05-02T08:40:24.097270Z",
+    "updated_at": "2026-05-02T08:40:24.097272Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "04dadeab-aef6-42c4-adf0-1bf16bd84128",
-    "title": "Complete Test 1 Issue",
-    "description": "Address and resolve the open issue labeled as Test 1 to ensure project stability and functionality.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "bug",
-      "testing"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.895573Z",
-    "updated_at": "2026-05-02T08:06:40.895575Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "9d52a735-0895-434b-8d31-d559ef9ab4c4",
-    "title": "Add English Version of OLLAMA-INSTALL Guide",
-    "description": "Translate the OLLAMA-INSTALL.zh-TW.md file to English to make the installation guide accessible to non-Chinese speakers.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "docs",
-      "translation"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.896145Z",
-    "updated_at": "2026-05-02T08:06:40.896146Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "9f595e22-9f79-4039-aa59-a93bd5b7f2fd",
-    "title": "Document Telegram Integration",
-    "description": "Create detailed documentation for the tg_integration.txt file to clarify how Telegram integration is implemented in the project.",
+    "id": "f8a9f272-40e2-4860-95f6-b80a09b6e208",
+    "title": "Document Telegram Integration Process",
+    "description": "Expand the documentation to include detailed steps for integrating Telegram, as referenced in tg_integration.txt.",
     "status": "open",
     "priority": "medium",
     "labels": [
@@ -207,381 +106,100 @@
       "integration"
     ],
     "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.896692Z",
-    "updated_at": "2026-05-02T08:06:40.896693Z",
+    "created_at": "2026-05-02T08:40:24.097490Z",
+    "updated_at": "2026-05-02T08:40:24.097491Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "13cf2d6e-d9c2-4a20-b447-8964232d3a46",
-    "title": "Review and Update SETUP.zh-TW.md",
-    "description": "Review the existing SETUP.zh-TW.md file for accuracy and update any outdated information to ensure users have the latest setup instructions.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "docs",
-      "update"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:06:40.897268Z",
-    "updated_at": "2026-05-02T08:06:40.897269Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "5dc948b3-c9fc-46f8-a930-e7d580edac52",
-    "title": "Implement Error Logging for Job Auto-Apply",
-    "description": "Add a comprehensive error logging mechanism to capture and store errors encountered during the job auto-apply process.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "feature",
-      "logging"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.280073Z",
-    "updated_at": "2026-05-02T08:07:40.280076Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "6e20a785-eecd-462c-9dba-f0a1311e91a9",
-    "title": "Enhance Profile Scraper with Additional Filters",
-    "description": "Introduce additional filtering options for the profile scraper to allow users to filter profiles by job title and years of experience.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "feature",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.281361Z",
-    "updated_at": "2026-05-02T08:07:40.281365Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "34ce5072-bde6-4b74-a3aa-a571ff12b191",
-    "title": "Optimize Contact Reacher for Connection Request Limits",
-    "description": "Improve the contact reacher skill to better handle LinkedIn's connection request limits and avoid account restrictions.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "optimization",
-      "feature"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.282184Z",
-    "updated_at": "2026-05-02T08:07:40.282186Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "09468a7e-b63b-4690-ace2-979ec10098cf",
-    "title": "Update Documentation for New Features",
-    "description": "Revise the documentation to include recent updates and new features added to the LinkedIn skills.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "docs",
-      "update"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.282932Z",
-    "updated_at": "2026-05-02T08:07:40.282933Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "e5d6550d-df79-418e-b82e-7f8a6541a2a5",
-    "title": "Add Unit Tests for Strategy Agent",
-    "description": "Develop unit tests for the strategy agent to ensure its scoring and filtering logic is functioning correctly.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "testing",
-      "qa"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.283937Z",
-    "updated_at": "2026-05-02T08:07:40.283941Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "2eea93a1-0f2a-44da-9ae1-5f414db39fdf",
-    "title": "Fix Bug in Profile Scraper's Country Filter",
-    "description": "Resolve the issue where the profile scraper fails to filter profiles correctly by country.",
+    "id": "858e4beb-3a95-4ad0-939e-7247e095b273",
+    "title": "Resolve Open Issue #1: Test 1",
+    "description": "Investigate and resolve the open issue labeled 'Test 1' to ensure all tests are passing and the system is stable.",
     "status": "open",
     "priority": "high",
     "labels": [
       "bug",
-      "fix"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.284835Z",
-    "updated_at": "2026-05-02T08:09:40.511339Z",
-    "acceptance_criteria": [
-      "The profile scraper correctly filters profiles by the specified country.",
-      "Unit tests cover scenarios for filtering profiles by country.",
-      "Integration tests confirm that the country filter works in conjunction with other filters (e.g., company, industry).",
-      "The bug fix does not introduce any new issues or regressions in the profile scraper functionality."
-    ],
-    "related_files": [
-      "PROFILE_SCRAPER.md",
-      "check_session.js",
-      "scrape_results.json",
-      "package.json"
-    ],
-    "technical_notes": "Investigate the logic within the profile scraper that handles country filtering. Check if the issue is related to incorrect DOM selectors or data parsing errors. Ensure that the Web Structure Agent is correctly identifying and interacting with LinkedIn's DOM elements related to country data. Consider edge cases where country names might have different formats or abbreviations.",
-    "suggested_assignee": "frontend"
-  },
-  {
-    "id": "bd9830f6-0301-4b85-bf60-e1872279164d",
-    "title": "Implement User Authentication for Skill Access",
-    "description": "Introduce a user authentication mechanism to restrict access to the LinkedIn skills based on user credentials.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "security",
-      "feature"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.285564Z",
-    "updated_at": "2026-05-02T08:07:40.285566Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "549b1989-9f60-4741-814f-acf426bcd37f",
-    "title": "Improve UI for On-Page Status Indicators",
-    "description": "Enhance the visual progress indicators on the LinkedIn job application pages for better user experience.",
-    "status": "open",
-    "priority": "low",
-    "labels": [
-      "ui",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.286225Z",
-    "updated_at": "2026-05-02T08:07:40.286227Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "1865cd73-7115-48a6-a8ef-9db1d59a584e",
-    "title": "Integrate Email Generator with External Email Services",
-    "description": "Allow the email generator agent to integrate with external email services for sending emails directly from the application.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "integration",
-      "feature"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.286753Z",
-    "updated_at": "2026-05-02T08:07:40.286754Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "7a51e0d4-aeaf-4cda-ab82-a9d29837cedb",
-    "title": "Conduct Performance Testing for Automation Agent",
-    "description": "Perform performance testing on the automation agent to identify and resolve potential bottlenecks.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "performance",
       "testing"
     ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:07:40.287266Z",
-    "updated_at": "2026-05-02T08:07:40.287267Z",
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:40:24.097951Z",
+    "updated_at": "2026-05-02T08:40:24.097952Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "864504f6-37b7-4830-9f40-5571d01c2f98",
-    "title": "Implement Error Logging for Job Auto-Apply",
-    "description": "Enhance the Job Auto-Apply skill by implementing detailed error logging to capture and analyze failures during job applications.",
+    "id": "65874174-4029-442b-aad4-b1ac6698622e",
+    "title": "Standardize Markdown File Naming",
+    "description": "Rename all markdown files to follow a consistent naming convention, improving organization and readability.",
     "status": "open",
-    "priority": "high",
+    "priority": "low",
     "labels": [
-      "feature",
-      "logging"
+      "docs",
+      "cleanup"
     ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.235188Z",
-    "updated_at": "2026-05-02T08:09:35.235192Z",
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:40:24.098553Z",
+    "updated_at": "2026-05-02T08:40:24.098554Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "55681ebd-8063-4077-9254-af9def22d891",
-    "title": "Add Unit Tests for Strategy Agent",
-    "description": "Develop unit tests for the Strategy Agent to ensure accurate job scoring and filtering based on user preferences.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "testing",
-      "qa"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.236717Z",
-    "updated_at": "2026-05-02T08:09:35.236719Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "7989f21c-3540-4e79-86e5-89ec1233b445",
-    "title": "Optimize LinkedIn DOM Selectors",
-    "description": "Review and optimize DOM selectors used by the Web Structure Agent to improve resilience against LinkedIn's UI changes.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "optimization",
-      "bug"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.237994Z",
-    "updated_at": "2026-05-02T08:09:35.237997Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "05ac0f91-78ad-49ba-8240-2eb6ca7a1f71",
-    "title": "Enhance Documentation for Specialized Agents",
-    "description": "Expand the documentation for each specialized agent to include usage examples and configuration options.",
+    "id": "4c75e616-b0fd-4414-8f2e-4280f3158105",
+    "title": "Add English Version of OLLAMA-INSTALL Guide",
+    "description": "Translate OLLAMA-INSTALL.zh-TW.md to English to cater to a broader audience, ensuring non-Chinese speakers can follow the installation guide.",
     "status": "open",
     "priority": "medium",
     "labels": [
       "docs",
-      "enhancement"
+      "translation"
     ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.238831Z",
-    "updated_at": "2026-05-02T08:09:35.238833Z",
+    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
+    "created_at": "2026-05-02T08:40:24.099199Z",
+    "updated_at": "2026-05-02T08:40:24.099200Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "c0fdb2df-70eb-45d2-8329-6d4e1fa19e2a",
-    "title": "Implement Rate Limiting in Automation Agent",
-    "description": "Introduce rate limiting in the Automation Agent to prevent detection and ensure compliance with LinkedIn's usage policies.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "feature",
-      "compliance"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.239968Z",
-    "updated_at": "2026-05-02T08:09:35.239971Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "6c8c37bd-dac6-4c9a-98a2-5cc993d00f6e",
-    "title": "Add Language Support for Profile Scraper",
-    "description": "Extend the Profile Scraper skill to support multiple languages, improving usability for non-English users.",
+    "id": "bce75593-ba31-4c48-8bc7-111d1d4ada7c",
+    "title": "fix bugs",
+    "description": "",
     "status": "open",
     "priority": "medium",
-    "labels": [
-      "feature",
-      "localization"
-    ],
+    "labels": [],
     "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.241134Z",
-    "updated_at": "2026-05-02T08:09:35.241138Z",
+    "created_at": "2026-05-02T08:40:39.222151Z",
+    "updated_at": "2026-05-02T08:40:39.222161Z",
     "acceptance_criteria": [],
     "related_files": [],
     "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "5eb37499-8952-43e3-b9f1-c1d4b1bd3030",
-    "title": "Fix Bug in Contact Reacher BFS/DFS Logic",
-    "description": "Investigate and resolve issues in the BFS/DFS traversal logic of the Contact Reacher skill to improve contact discovery.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "bug",
-      "fix"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.242175Z",
-    "updated_at": "2026-05-02T08:09:35.242176Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "32bed75f-62c9-4b03-8fad-ef3b68910a4d",
-    "title": "Create CI/CD Pipeline for Automated Testing",
-    "description": "Set up a CI/CD pipeline to automate testing and deployment processes, ensuring consistent quality and faster releases.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "ci",
-      "automation"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.243407Z",
-    "updated_at": "2026-05-02T08:09:35.243409Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
-  },
-  {
-    "id": "0fa9f856-442e-4260-8eb3-cd24138ecdbd",
-    "title": "Improve Human-Like Delays in Job Auto-Apply",
-    "description": "Refine the random delay algorithm in the Job Auto-Apply skill to better mimic human interaction patterns.",
-    "status": "open",
-    "priority": "low",
-    "labels": [
-      "enhancement",
-      "usability"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:09:35.244294Z",
-    "updated_at": "2026-05-02T08:09:35.244295Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": ""
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   }
 ]

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Logs — Agent Ticket System</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; color: #222; }
+
+  header { background: #1a1a2e; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
+  header a { color: #a5b4fc; text-decoration: none; font-size: 0.85rem; }
+  header a:hover { color: #fff; }
+  header h1 { font-size: 1.05rem; font-weight: 600; flex: 1; }
+
+  .toolbar { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 10px 24px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .toolbar button { border: 1px solid #e2e8f0; border-radius: 5px; padding: 5px 12px; cursor: pointer; font-size: 0.82rem; background: #fff; color: #475569; }
+  .toolbar button:hover { background: #f1f5f9; }
+  .toolbar button.active { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+  .toolbar button.danger { color: #dc2626; border-color: #fecaca; }
+  .toolbar button.danger:hover { background: #fef2f2; }
+  .toolbar .spacer { flex: 1; }
+  .toolbar .meta { font-size: 0.78rem; color: #94a3b8; }
+
+  main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.07); font-size: 0.84rem; }
+  th { background: #f8fafc; text-align: left; padding: 9px 12px; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+
+  .badge { display: inline-block; border-radius: 4px; padding: 2px 7px; font-size: 0.72rem; font-weight: 600; }
+  .status-success { background: #d1fae5; color: #065f46; }
+  .status-error   { background: #fee2e2; color: #991b1b; }
+  .event-create { background: #dbeafe; color: #1d4ed8; }
+  .event-enrich { background: #e0e7ff; color: #3730a3; }
+  .event-validate { background: #fef3c7; color: #92400e; }
+  .event-create_batch { background: #dcfce7; color: #15803d; }
+  .event-other { background: #f1f5f9; color: #475569; }
+
+  .ticket-link { color: #4f46e5; text-decoration: none; font-family: monospace; font-size: 0.78rem; }
+  .ticket-link:hover { text-decoration: underline; }
+  .duration { color: #64748b; white-space: nowrap; }
+  .details-cell { color: #475569; max-width: 300px; word-break: break-word; }
+  .ts { color: #94a3b8; font-size: 0.78rem; white-space: nowrap; }
+  .agent-name { font-family: monospace; font-size: 0.8rem; color: #475569; }
+
+  .empty { text-align: center; color: #94a3b8; padding: 64px 0; font-size: 0.95rem; }
+
+  #toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; }
+  #toast.show { opacity: 1; }
+  #toast.error { background: #dc2626; }
+
+  .refresh-dot { display: inline-block; width: 7px; height: 7px; background: #10b981; border-radius: 50%; margin-right: 5px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.3 } }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/">← Tickets</a>
+  <h1>Agent Logs</h1>
+</header>
+
+<div class="toolbar">
+  <button id="filter-all" class="active" onclick="setFilter('all')">All</button>
+  <button onclick="setFilter('create')">Create</button>
+  <button onclick="setFilter('enrich')">Enrich</button>
+  <button onclick="setFilter('validate')">Validate</button>
+  <button onclick="setFilter('error')">Errors</button>
+  <div class="spacer"></div>
+  <span class="meta"><span class="refresh-dot"></span>Auto-refresh 15s · Last: <span id="last-updated">—</span></span>
+  <button onclick="loadLogs()">↻ Refresh</button>
+  <button class="danger" onclick="clearLogs()">Clear Logs</button>
+</div>
+
+<main>
+  <div id="log-container"></div>
+</main>
+
+<div id="toast"></div>
+
+<script>
+const API = '/api';
+let allLogs = [];
+let currentFilter = 'all';
+let refreshTimer;
+
+async function loadLogs() {
+  const res = await fetch(`${API}/logs`);
+  allLogs = await res.json();
+  allLogs.reverse(); // newest first
+  renderLogs();
+  document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.toolbar button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderLogs();
+}
+
+function renderLogs() {
+  const filtered = allLogs.filter(e => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'error') return e.status === 'error';
+    return e.event === currentFilter;
+  });
+
+  const el = document.getElementById('log-container');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty">No log entries' + (currentFilter !== 'all' ? ' for this filter' : '') + '.</div>';
+    return;
+  }
+
+  const rows = filtered.map(e => {
+    const eventClass = ['create','enrich','validate','create_batch'].includes(e.event)
+      ? `event-${e.event}` : 'event-other';
+    const ticketCell = e.ticket_id
+      ? `<a href="/tickets/${esc(e.ticket_id)}" class="ticket-link">${esc(e.ticket_id.slice(0,8))}…</a>`
+      : '—';
+    const dur = e.duration_ms != null ? `${Math.round(e.duration_ms).toLocaleString()} ms` : '—';
+
+    return `<tr>
+      <td class="ts">${fmtTs(e.timestamp)}</td>
+      <td><span class="badge ${eventClass}">${esc(e.event)}</span></td>
+      <td>${ticketCell}</td>
+      <td class="agent-name">${esc(e.agent)}</td>
+      <td class="duration">${dur}</td>
+      <td><span class="badge status-${e.status}">${e.status}</span></td>
+      <td class="details-cell">${esc(e.details || '')}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<table>
+    <thead><tr>
+      <th>Timestamp</th><th>Event</th><th>Ticket</th><th>Agent</th><th>Duration</th><th>Status</th><th>Details</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+async function clearLogs() {
+  if (!confirm('Clear all logs?')) return;
+  const res = await fetch(`${API}/logs`, { method: 'DELETE' });
+  if (res.ok) { allLogs = []; renderLogs(); toast('Logs cleared'); }
+  else toast('Clear failed', true);
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtTs(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
+}
+
+function toast(msg, isError=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (isError ? ' error' : '');
+  setTimeout(() => el.className = '', 3000);
+}
+
+function startAutoRefresh() {
+  clearInterval(refreshTimer);
+  refreshTimer = setInterval(loadLogs, 15000);
+}
+
+loadLogs();
+startAutoRefresh();
+</script>
+</body>
+</html>

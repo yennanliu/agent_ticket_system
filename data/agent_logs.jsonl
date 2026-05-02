@@ -1,0 +1,2 @@
+{"timestamp": "2026-05-02T08:40:24.100313+00:00", "event": "create", "ticket_id": "", "agent": "creator", "duration_ms": 7230.5, "status": "success", "details": "created 7 tickets from https://github.com/yennanliu/OpenClaw-mba-intel-1"}
+{"timestamp": "2026-05-02T08:40:39.223980+00:00", "event": "create_batch", "ticket_id": "", "agent": "api", "duration_ms": 0, "status": "success", "details": "created 1 tickets manually"}

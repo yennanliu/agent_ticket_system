@@ -1,9 +1,9 @@
 import pytest
-import tempfile
-import os
 from datetime import datetime, timezone
 
 from app.models import Ticket
+from app.storage import TicketStore
+from app.logger import AgentLogger
 
 
 @pytest.fixture
@@ -32,7 +32,6 @@ def sample_ticket_dict():
 
 @pytest.fixture
 def tmp_data_dir(tmp_path):
-    """Provides a temporary directory for JSON persistence tests."""
     return tmp_path
 
 
@@ -44,3 +43,19 @@ def repo_context():
         "readme": "# LinkedIn Skill\nAutomate LinkedIn interactions.",
         "file_contents": "// autoApplyLinkedInJobs.js\nconst jobs = [];\n",
     }
+
+
+@pytest.fixture
+def store(tmp_data_dir):
+    return TicketStore(data_dir=str(tmp_data_dir))
+
+
+@pytest.fixture
+def logger(tmp_path):
+    return AgentLogger(log_path=str(tmp_path / "test_logs.jsonl"))
+
+
+@pytest.fixture
+def app_with_store(store, logger):
+    from main import create_app
+    return create_app(store, logger=logger)

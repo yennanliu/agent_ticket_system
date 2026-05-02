@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from typing import TypedDict
 
 from langchain_openai import ChatOpenAI
@@ -89,7 +90,18 @@ def _build_graph(store: TicketStore) -> StateGraph:
     return graph.compile()
 
 
-def run_creator(source: str, store: TicketStore) -> list[Ticket]:
-    app = _build_graph(store)
-    result = app.invoke({"source": source, "repo_context": {}, "ticket_drafts": [], "created_tickets": []})
-    return result["created_tickets"]
+def run_creator(source: str, store: TicketStore, logger=None) -> list[Ticket]:
+    start = time.time()
+    try:
+        app = _build_graph(store)
+        result = app.invoke({"source": source, "repo_context": {}, "ticket_drafts": [], "created_tickets": []})
+        tickets = result["created_tickets"]
+        if logger:
+            logger.log("create", "creator", duration_ms=(time.time() - start) * 1000,
+                       status="success", details=f"created {len(tickets)} tickets from {source}")
+        return tickets
+    except Exception as e:
+        if logger:
+            logger.log("create", "creator", duration_ms=(time.time() - start) * 1000,
+                       status="error", details=str(e))
+        raise

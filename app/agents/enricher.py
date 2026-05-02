@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from typing import TypedDict, Optional
 
 from langchain_openai import ChatOpenAI
@@ -7,6 +8,7 @@ from langgraph.graph import StateGraph, END
 
 from app.models import Ticket
 from app.repo_tools import read_repo
+from app.search_tools import find_refs
 from app.storage import TicketStore
 
 
@@ -74,6 +76,19 @@ def _node_enrich(state: EnricherState) -> EnricherState:
     return state
 
 
+def _node_find_refs(state: EnricherState) -> EnricherState:
+    try:
+        refs = find_refs(
+            related_files=state["enriched_fields"].get("related_files", []),
+            source=state["source"],
+            repo_name=state["repo_context"].get("name", ""),
+        )
+        state["enriched_fields"]["suggested_change_refs"] = refs
+    except Exception:
+        state["enriched_fields"].setdefault("suggested_change_refs", [])
+    return state
+
+
 def _node_save(state: EnricherState, store: TicketStore) -> EnricherState:
     store.update(state["ticket_id"], state["enriched_fields"])
     return state
@@ -84,22 +99,36 @@ def _build_graph(store: TicketStore) -> StateGraph:
     graph.add_node("fetch_ticket", lambda s: _node_fetch_ticket(s, store))
     graph.add_node("fetch_context", _node_fetch_context)
     graph.add_node("enrich", _node_enrich)
+    graph.add_node("find_refs", _node_find_refs)
     graph.add_node("save_ticket", lambda s: _node_save(s, store))
     graph.set_entry_point("fetch_ticket")
     graph.add_edge("fetch_ticket", "fetch_context")
     graph.add_edge("fetch_context", "enrich")
-    graph.add_edge("enrich", "save_ticket")
+    graph.add_edge("enrich", "find_refs")
+    graph.add_edge("find_refs", "save_ticket")
     graph.add_edge("save_ticket", END)
     return graph.compile()
 
 
-def run_enricher(ticket_id: str, source: str, store: TicketStore) -> Ticket:
-    app = _build_graph(store)
-    app.invoke({
-        "ticket_id": ticket_id,
-        "source": source,
-        "ticket": None,
-        "repo_context": {},
-        "enriched_fields": {},
-    })
-    return store.get(ticket_id)
+def run_enricher(ticket_id: str, source: str, store: TicketStore, logger=None) -> Ticket:
+    start = time.time()
+    try:
+        app = _build_graph(store)
+        app.invoke({
+            "ticket_id": ticket_id,
+            "source": source,
+            "ticket": None,
+            "repo_context": {},
+            "enriched_fields": {},
+        })
+        ticket = store.get(ticket_id)
+        if logger:
+            logger.log("enrich", "enricher", ticket_id=ticket_id,
+                       duration_ms=(time.time() - start) * 1000, status="success")
+        return ticket
+    except Exception as e:
+        if logger:
+            logger.log("enrich", "enricher", ticket_id=ticket_id,
+                       duration_ms=(time.time() - start) * 1000,
+                       status="error", details=str(e))
+        raise

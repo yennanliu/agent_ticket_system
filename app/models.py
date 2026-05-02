@@ -27,6 +27,11 @@ class Ticket(BaseModel):
     related_files: list[str] = Field(default_factory=list)
     technical_notes: str = ""
     suggested_assignee: str = ""
+    suggested_change_refs: list[dict] = Field(default_factory=list)
+    # Populated by validator agent
+    validation_score: Optional[float] = None
+    validation_notes: str = ""
+    validation_passed: Optional[bool] = None
 
 
 class CreateTicketRequest(BaseModel):
@@ -49,6 +54,10 @@ class UpdateTicketRequest(BaseModel):
     related_files: Optional[list[str]] = None
     technical_notes: Optional[str] = None
     suggested_assignee: Optional[str] = None
+    suggested_change_refs: Optional[list[dict]] = None
+    validation_score: Optional[float] = None
+    validation_notes: Optional[str] = None
+    validation_passed: Optional[bool] = None
 
 
 class RepoRequest(BaseModel):

@@ -9,17 +9,26 @@
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; color: #222; }
 
   /* ── Header ── */
-  header { background: #1a1a2e; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+  header { background: #1a1a2e; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 10px; }
   header h1 { font-size: 1.2rem; font-weight: 600; flex: 1; }
+  header a.nav-link { color: #a5b4fc; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 5px; }
+  header a.nav-link:hover { background: rgba(255,255,255,.1); color: #fff; }
   header button { background: #4f46e5; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-size: 0.85rem; }
   header button:hover { background: #4338ca; }
+  header button.btn-outline-white { background: transparent; border: 1px solid rgba(255,255,255,.3); color: #fff; }
+  header button.btn-outline-white:hover { background: rgba(255,255,255,.1); }
 
   /* ── Repo panel ── */
-  #repo-panel { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; gap: 10px; align-items: center; }
-  #repo-panel input { flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 0.9rem; }
-  #repo-panel button { background: #0f766e; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
-  #repo-panel button:hover { background: #0d6662; }
+  #repo-panel { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  #repo-panel input { flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 0.9rem; }
+  #repo-panel button { border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
   #repo-panel button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-teal { background: #0f766e; color: #fff; }
+  .btn-teal:hover { background: #0d6662; }
+  .btn-violet { background: #7c3aed; color: #fff; }
+  .btn-violet:hover { background: #6d28d9; }
+  .btn-slate { background: #475569; color: #fff; }
+  .btn-slate:hover { background: #334155; }
 
   /* ── Toast ── */
   #toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; }
@@ -31,12 +40,13 @@
 
   /* ── Table ── */
   table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
-  th { background: #f8fafc; text-align: left; padding: 10px 14px; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #e2e8f0; }
-  td { padding: 11px 14px; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+  th { background: #f8fafc; text-align: left; padding: 10px 12px; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #e2e8f0; }
+  th.check-col { width: 36px; }
+  td { padding: 10px 12px; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #f8fafc; }
   .title-cell { cursor: pointer; }
-  .title-cell:hover strong { color: #4f46e5; text-decoration: underline; }
+  .title-cell strong:hover { color: #4f46e5; text-decoration: underline; }
 
   /* ── Badges ── */
   .badge { display: inline-block; border-radius: 4px; padding: 2px 7px; font-size: 0.75rem; font-weight: 600; }
@@ -48,14 +58,14 @@
   .priority-low { background: #f0fdf4; color: #166534; }
   .label { background: #e0e7ff; color: #3730a3; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin-right: 3px; }
 
-  /* ── Repo chip in table ── */
-  .repo-chip { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 0.72rem; color: #64748b; background: #f1f5f9; border-radius: 3px; padding: 1px 6px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* ── Repo chip ── */
+  .repo-chip { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; font-size: 0.72rem; color: #64748b; background: #f1f5f9; border-radius: 3px; padding: 1px 6px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .repo-chip a { color: inherit; text-decoration: none; }
   .repo-chip a:hover { color: #4f46e5; }
 
   /* ── Action buttons ── */
   .actions { display: flex; gap: 5px; flex-wrap: wrap; }
-  .btn-icon { background: none; border: 1px solid #e2e8f0; border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem; color: #475569; white-space: nowrap; }
+  .btn-icon { background: none; border: 1px solid #e2e8f0; border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 0.78rem; color: #475569; white-space: nowrap; }
   .btn-icon:hover { background: #f1f5f9; }
   .btn-icon.enrich { color: #7c3aed; border-color: #c4b5fd; }
   .btn-icon.enrich:hover { background: #ede9fe; }
@@ -65,7 +75,7 @@
 
   .empty { text-align: center; color: #94a3b8; padding: 48px 0; font-size: 0.95rem; }
 
-  /* ── Create/Edit modal ── */
+  /* ── Modals ── */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: #fff; border-radius: 12px; padding: 28px; width: 480px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
@@ -81,39 +91,6 @@
   .btn-submit { background: #4f46e5; color: #fff; }
   .btn-submit:hover { background: #4338ca; }
 
-  /* ── Detail drawer ── */
-  #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 150; }
-  #detail-overlay.open { display: block; }
-  #detail-panel {
-    position: fixed; top: 0; right: -560px; width: 540px; max-width: 95vw;
-    height: 100vh; background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,.12);
-    display: flex; flex-direction: column; z-index: 151;
-    transition: right 0.25s ease;
-    overflow: hidden;
-  }
-  #detail-panel.open { right: 0; }
-  #detail-header { padding: 20px 24px 16px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: flex-start; }
-  #detail-header-title { flex: 1; font-size: 1rem; font-weight: 600; line-height: 1.4; }
-  #detail-header-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; padding: 2px 6px; border-radius: 4px; }
-  #detail-header-close:hover { background: #f1f5f9; }
-  #detail-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
-  #detail-footer { padding: 14px 24px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; }
-
-  .detail-section { margin-bottom: 20px; }
-  .detail-section h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; margin-bottom: 8px; }
-  .detail-section p { font-size: 0.88rem; color: #334155; line-height: 1.6; white-space: pre-wrap; }
-  .detail-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
-  .detail-meta { font-size: 0.78rem; color: #64748b; }
-  .detail-meta span { font-weight: 600; color: #334155; }
-  .detail-list { list-style: none; padding: 0; }
-  .detail-list li { font-size: 0.85rem; color: #334155; padding: 5px 0; border-bottom: 1px solid #f1f5f9; display: flex; gap: 8px; align-items: baseline; }
-  .detail-list li:last-child { border-bottom: none; }
-  .detail-list li::before { content: "•"; color: #94a3b8; flex-shrink: 0; }
-  .detail-empty { font-size: 0.82rem; color: #94a3b8; font-style: italic; }
-  .detail-repo-link { font-size: 0.82rem; color: #4f46e5; word-break: break-all; }
-  .detail-repo-link a { color: inherit; }
-  .detail-file { font-size: 0.8rem; font-family: monospace; background: #f8fafc; border-radius: 3px; padding: 1px 5px; color: #475569; }
-
   /* ── Spinner ── */
   .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; margin-right: 6px; vertical-align: middle; }
   .spinner.dark { border-color: rgba(79,70,229,.2); border-top-color: #4f46e5; }
@@ -124,12 +101,15 @@
 
 <header>
   <h1>Agent Ticket System</h1>
+  <a href="/logs" class="nav-link">📋 Logs</a>
+  <button class="btn-outline-white" onclick="openBatchCreate()">Batch Create</button>
   <button onclick="openCreate()">+ New Ticket</button>
 </header>
 
 <div id="repo-panel">
   <input id="repo-input" type="text" placeholder="Local path (e.g. ../linkedin-skill) or GitHub URL" />
-  <button id="generate-btn" onclick="generateTickets()">Generate from Repo</button>
+  <button class="btn-teal" id="generate-btn" onclick="generateTickets()">Generate from Repo</button>
+  <button class="btn-violet" id="enrich-all-btn" onclick="enrichAll()">✨ Enrich Selected</button>
 </div>
 
 <main>
@@ -145,7 +125,7 @@
     <input id="f-title" type="text" placeholder="Short, actionable title" />
     <label>Description</label>
     <textarea id="f-desc" placeholder="What needs to be done? (optional — AI can generate this via Enrich)"></textarea>
-    <p class="hint">Leave blank and use ✨ Enrich after creating to let AI fill this in.</p>
+    <p class="hint">Leave blank and use ✨ Enrich to let AI fill this in.</p>
     <label>Status</label>
     <select id="f-status">
       <option value="open">Open</option>
@@ -169,18 +149,19 @@
   </div>
 </div>
 
-<!-- Detail drawer -->
-<div id="detail-overlay" onclick="closeDetail()"></div>
-<div id="detail-panel">
-  <div id="detail-header">
-    <div id="detail-header-title"></div>
-    <button id="detail-header-close" onclick="closeDetail()">✕</button>
-  </div>
-  <div id="detail-body"></div>
-  <div id="detail-footer">
-    <button class="btn-icon" id="detail-edit-btn">✏️ Edit</button>
-    <button class="btn-icon enrich" id="detail-enrich-btn">✨ Enrich</button>
-    <button class="btn-icon danger" id="detail-delete-btn">🗑️ Delete</button>
+<!-- Batch Create modal -->
+<div class="modal-overlay" id="batch-modal">
+  <div class="modal">
+    <h2>Batch Create Tickets</h2>
+    <label>Ticket titles (one per line)</label>
+    <textarea id="batch-titles" style="min-height:160px" placeholder="Fix login bug&#10;Add dark mode&#10;Improve test coverage&#10;Update API docs"></textarea>
+    <label>Source Repo (optional)</label>
+    <input id="batch-repo" type="text" placeholder="../my-project or https://github.com/..." />
+    <p class="hint">Descriptions will be empty — run ✨ Enrich after to let AI fill them in.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeBatchModal()">Cancel</button>
+      <button class="btn-submit" onclick="submitBatch()">Create All</button>
+    </div>
   </div>
 </div>
 
@@ -189,7 +170,6 @@
 <script>
 const API = '/api';
 let enrichingIds = new Set();
-let currentDetailTicket = null;
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -214,12 +194,29 @@ async function generateTickets() {
     const tickets = await res.json();
     toast(`Created ${tickets.length} ticket(s) from repo`);
     loadTickets();
-  } catch(e) {
-    toast('Failed: ' + e.message, true);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Generate from Repo';
-  }
+  } catch(e) { toast('Failed: ' + e.message, true); }
+  finally { btn.disabled = false; btn.textContent = 'Generate from Repo'; }
+}
+
+async function enrichAll() {
+  const source = document.getElementById('repo-input').value.trim();
+  if (!source) { toast('Enter a local path or GitHub URL to enrich from', true); return; }
+  const checked = [...document.querySelectorAll('.row-check:checked')].map(el => el.dataset.id);
+  const btn = document.getElementById('enrich-all-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Enriching…';
+  try {
+    const body = source.startsWith('http') ? { repo_url: source } : { repo_path: source };
+    if (checked.length) body.ticket_ids = checked;
+    const res = await fetch(`${API}/agents/enrich-batch`, {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const tickets = await res.json();
+    toast(`Enriched ${tickets.length} ticket(s)`);
+    loadTickets();
+  } catch(e) { toast('Enrich failed: ' + e.message, true); }
+  finally { btn.disabled = false; btn.innerHTML = '✨ Enrich Selected'; }
 }
 
 async function enrichTicket(id) {
@@ -234,28 +231,16 @@ async function enrichTicket(id) {
     });
     if (!res.ok) throw new Error(await res.text());
     toast('Ticket enriched');
-    await loadTickets();
-    // Refresh detail panel if open for this ticket
-    if (currentDetailTicket && currentDetailTicket.id === id) {
-      const r2 = await fetch(`${API}/tickets/${id}`);
-      if (r2.ok) openDetail(await r2.json());
-    }
-  } catch(e) {
-    toast('Enrich failed: ' + e.message, true);
-  } finally {
-    enrichingIds.delete(id);
-    setEnrichLoading(id, false);
-  }
+    loadTickets();
+  } catch(e) { toast('Enrich failed: ' + e.message, true); }
+  finally { enrichingIds.delete(id); setEnrichLoading(id, false); }
 }
 
 async function deleteTicket(id, title) {
   if (!confirm(`Delete "${title}"?`)) return;
   const res = await fetch(`${API}/tickets/${id}`, { method: 'DELETE' });
-  if (res.ok) {
-    toast('Ticket deleted');
-    if (currentDetailTicket && currentDetailTicket.id === id) closeDetail();
-    loadTickets();
-  } else toast('Delete failed', true);
+  if (res.ok) { toast('Ticket deleted'); loadTickets(); }
+  else toast('Delete failed', true);
 }
 
 // ── Create / Edit modal ───────────────────────────────────────────────────────
@@ -297,97 +282,35 @@ async function submitTicket() {
   const url = id ? `${API}/tickets/${id}` : `${API}/tickets`;
   const method = id ? 'PUT' : 'POST';
   const res = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  if (res.ok) { closeModal(); toast(id ? 'Ticket updated' : 'Ticket created'); loadTickets(); }
+  else toast('Save failed', true);
+}
+
+// ── Batch Create modal ────────────────────────────────────────────────────────
+
+function openBatchCreate() {
+  document.getElementById('batch-titles').value = '';
+  document.getElementById('batch-repo').value = '';
+  document.getElementById('batch-modal').classList.add('open');
+}
+function closeBatchModal() { document.getElementById('batch-modal').classList.remove('open'); }
+
+async function submitBatch() {
+  const raw = document.getElementById('batch-titles').value;
+  const titles = raw.split('\n').map(s=>s.trim()).filter(Boolean);
+  if (!titles.length) { toast('Enter at least one title', true); return; }
+  const repo_path = document.getElementById('batch-repo').value.trim() || undefined;
+  const body = { titles };
+  if (repo_path) body.repo_path = repo_path;
+  const res = await fetch(`${API}/agents/create-batch`, {
+    method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+  });
   if (res.ok) {
-    closeModal();
-    toast(id ? 'Ticket updated' : 'Ticket created');
+    const tickets = await res.json();
+    closeBatchModal();
+    toast(`Created ${tickets.length} ticket(s)`);
     loadTickets();
-  } else toast('Save failed', true);
-}
-
-// ── Detail drawer ─────────────────────────────────────────────────────────────
-
-function openDetail(t) {
-  currentDetailTicket = t;
-
-  document.getElementById('detail-header-title').textContent = t.title;
-
-  // Footer buttons
-  document.getElementById('detail-edit-btn').onclick = () => { closeDetail(); openEdit(t); };
-  document.getElementById('detail-enrich-btn').onclick = () => enrichTicket(t.id);
-  document.getElementById('detail-delete-btn').onclick = () => deleteTicket(t.id, t.title);
-
-  // Body
-  const repoHtml = t.source_repo
-    ? (t.source_repo.startsWith('http')
-        ? `<a href="${esc(t.source_repo)}" target="_blank" rel="noopener">${esc(t.source_repo)}</a>`
-        : esc(t.source_repo))
-    : '<span class="detail-empty">—</span>';
-
-  const acHtml = (t.acceptance_criteria && t.acceptance_criteria.length)
-    ? `<ul class="detail-list">${t.acceptance_criteria.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`
-    : '<p class="detail-empty">None yet — click ✨ Enrich to generate.</p>';
-
-  const filesHtml = (t.related_files && t.related_files.length)
-    ? `<ul class="detail-list">${t.related_files.map(f=>`<li><span class="detail-file">${esc(f)}</span></li>`).join('')}</ul>`
-    : '<p class="detail-empty">None yet.</p>';
-
-  const notesHtml = t.technical_notes
-    ? `<p>${esc(t.technical_notes)}</p>`
-    : '<p class="detail-empty">None yet.</p>';
-
-  document.getElementById('detail-body').innerHTML = `
-    <div class="detail-row">
-      <span class="badge status-${t.status}">${t.status.replace('_',' ')}</span>
-      <span class="badge priority-${t.priority}">${t.priority}</span>
-      ${(t.labels||[]).map(l=>`<span class="label">${esc(l)}</span>`).join('')}
-    </div>
-
-    <div class="detail-section">
-      <h3>Source Repo</h3>
-      <p class="detail-repo-link">${repoHtml}</p>
-    </div>
-
-    <div class="detail-section">
-      <h3>Description</h3>
-      <p>${t.description ? esc(t.description) : '<span class="detail-empty">No description — use ✨ Enrich to generate one.</span>'}</p>
-    </div>
-
-    <div class="detail-section">
-      <h3>Acceptance Criteria</h3>
-      ${acHtml}
-    </div>
-
-    <div class="detail-section">
-      <h3>Related Files</h3>
-      ${filesHtml}
-    </div>
-
-    <div class="detail-section">
-      <h3>Technical Notes</h3>
-      ${notesHtml}
-    </div>
-
-    ${t.suggested_assignee ? `
-    <div class="detail-section">
-      <h3>Suggested Assignee</h3>
-      <p>${esc(t.suggested_assignee)}</p>
-    </div>` : ''}
-
-    <div class="detail-section">
-      <h3>Timestamps</h3>
-      <p class="detail-meta">Created: <span>${fmtDateTime(t.created_at)}</span></p>
-      <p class="detail-meta" style="margin-top:4px">Updated: <span>${fmtDateTime(t.updated_at)}</span></p>
-    </div>
-  `;
-
-  document.getElementById('detail-overlay').classList.add('open');
-  document.getElementById('detail-panel').classList.add('open');
-}
-
-function closeDetail() {
-  currentDetailTicket = null;
-  document.getElementById('detail-overlay').classList.remove('open');
-  document.getElementById('detail-panel').classList.remove('open');
+  } else toast('Batch create failed', true);
 }
 
 // ── Table rendering ───────────────────────────────────────────────────────────
@@ -398,19 +321,29 @@ function renderTable(tickets) {
     el.innerHTML = '<div class="empty">No tickets yet — create one or generate from a repo.</div>';
     return;
   }
+
   const rows = tickets.map(t => {
     const repoChip = t.source_repo
       ? `<div class="repo-chip" title="${esc(t.source_repo)}">
-           ${repoIcon(t.source_repo)}
+           ${t.source_repo.startsWith('http') ? '⎇' : '📁'}
            ${t.source_repo.startsWith('http')
              ? `<a href="${esc(t.source_repo)}" target="_blank" rel="noopener">${repoLabel(t.source_repo)}</a>`
              : esc(t.source_repo)}
          </div>`
       : '';
 
+    const validBadge = t.validation_passed === true
+      ? '<span style="font-size:.7rem;color:#10b981;margin-left:4px">✅</span>'
+      : t.validation_passed === false
+        ? '<span style="font-size:.7rem;color:#dc2626;margin-left:4px">❌</span>'
+        : '';
+
     return `<tr>
-      <td class="title-cell" onclick='openDetail(${JSON.stringify(t)})'>
-        <strong>${esc(t.title)}</strong>${enrichedBadge(t)}
+      <td><input type="checkbox" class="row-check" data-id="${t.id}"></td>
+      <td class="title-cell">
+        <a href="/tickets/${t.id}" style="text-decoration:none;color:inherit">
+          <strong>${esc(t.title)}</strong>${enrichedBadge(t)}${validBadge}
+        </a>
         ${repoChip}
       </td>
       <td><span class="badge status-${t.status}">${t.status.replace('_',' ')}</span></td>
@@ -429,10 +362,15 @@ function renderTable(tickets) {
 
   el.innerHTML = `<table>
     <thead><tr>
+      <th class="check-col"><input type="checkbox" id="select-all" onchange="toggleAll(this)" title="Select all"></th>
       <th>Title / Repo</th><th>Status</th><th>Priority</th><th>Labels</th><th>Created</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
+}
+
+function toggleAll(master) {
+  document.querySelectorAll('.row-check').forEach(cb => { cb.checked = master.checked; });
 }
 
 function setEnrichLoading(id, loading) {
@@ -440,20 +378,11 @@ function setEnrichLoading(id, loading) {
   if (!btn) return;
   btn.disabled = loading;
   btn.innerHTML = loading ? '<span class="spinner dark"></span>Enriching…' : '✨ Enrich';
-  // Also update detail footer if open
-  if (currentDetailTicket && currentDetailTicket.id === id) {
-    const dbtn = document.getElementById('detail-enrich-btn');
-    if (dbtn) { dbtn.disabled = loading; dbtn.innerHTML = loading ? '<span class="spinner dark"></span>Enriching…' : '✨ Enrich'; }
-  }
 }
 
 function enrichedBadge(t) {
   return (t.acceptance_criteria && t.acceptance_criteria.length)
-    ? ' <span style="font-size:.7rem;color:#7c3aed;margin-left:4px">✨ enriched</span>' : '';
-}
-
-function repoIcon(src) {
-  return src.startsWith('http') ? '⎇' : '📁';
+    ? ' <span style="font-size:.7rem;color:#7c3aed;margin-left:4px">✨</span>' : '';
 }
 
 function repoLabel(url) {
@@ -463,13 +392,10 @@ function repoLabel(url) {
   } catch { return url; }
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
 function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function fmtDate(s) { return s ? new Date(s).toLocaleDateString() : '—'; }
-function fmtDateTime(s) { return s ? new Date(s).toLocaleString() : '—'; }
 
 function toast(msg, isError=false) {
   const el = document.getElementById('toast');
@@ -478,9 +404,8 @@ function toast(msg, isError=false) {
   setTimeout(() => el.className = '', 3000);
 }
 
-// Close modal on overlay click
 document.getElementById('modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeModal(); });
-
+document.getElementById('batch-modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeBatchModal(); });
 loadTickets();
 </script>
 </body>
