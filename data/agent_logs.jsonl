@@ -21,3 +21,7 @@
 {"timestamp": "2026-05-03T07:08:02.542817+00:00", "event": "validate", "ticket_id": "b247391b-4eed-434e-9ec3-b6b29ec8c5bd", "agent": "validator", "duration_ms": 1080.8, "status": "success", "details": "score=0.0"}
 {"timestamp": "2026-05-03T07:10:00.861673+00:00", "event": "enrich", "ticket_id": "2e4aa262-bb3d-4ac4-b97e-f89876d80bf7", "agent": "enricher", "duration_ms": 18214.0, "status": "success", "details": ""}
 {"timestamp": "2026-05-03T07:10:22.305053+00:00", "event": "validate", "ticket_id": "2e4aa262-bb3d-4ac4-b97e-f89876d80bf7", "agent": "validator", "duration_ms": 1256.2, "status": "success", "details": "score=1.0"}
+{"timestamp": "2026-05-03T07:24:58.651929+00:00", "event": "enrich", "ticket_id": "4b994507-3f33-4552-bf62-a6b352672c34", "agent": "enricher", "duration_ms": 5660.3, "status": "success", "details": ""}
+{"timestamp": "2026-05-03T07:25:28.768039+00:00", "event": "enrich", "ticket_id": "4b994507-3f33-4552-bf62-a6b352672c34", "agent": "enricher", "duration_ms": 5545.5, "status": "success", "details": ""}
+{"timestamp": "2026-05-03T07:25:34.647969+00:00", "event": "enrich", "ticket_id": "f822a9dd-4741-44a4-b807-074fcf33d4b3", "agent": "enricher", "duration_ms": 5879.4, "status": "success", "details": ""}
+{"timestamp": "2026-05-03T07:26:28.261143+00:00", "event": "enrich", "ticket_id": "ccbd81c9-28ce-4a27-be69-08094c5c6649", "agent": "enricher", "duration_ms": 5404.8, "status": "success", "details": ""}

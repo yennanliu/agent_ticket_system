@@ -1,2 +1,4 @@
 __pycache__/
 .env
+data/agent_logs.jsonl
+data/tickets.json

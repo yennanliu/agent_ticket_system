@@ -1,51 +1,89 @@
 [
   {
-    "id": "ec5d007b-c852-4da1-9924-eeef4c04320d",
-    "title": "https://github.com/BrotherSupport/ai_consultant",
-    "description": "refactor",
+    "id": "65c327f7-c62d-4a44-9770-109cae198ab4",
+    "title": "add UI support",
+    "description": "",
     "status": "open",
     "priority": "medium",
     "importance": "medium",
     "labels": [
-      "docs"
+      "feature"
     ],
     "source_repo": "",
-    "created_at": "2026-05-03T06:51:15.345897Z",
-    "updated_at": "2026-05-03T06:56:03.006032Z",
+    "created_at": "2026-05-03T07:24:16.473316Z",
+    "updated_at": "2026-05-03T07:24:16.473322Z",
     "business_req": "",
     "stakeholder": "",
     "user_story": "",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
+  },
+  {
+    "id": "4b994507-3f33-4552-bf62-a6b352672c34",
+    "title": "add claude support",
+    "description": "",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [],
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-03T07:24:32.607072Z",
+    "updated_at": "2026-05-03T07:25:28.766363Z",
+    "business_req": "Integrate Claude to enhance automation and efficiency of LinkedIn skills, providing users with more powerful tools for job applications and networking.",
+    "stakeholder": "Product Manager",
+    "user_story": "As a user, I want to leverage Claude's advanced capabilities to improve the efficiency and effectiveness of LinkedIn automation tasks, such as applying for jobs and reaching out to contacts, so that I can maximize my professional networking opportunities.",
     "acceptance_criteria": [
-      "Codebase is refactored to improve readability and maintainability without altering existing functionality.",
-      "All existing tests pass successfully after the refactor.",
-      "No performance degradation is observed post-refactor.",
-      "Code adheres to the project's style guidelines as defined in scalastyle-config.xml."
+      "Claude integration is successfully added to the existing LinkedIn skills.",
+      "All existing skills (Job Auto-Apply, Profile Scraper, Contact Reacher) can utilize Claude's capabilities without errors.",
+      "New tests are written and existing tests are updated to cover Claude integration.",
+      "Documentation is updated to reflect the integration of Claude, including usage examples and any new commands.",
+      "Performance benchmarks show no significant degradation in task execution times after Claude integration."
     ],
     "related_files": [
-      "pom.xml",
-      "scalastyle-config.xml",
-      ".pre-commit-config.yaml"
+      "CLAUDE.md",
+      "QUICKSTART.md",
+      "SKILL.md",
+      "package.json",
+      "check_session.js"
     ],
-    "technical_notes": "Focus on simplifying complex methods and reducing code duplication. Pay attention to the dependency management in pom.xml to ensure no unnecessary dependencies are included. Consider using the pre-commit hooks defined in .pre-commit-config.yaml to catch any style issues early. Be cautious of any changes that might affect the public API or backward compatibility.",
+    "technical_notes": "Ensure that Claude's API is compatible with the existing Playwright MCP tools. Consider potential rate limits and authentication requirements when integrating Claude. Review the existing agents to determine if any need to be modified to support Claude's capabilities. Pay special attention to the Automation Agent and Web Structure Agent for potential updates.",
     "suggested_assignee": "backend",
     "suggested_change_refs": [
       {
-        "file": "pom.xml",
+        "file": "CLAUDE.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/pom.xml",
-        "title": "pom.xml"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/CLAUDE.md",
+        "title": "CLAUDE.md"
       },
       {
-        "file": "scalastyle-config.xml",
+        "file": "QUICKSTART.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/scalastyle-config.xml",
-        "title": "scalastyle-config.xml"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/QUICKSTART.md",
+        "title": "QUICKSTART.md"
       },
       {
-        "file": ".pre-commit-config.yaml",
+        "file": "SKILL.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/.pre-commit-config.yaml",
-        "title": ".pre-commit-config.yaml"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/SKILL.md",
+        "title": "SKILL.md"
+      },
+      {
+        "file": "package.json",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
+        "title": "package.json"
+      },
+      {
+        "file": "check_session.js",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/check_session.js",
+        "title": "check_session.js"
       }
     ],
     "validation_score": null,
@@ -53,388 +91,158 @@
     "validation_passed": null
   },
   {
-    "id": "bcfc56f8-c977-48dd-9a8f-ca342fae5a21",
-    "title": "add e2e test",
+    "id": "f822a9dd-4741-44a4-b807-074fcf33d4b3",
+    "title": "add UI supporrt",
     "description": "",
     "status": "open",
     "priority": "medium",
     "importance": "medium",
     "labels": [],
-    "source_repo": "https://github.com/apache/spark",
-    "created_at": "2026-05-03T06:53:27.581736Z",
-    "updated_at": "2026-05-03T07:06:44.729609Z",
-    "business_req": "Ensure the reliability and stability of the Spark application by validating key user flows through automated end-to-end testing.",
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-03T07:24:44.373378Z",
+    "updated_at": "2026-05-03T07:25:34.646164Z",
+    "business_req": "Enhance user engagement by providing a graphical interface for LinkedIn automation tasks, making it accessible to non-technical users.",
     "stakeholder": "Product Manager",
-    "user_story": "As a developer, I want to ensure that the Spark application functions correctly in an integrated environment so that users experience a stable and reliable product.",
+    "user_story": "As a user, I want a user-friendly interface to easily access and manage LinkedIn automation tasks, so that I can efficiently utilize the automation tools without needing to interact with the command line.",
     "acceptance_criteria": [
-      "The e2e test should cover the main user flows in the Spark application.",
-      "The test should be executed successfully in the CI pipeline without errors.",
-      "The test should validate the integration of Spark SQL and Structured Streaming components.",
-      "The test should be documented with clear steps and expected outcomes."
+      "UI components are integrated with existing Playwright MCP tools.",
+      "UI allows users to select and invoke each of the three skills: Job Auto-Apply, Profile Scraper, and Contact Reacher.",
+      "UI displays real-time feedback and status updates for each skill execution.",
+      "UI adheres to LinkedIn's terms of service and does not trigger anti-detection mechanisms."
     ],
     "related_files": [
-      "README.md",
-      "pom.xml",
-      "pyproject.toml",
-      "CONTRIBUTING.md"
+      "check_session.js",
+      "profile_snapshot.html",
+      "scrape_results.json",
+      "package.json",
+      "debug_profile.html"
     ],
-    "technical_notes": "Consider using existing test frameworks compatible with Spark, such as Apache Maven for Java/Scala or pytest for Python. Ensure that the test environment is properly set up to mimic production conditions. Pay attention to the dependencies specified in pom.xml and pyproject.toml to avoid version conflicts.",
-    "suggested_assignee": "QA team",
-    "suggested_change_refs": [
-      {
-        "file": "README.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/README.md",
-        "title": "README.md"
-      },
-      {
-        "file": "pom.xml",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/pom.xml",
-        "title": "pom.xml"
-      },
-      {
-        "file": "pyproject.toml",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/pyproject.toml",
-        "title": "pyproject.toml"
-      },
-      {
-        "file": "CONTRIBUTING.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/CONTRIBUTING.md",
-        "title": "CONTRIBUTING.md"
-      }
-    ],
-    "validation_score": 1.0,
-    "validation_notes": "The ticket is well-structured with specific acceptance criteria, plausible related files, actionable technical notes, and includes change references.",
-    "validation_passed": true
-  },
-  {
-    "id": "1466c337-b59b-46dc-9f08-5b56851fd301",
-    "title": "add new UI for spark stream",
-    "description": "",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "feature"
-    ],
-    "source_repo": "https://github.com/apache/spark",
-    "created_at": "2026-05-03T06:55:34.835503Z",
-    "updated_at": "2026-05-03T07:07:03.338363Z",
-    "business_req": "Enhance user experience by providing a more intuitive and interactive interface for monitoring and managing Spark Streams.",
-    "stakeholder": "Product Management Team",
-    "user_story": "As a data engineer, I want a user-friendly UI to monitor and manage Spark Streams so that I can efficiently oversee data processing tasks and quickly respond to any issues.",
-    "acceptance_criteria": [
-      "The new UI for Spark Stream is accessible from the main dashboard.",
-      "The UI displays real-time data streams with minimal latency.",
-      "Users can filter and sort streams based on predefined criteria.",
-      "The UI is responsive and works across different devices and screen sizes.",
-      "All new UI components pass accessibility checks."
-    ],
-    "related_files": [
-      "README.md",
-      "pom.xml",
-      "scalastyle-config.xml",
-      "CONTRIBUTING.md"
-    ],
-    "technical_notes": "Consider leveraging existing UI components for consistency. Ensure that the new UI integrates seamlessly with the existing Spark Structured Streaming module. Pay attention to performance optimization to handle large-scale data streams efficiently.",
+    "technical_notes": "Ensure that the UI components are responsive and compatible with various browsers. Consider using a frontend framework like React or Vue.js for dynamic UI updates. Pay special attention to LinkedIn's DOM structure and potential changes that might affect the UI's interaction with the underlying automation scripts.",
     "suggested_assignee": "frontend",
     "suggested_change_refs": [
       {
-        "file": "README.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/README.md",
-        "title": "README.md"
+        "file": "check_session.js",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/check_session.js",
+        "title": "check_session.js"
       },
       {
-        "file": "pom.xml",
+        "file": "profile_snapshot.html",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/pom.xml",
-        "title": "pom.xml"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/profile_snapshot.html",
+        "title": "profile_snapshot.html"
       },
       {
-        "file": "scalastyle-config.xml",
+        "file": "scrape_results.json",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/scalastyle-config.xml",
-        "title": "scalastyle-config.xml"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/scrape_results.json",
+        "title": "scrape_results.json"
       },
       {
-        "file": "CONTRIBUTING.md",
+        "file": "package.json",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/CONTRIBUTING.md",
-        "title": "CONTRIBUTING.md"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
+        "title": "package.json"
+      },
+      {
+        "file": "debug_profile.html",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/debug_profile.html",
+        "title": "debug_profile.html"
       }
     ],
-    "validation_score": 1.0,
-    "validation_notes": "The ticket is well-structured with specific acceptance criteria, plausible related files, actionable technical notes, and includes change references.",
-    "validation_passed": true
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   },
   {
-    "id": "2e4aa262-bb3d-4ac4-b97e-f89876d80bf7",
-    "title": "add emr support",
+    "id": "eab4396b-82d5-44e3-b9b5-2a4812aef373",
+    "title": "add parallel run",
     "description": "",
     "status": "open",
     "priority": "medium",
     "importance": "medium",
     "labels": [],
-    "source_repo": "https://github.com/apache/spark",
-    "created_at": "2026-05-03T07:01:43.857688Z",
-    "updated_at": "2026-05-03T07:10:22.303267Z",
-    "business_req": "Enable Spark to run efficiently on AWS EMR to leverage cloud scalability, reduce infrastructure overhead, and provide a managed environment for big data processing.",
-    "stakeholder": "product",
-    "user_story": "As a product manager, I want Spark to support EMR so that we can utilize AWS's managed Hadoop framework for scalable and efficient data processing, reducing the need for manual infrastructure management.",
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-03T07:25:36.089042Z",
+    "updated_at": "2026-05-03T07:25:36.089053Z",
+    "business_req": "",
+    "stakeholder": "",
+    "user_story": "",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
+  },
+  {
+    "id": "ccbd81c9-28ce-4a27-be69-08094c5c6649",
+    "title": "add K8S support",
+    "description": "add aws, k8s support",
+    "status": "open",
+    "priority": "high",
+    "importance": "medium",
+    "labels": [
+      "feature"
+    ],
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-03T07:26:12.938901Z",
+    "updated_at": "2026-05-03T07:26:28.258717Z",
+    "business_req": "Enable scalable and efficient deployment of LinkedIn Skills services using Kubernetes on AWS infrastructure.",
+    "stakeholder": "eng",
+    "user_story": "As an engineer, I want to deploy LinkedIn Skills services on Kubernetes to leverage its scalability and manageability features, ensuring high availability and efficient resource utilization.",
     "acceptance_criteria": [
-      "Spark jobs can be submitted to AWS EMR and execute successfully.",
-      "Performance benchmarks show improved scalability and reduced infrastructure overhead compared to on-premise solutions.",
-      "Documentation is updated to include steps for deploying Spark on AWS EMR.",
-      "Automated tests cover EMR deployment scenarios and pass consistently."
+      "Kubernetes (K8S) manifests are created for all services in the repository.",
+      "AWS EKS cluster is configured and services are deployable to it.",
+      "CI/CD pipeline is updated to support deployment to K8S.",
+      "Documentation is updated to include K8S deployment instructions."
     ],
     "related_files": [
-      "pom.xml",
+      "install.sh",
+      "package.json",
       "README.md",
-      "pyproject.toml",
-      "CONTRIBUTING.md"
+      "INSTALLATION.md",
+      "QUICKSTART.md"
     ],
-    "technical_notes": "Ensure compatibility with the latest EMR release. Consider using AWS SDKs for integration. Pay attention to IAM roles and permissions for accessing S3 and other AWS services. Test with different instance types to optimize cost and performance.",
+    "technical_notes": "Ensure that the Kubernetes manifests include necessary configurations such as resource limits, environment variables, and secrets management. Consider using Helm charts for easier management of K8S resources. Pay attention to AWS IAM roles and permissions required for EKS. Update the CI/CD pipeline to include steps for building Docker images and pushing them to a container registry before deploying to K8S.",
     "suggested_assignee": "devops",
     "suggested_change_refs": [
       {
-        "file": "pom.xml",
+        "file": "install.sh",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/install.sh",
+        "title": "install.sh"
+      },
+      {
+        "file": "package.json",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/pom.xml",
-        "title": "pom.xml"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
+        "title": "package.json"
       },
       {
         "file": "README.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/README.md",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/README.md",
         "title": "README.md"
       },
       {
-        "file": "pyproject.toml",
+        "file": "INSTALLATION.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/pyproject.toml",
-        "title": "pyproject.toml"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/INSTALLATION.md",
+        "title": "INSTALLATION.md"
       },
       {
-        "file": "CONTRIBUTING.md",
+        "file": "QUICKSTART.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/apache/spark/blob/main/CONTRIBUTING.md",
-        "title": "CONTRIBUTING.md"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/QUICKSTART.md",
+        "title": "QUICKSTART.md"
       }
     ],
-    "validation_score": 1.0,
-    "validation_notes": "The ticket is well-structured with specific acceptance criteria, plausible related files, actionable technical notes, and includes change references.",
-    "validation_passed": true
-  },
-  {
-    "id": "b247391b-4eed-434e-9ec3-b6b29ec8c5bd",
-    "title": "Implement Timezone-Aware Watermark Timestamps",
-    "description": "Port timezone-aware watermark timestamps to release-2.1 to enhance data processing accuracy across different time zones.",
-    "status": "open",
-    "priority": "high",
-    "importance": "critical",
-    "labels": [
-      "feature",
-      "webui"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.701672Z",
-    "updated_at": "2026-05-03T07:08:02.540843Z",
-    "business_req": "Ensure accurate time-based data processing in global deployments.",
-    "stakeholder": "Engineering",
-    "user_story": "As a data engineer, I want timezone-aware watermark timestamps so that I can process data accurately across different time zones.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "61239321-4566-4564-81e7-2560a56860e2",
-    "title": "Remove Watermark Assigner Operator for Non-Time Attribute Rows",
-    "description": "Modify the flink-table-planner to avoid generating watermark assigner operators when there are no time attribute operations on rowtime.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "high",
-    "labels": [
-      "bug",
-      "table-planner"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.703492Z",
-    "updated_at": "2026-05-03T07:07:02.009838Z",
-    "business_req": "Optimize processing by removing unnecessary operations.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want to avoid unnecessary watermark assigners so that the system runs more efficiently.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "e32c2ab4-ee9a-4f2a-8ea4-6f0dc992d2ce",
-    "title": "Fix Incorrect UB Drop for Non-Upsert Key Filters",
-    "description": "Address the issue in table-planner where incorrect UB drop occurs for filters on non-upsert keys.",
-    "status": "open",
-    "priority": "high",
-    "importance": "high",
-    "labels": [
-      "bug",
-      "table-planner"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.704953Z",
-    "updated_at": "2026-05-03T07:07:02.871570Z",
-    "business_req": "Ensure data integrity and correct filtering operations.",
-    "stakeholder": "Customer",
-    "user_story": "As a data analyst, I want correct filtering on non-upsert keys so that my data queries return accurate results.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "cd7bdc56-b9f2-48d0-acc7-ebc293d14df8",
-    "title": "Enforce ESLint on Runtime-Web Logs Components",
-    "description": "Bring the logs components under ESLint enforcement to maintain code quality and consistency.",
-    "status": "open",
-    "priority": "low",
-    "importance": "medium",
-    "labels": [
-      "ci",
-      "runtime-web"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.706142Z",
-    "updated_at": "2026-05-03T07:07:03.851292Z",
-    "business_req": "Maintain high code quality standards across the project.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want ESLint enforcement on logs components so that the codebase remains clean and consistent.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "49fa6a77-49c4-4dbd-a1a1-5ee1db6942c1",
-    "title": "Log Execution Graph Creation Failures at ERROR Level",
-    "description": "Update the logging level for execution graph creation failures to ERROR to improve debugging and monitoring.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "runtime",
-      "logging"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.707324Z",
-    "updated_at": "2026-05-03T07:07:04.904867Z",
-    "business_req": "Improve system monitoring and error detection.",
-    "stakeholder": "Engineering",
-    "user_story": "As a system administrator, I want execution graph creation failures logged at ERROR level so that I can quickly identify and address issues.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "95b4deb4-5dba-4d5e-9913-d42b31c0c962",
-    "title": "Include Py.typed in PyFlink Distribution",
-    "description": "Ensure that py.typed is included in the PyFlink distribution to support type checking in Python projects.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "python",
-      "distribution"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.708469Z",
-    "updated_at": "2026-05-03T07:07:05.899798Z",
-    "business_req": "Enhance Python development experience with type checking support.",
-    "stakeholder": "Engineering",
-    "user_story": "As a Python developer, I want py.typed included in PyFlink so that I can use type checking in my projects.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "0fd4fbe1-ed63-4615-b3e4-ce78f81b2977",
-    "title": "Fix Typo in 'Working with State V2 - Execution Order'",
-    "description": "Correct a typo in the documentation for 'Working with State V2 - Execution Order' to improve clarity and understanding.",
-    "status": "open",
-    "priority": "low",
-    "importance": "low",
-    "labels": [
-      "docs",
-      "hotfix"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.709471Z",
-    "updated_at": "2026-05-03T07:07:07.024511Z",
-    "business_req": "Ensure documentation accuracy and clarity.",
-    "stakeholder": "Product",
-    "user_story": "As a user, I want accurate documentation so that I can understand and implement features correctly.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "5e6c749a-3a47-4e48-8535-cae1a50f157e",
-    "title": "Honor Microsecond Avro Logical Types in RowDataToAvroConverters",
-    "description": "Update RowDataToAvroConverters to support microsecond Avro logical types for enhanced precision in data serialization.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "high",
-    "labels": [
-      "formats",
-      "feature"
-    ],
-    "source_repo": "https://github.com/apache/flink",
-    "created_at": "2026-05-03T07:06:59.710374Z",
-    "updated_at": "2026-05-03T07:07:08.153166Z",
-    "business_req": "Improve data serialization precision for time-sensitive applications.",
-    "stakeholder": "Customer",
-    "user_story": "As a data engineer, I want microsecond precision in Avro converters so that my data serialization is accurate.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
   }
 ]
