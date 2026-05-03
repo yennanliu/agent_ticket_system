@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,174 +13,180 @@
   --surface:     #2a2a2a;
   --surface2:    #333333;
   --text:        #f5f5f5;
-  --text-muted:  #a0a0a0;
+  --text-muted:  #b0b0b0;
   --text-dim:    #6a6a6a;
   --border:      #333333;
   --accent:      #faff69;
-  --accent-alt:  #ff6ec7;
+  --accent-fg:   #000;
   --success:     #b5e48c;
   --warning:     #ffa07a;
   --danger:      #ff6b6b;
   --blue:        #7bdff2;
   --purple:      #c7a9ff;
+  --b-hi-bg:     #2a1212; --b-hi-fg: #ff6b6b;
+  --b-done-bg:   #0d2a14; --b-done-fg: #b5e48c;
+  --h-header:    48px;
+  --h-toolbar:   48px;
+  --h-statbar:   34px;
 }
+[data-theme="light"] {
+  --bg:          #ffffff;
+  --bg-alt:      #f8f9fa;
+  --surface:     #f1f5f9;
+  --surface2:    #e2e8f0;
+  --text:        #1a1a2e;
+  --text-muted:  #334155;
+  --text-dim:    #94a3b8;
+  --border:      #e2e8f0;
+  --accent:      #4f46e5;
+  --accent-fg:   #fff;
+  --success:     #16a34a;
+  --warning:     #d97706;
+  --danger:      #dc2626;
+  --blue:        #1d4ed8;
+  --purple:      #6d28d9;
+  --b-hi-bg:     #fee2e2; --b-hi-fg: #991b1b;
+  --b-done-bg:   #dcfce7; --b-done-fg: #15803d;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-variant-numeric: tabular-nums; }
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 13px;
-  line-height: 1.4;
+  background: var(--bg); color: var(--text);
+  font-size: 14px; line-height: 1.4;
+  transition: background .2s, color .2s;
 }
 
 header {
-  background: var(--bg-alt);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  background: var(--bg-alt); border-bottom: 1px solid var(--border);
+  padding: 0 20px; height: var(--h-header);
+  display: flex; align-items: center; gap: 14px;
+  position: sticky; top: 0; z-index: 100;
 }
-.logo { font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
-.header-sep { width: 1px; height: 20px; background: var(--border); }
-.nav-back { font-size: 12px; color: var(--text-muted); text-decoration: none; padding: 4px 8px; border-radius: 4px; }
+.logo { font-size: 14px; font-weight: 600; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
+.header-sep { width: 1px; height: 22px; background: var(--border); }
+.nav-back { font-size: 14px; color: var(--text-muted); text-decoration: none; padding: 4px 10px; border-radius: 4px; }
 .nav-back:hover { color: var(--text); background: var(--surface); }
-.page-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.page-title { font-size: 14px; font-weight: 600; color: var(--text); }
 .spacer { flex: 1; }
+.btn-theme {
+  font-size: 13px; padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-muted); cursor: pointer; font-family: inherit;
+}
+.btn-theme:hover { color: var(--text); background: var(--surface2); }
 
 .toolbar {
-  background: var(--bg-alt);
-  border-bottom: 1px solid var(--border);
-  padding: 8px 20px;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
+  background: var(--bg-alt); border-bottom: 1px solid var(--border);
+  padding: 0 20px; height: var(--h-toolbar);
+  display: flex; gap: 6px; align-items: center; flex-wrap: nowrap;
+  position: sticky; top: var(--h-header); z-index: 99;
+  overflow-x: auto;
 }
 .filter-btn {
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 3px 10px;
-  background: transparent;
-  color: var(--text-dim);
-  cursor: pointer;
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .04em;
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 12px; background: transparent; color: var(--text-dim); cursor: pointer;
+  white-space: nowrap;
 }
 .filter-btn:hover { background: var(--surface); color: var(--text-muted); }
-.filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
-.filter-btn.err { color: var(--danger); border-color: #3a1515; }
+.filter-btn.active { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.filter-btn.err { color: var(--danger); }
 .filter-btn.err.active { background: var(--danger); color: #fff; border-color: var(--danger); }
-.toolbar-meta { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 5px; }
-.live-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.3 } }
+.toolbar-meta { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.live-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; flex-shrink: 0; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .btn-sm {
-  font-family: inherit; font-size: 11px; border-radius: 3px;
-  padding: 4px 10px; border: 1px solid var(--border);
-  background: transparent; color: var(--text-muted); cursor: pointer;
+  font-family: inherit; font-size: 14px; border-radius: 3px;
+  padding: 4px 12px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted); cursor: pointer; white-space: nowrap;
 }
 .btn-sm:hover { background: var(--surface); color: var(--text); }
-.btn-sm.del { color: var(--danger); border-color: #3a1515; }
-.btn-sm.del:hover { background: #1e0f0f; }
+.btn-sm.del { color: var(--danger); }
+.btn-sm.del:hover { background: var(--b-hi-bg); }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
+#stat-bar {
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  padding: 0 20px; height: var(--h-statbar);
+  display: flex; gap: 24px; align-items: center;
+  font-size: 14px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim);
+  position: sticky; top: calc(var(--h-header) + var(--h-toolbar)); z-index: 98;
 }
+.stat-val { color: var(--text-muted); font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
 thead th {
-  background: var(--bg-alt);
-  color: var(--text-dim);
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  padding: 0 12px;
-  height: 32px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt); color: var(--text-dim);
+  font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em;
+  padding: 0 14px; height: 36px; text-align: left;
+  border-bottom: 2px solid var(--border);
   position: sticky;
-  top: 44px;
-  white-space: nowrap;
+  top: calc(var(--h-header) + var(--h-toolbar) + var(--h-statbar));
+  z-index: 97; white-space: nowrap;
 }
 thead th.num { text-align: right; }
 tbody tr:nth-child(even) td { background: var(--bg-alt); }
 tbody tr:hover td { background: var(--surface) !important; }
 tbody td {
-  padding: 0 12px;
-  height: 30px;
-  border-bottom: 1px solid #1e1e1e;
-  vertical-align: middle;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 0 14px; height: 34px;
+  border-bottom: 1px solid var(--bg-alt);
+  vertical-align: middle; font-size: 14px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--text);
 }
+[data-theme="dark"] tbody td { border-bottom-color: #1e1e1e; }
 tbody tr:last-child td { border-bottom: none; }
-tbody td.mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+tbody td.mono { font-family: 'JetBrains Mono', monospace; }
 tbody td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
-tbody td.details { max-width: 280px; white-space: normal; word-break: break-word; color: var(--text-muted); font-size: 11px; }
+tbody td.details { max-width: 260px; white-space: normal; color: var(--text-muted); }
 
 .badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  border-radius: 3px;
-  padding: 1px 5px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .04em;
+  border-radius: 3px; padding: 2px 6px;
 }
-.ev-create      { background: #0d2a3a; color: var(--blue); }
-.ev-enrich      { background: #1e0d2a; color: var(--purple); }
-.ev-validate    { background: #2a2500; color: var(--accent); }
-.ev-create_batch{ background: #0d2a14; color: var(--success); }
-.ev-other       { background: var(--surface2); color: var(--text-dim); }
-.st-success     { color: var(--success); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.st-error       { color: var(--danger); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.ticket-link    { color: var(--purple); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.ticket-link:hover { color: var(--accent-alt); }
+.ev-create       { background: #0d2a3a; color: #7bdff2; }
+.ev-enrich       { background: #1e0d2a; color: var(--purple); }
+.ev-validate     { background: #2a2500; color: #faff69; }
+.ev-create_batch { background: #0d2a14; color: #b5e48c; }
+.ev-other        { background: var(--surface2); color: var(--text-dim); }
+[data-theme="light"] .ev-create       { background: #dbeafe; color: #1d4ed8; }
+[data-theme="light"] .ev-enrich       { background: #ede9fe; color: #6d28d9; }
+[data-theme="light"] .ev-validate     { background: #fef3c7; color: #92400e; }
+[data-theme="light"] .ev-create_batch { background: #dcfce7; color: #15803d; }
+[data-theme="light"] .ev-other        { background: #f1f5f9; color: #64748b; }
 
-.empty { text-align: center; color: var(--text-dim); padding: 64px 0; font-size: 13px; }
-.empty strong { display: block; font-size: 15px; color: var(--text-muted); margin-bottom: 6px; }
+.st-success { color: var(--success); font-family: 'JetBrains Mono', monospace; }
+.st-error   { color: var(--danger);  font-family: 'JetBrains Mono', monospace; }
+.ticket-link { color: var(--purple); text-decoration: none; font-family: 'JetBrains Mono', monospace; }
+.ticket-link:hover { color: var(--accent); }
+
+.empty { text-align: center; color: var(--text-dim); padding: 64px 0; font-size: 14px; }
+.empty strong { display: block; font-size: 16px; color: var(--text-muted); margin-bottom: 8px; }
 
 #toast {
   position: fixed; bottom: 20px; right: 20px;
   background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text); padding: 8px 16px; border-radius: 4px;
-  font-size: 12px; opacity: 0; transition: opacity .2s;
+  color: var(--text); padding: 10px 18px; border-radius: 4px;
+  font-size: 14px; opacity: 0; transition: opacity .2s;
   pointer-events: none; z-index: 9999;
 }
 #toast.show { opacity: 1; }
-#toast.error { background: #2a1212; border-color: var(--danger); color: var(--danger); }
-
-#stat-bar {
-  padding: 6px 20px;
-  font-size: 11px;
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-  display: flex;
-  gap: 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-}
-.stat-val { color: var(--text-muted); }
+#toast.error { background: var(--b-hi-bg); border-color: var(--danger); color: var(--danger); }
 </style>
 </head>
 <body>
 
 <header>
-  <span class="logo">⬡ Ticket System</span>
+  <span class="logo">⬡ Tickets</span>
   <div class="header-sep"></div>
   <a href="/" class="nav-back">← Tickets</a>
   <span class="page-title">Agent Logs</span>
   <div class="spacer"></div>
+  <button class="btn-theme" id="theme-btn" onclick="toggleTheme()">☀ Bright</button>
 </header>
 
 <div class="toolbar">
@@ -202,14 +208,26 @@ tbody td.details { max-width: 280px; white-space: normal; word-break: break-word
 </div>
 
 <div id="log-container"></div>
-
 <div id="toast"></div>
 
 <script>
 const API = '/api';
 let allLogs = [];
 let currentFilter = 'all';
-let refreshTimer;
+
+function initTheme() {
+  const saved = localStorage.getItem('ats-theme') || 'dark';
+  applyTheme(saved);
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ats-theme', theme);
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀ Bright' : '◗ Dark';
+}
 
 async function loadLogs() {
   const res = await fetch(`${API}/logs`);
@@ -241,33 +259,28 @@ function renderLogs() {
     if (currentFilter === 'error') return e.status === 'error';
     return e.event === currentFilter;
   });
-
   const el = document.getElementById('log-container');
   if (!filtered.length) {
-    el.innerHTML = `<div class="empty"><strong>No entries</strong>${currentFilter !== 'all' ? 'No entries for this filter.' : 'Logs will appear here as agents run.'}</div>`;
+    el.innerHTML = `<div class="empty"><strong>No entries</strong>${currentFilter !== 'all' ? 'No entries for this filter.' : 'Logs appear here as agents run.'}</div>`;
     return;
   }
-
   const rows = filtered.map(e => {
-    const evClass = ['create','enrich','validate','create_batch'].includes(e.event)
-      ? `ev-${e.event}` : 'ev-other';
+    const evClass = ['create','enrich','validate','create_batch'].includes(e.event) ? `ev-${e.event}` : 'ev-other';
     const ticketCell = e.ticket_id
       ? `<a href="/tickets/${esc(e.ticket_id)}" class="ticket-link">${esc(e.ticket_id.slice(0,8))}…</a>`
       : '<span style="color:var(--text-dim)">—</span>';
     const dur = e.duration_ms != null ? Math.round(e.duration_ms).toLocaleString() + ' ms' : '—';
     const stClass = e.status === 'success' ? 'st-success' : 'st-error';
-    const stIcon = e.status === 'success' ? '✓' : '✗';
     return `<tr>
       <td class="mono" style="color:var(--text-dim)">${fmtTs(e.timestamp)}</td>
       <td><span class="badge ${evClass}">${esc(e.event)}</span></td>
       <td>${ticketCell}</td>
       <td class="mono" style="color:var(--text-muted)">${esc(e.agent)}</td>
       <td class="num">${dur}</td>
-      <td><span class="${stClass}">${stIcon} ${e.status}</span></td>
+      <td><span class="${stClass}">${e.status === 'success' ? '✓' : '✗'} ${e.status}</span></td>
       <td class="details">${esc(e.details || '')}</td>
     </tr>`;
   }).join('');
-
   el.innerHTML = `<table>
     <thead><tr>
       <th>Timestamp</th><th>Event</th><th>Ticket</th><th>Agent</th><th class="num">Duration</th><th>Status</th><th>Details</th>
@@ -298,8 +311,9 @@ function toast(msg, isError=false) {
   setTimeout(() => el.className = '', 3000);
 }
 
+initTheme();
 loadLogs();
-refreshTimer = setInterval(loadLogs, 15000);
+setInterval(loadLogs, 15000);
 </script>
 </body>
 </html>

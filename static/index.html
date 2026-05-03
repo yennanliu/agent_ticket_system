@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +7,77 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* ── Themes ─────────────────────────────────────────────────────────────── */
 :root {
   --bg:          #181818;
   --bg-alt:      #202020;
   --surface:     #2a2a2a;
   --surface2:    #333333;
   --text:        #f5f5f5;
-  --text-muted:  #a0a0a0;
+  --text-muted:  #b0b0b0;
   --text-dim:    #6a6a6a;
   --border:      #333333;
   --accent:      #faff69;
+  --accent-fg:   #000;
   --accent-alt:  #ff6ec7;
+  --accent-alt-fg: #000;
   --success:     #b5e48c;
   --warning:     #ffa07a;
   --danger:      #ff6b6b;
   --blue:        #7bdff2;
   --purple:      #c7a9ff;
+  /* badge skins */
+  --b-open-bg:   #0d2a3a; --b-open-fg:   #7bdff2;
+  --b-prog-bg:   #2a2500; --b-prog-fg:   #faff69;
+  --b-done-bg:   #0d2a14; --b-done-fg:   #b5e48c;
+  --b-hi-bg:     #2a1212; --b-hi-fg:     #ff6b6b;
+  --b-med-bg:    #2a1c0a; --b-med-fg:    #ffa07a;
+  --b-lo-bg:     #0d2a14; --b-lo-fg:     #b5e48c;
+  --b-crit-bg:   #2a0f2a; --b-crit-fg:   #ff6ec7;
+  --b-chip-bg:   #333333; --b-chip-fg:   #b0b0b0;
+  /* heights for sticky math */
+  --h-header:    48px;
+  --h-toolbar:   52px;
+  --h-statbar:   34px;
 }
+[data-theme="light"] {
+  --bg:          #ffffff;
+  --bg-alt:      #f8f9fa;
+  --surface:     #f1f5f9;
+  --surface2:    #e2e8f0;
+  --text:        #1a1a2e;
+  --text-muted:  #334155;
+  --text-dim:    #94a3b8;
+  --border:      #e2e8f0;
+  --accent:      #4f46e5;
+  --accent-fg:   #fff;
+  --accent-alt:  #9333ea;
+  --accent-alt-fg: #fff;
+  --success:     #16a34a;
+  --warning:     #d97706;
+  --danger:      #dc2626;
+  --blue:        #1d4ed8;
+  --purple:      #6d28d9;
+  --b-open-bg:   #dbeafe; --b-open-fg:   #1d4ed8;
+  --b-prog-bg:   #fef3c7; --b-prog-fg:   #92400e;
+  --b-done-bg:   #dcfce7; --b-done-fg:   #15803d;
+  --b-hi-bg:     #fee2e2; --b-hi-fg:     #991b1b;
+  --b-med-bg:    #ffedd5; --b-med-fg:    #9a3412;
+  --b-lo-bg:     #f0fdf4; --b-lo-fg:     #166534;
+  --b-crit-bg:   #fce7f3; --b-crit-fg:   #9d174d;
+  --b-chip-bg:   #e2e8f0; --b-chip-fg:   #475569;
+}
+
+/* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-variant-numeric: tabular-nums; }
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
+  transition: background .2s, color .2s;
 }
 
 /* ── Header ── */
@@ -39,7 +85,7 @@ header {
   background: var(--bg-alt);
   border-bottom: 1px solid var(--border);
   padding: 0 20px;
-  height: 44px;
+  height: var(--h-header);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -48,163 +94,215 @@ header {
   z-index: 100;
 }
 .logo {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--accent);
   letter-spacing: .04em;
   text-transform: uppercase;
   white-space: nowrap;
 }
-.header-sep { width: 1px; height: 20px; background: var(--border); }
+.header-sep { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
 .nav-link {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted);
   text-decoration: none;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 4px;
 }
 .nav-link:hover { color: var(--text); background: var(--surface); }
 .spacer { flex: 1; }
+
 .btn {
   font-family: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   border: none;
   border-radius: 4px;
-  padding: 5px 12px;
+  padding: 6px 14px;
   cursor: pointer;
   white-space: nowrap;
+  line-height: 1.2;
 }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-primary { background: var(--accent); color: #000; }
-.btn-primary:hover:not(:disabled) { background: #eaef50; }
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover:not(:disabled) { filter: brightness(0.92); }
 .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 .btn-secondary:hover:not(:disabled) { background: var(--surface2); }
 .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
 .btn-ghost:hover:not(:disabled) { color: var(--text); background: var(--surface); }
-.btn-danger-ghost { background: transparent; color: var(--danger); border: 1px solid #4a2020; }
-.btn-danger-ghost:hover:not(:disabled) { background: #2a1515; }
-.btn-violet { background: var(--accent-alt); color: #000; }
-.btn-violet:hover:not(:disabled) { background: #e85fb0; }
+.btn-violet { background: var(--accent-alt); color: var(--accent-alt-fg); }
+.btn-violet:hover:not(:disabled) { filter: brightness(0.9); }
+.btn-theme {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.btn-theme:hover { color: var(--text); background: var(--surface2); }
 
 /* ── Toolbar ── */
 #toolbar {
   background: var(--bg-alt);
   border-bottom: 1px solid var(--border);
-  padding: 8px 20px;
+  padding: 0 20px;
+  height: var(--h-toolbar);
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  position: sticky;
+  top: var(--h-header);
+  z-index: 99;
 }
 #toolbar input[type="text"] {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 14px;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--text);
-  padding: 5px 10px;
+  padding: 6px 12px;
   flex: 1;
-  min-width: 220px;
+  min-width: 0;
   outline: none;
 }
 #toolbar input[type="text"]::placeholder { color: var(--text-dim); }
 #toolbar input[type="text"]:focus { border-color: var(--accent); }
 
-/* ── Main ── */
-main { padding: 0; }
+/* ── Stat bar ── */
+#stat-bar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: var(--h-statbar);
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-dim);
+  position: sticky;
+  top: calc(var(--h-header) + var(--h-toolbar));
+  z-index: 98;
+}
+.stat-val { color: var(--text-muted); font-weight: 500; }
 
 /* ── Table ── */
-.table-wrap {
-  overflow-x: auto;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
 thead th {
   background: var(--bg-alt);
   color: var(--text-dim);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: .06em;
-  padding: 0 12px;
-  height: 32px;
+  letter-spacing: .05em;
+  padding: 0 14px;
+  height: 36px;
   text-align: left;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
   position: sticky;
-  top: 44px;
+  top: calc(var(--h-header) + var(--h-toolbar) + var(--h-statbar));
+  z-index: 97;
   white-space: nowrap;
   user-select: none;
 }
 thead th.num { text-align: right; }
-thead th.check-col { width: 36px; padding: 0 8px; }
-tbody tr { height: 30px; }
+thead th.check-col { width: 40px; padding: 0 10px; }
+
+tbody tr { height: 36px; }
 tbody tr:nth-child(even) td { background: var(--bg-alt); }
 tbody tr:hover td { background: var(--surface) !important; }
 tbody td {
-  padding: 0 12px;
-  border-bottom: 1px solid #1e1e1e;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--bg-alt);
   vertical-align: middle;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text);
+  font-size: 14px;
 }
-tbody td.check-col { padding: 0 8px; }
-tbody td.title-col { max-width: 340px; cursor: pointer; }
-tbody td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+[data-theme="dark"] tbody td { border-bottom-color: #1e1e1e; }
+tbody td.check-col { padding: 0 10px; }
+tbody td.title-col { max-width: 320px; }
+tbody td.num {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+}
 tbody tr:last-child td { border-bottom: none; }
 
 input[type="checkbox"] {
   accent-color: var(--accent);
-  width: 13px;
-  height: 13px;
+  width: 14px; height: 14px;
   cursor: pointer;
 }
 
-/* ── Title link ── */
-.ticket-link { color: var(--text); text-decoration: none; font-weight: 500; }
+/* ── Ticket link ── */
+.ticket-link { color: var(--text); text-decoration: none; font-weight: 500; font-size: 14px; }
 .ticket-link:hover { color: var(--accent); }
-.enriched-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); margin-left: 5px; vertical-align: middle; }
+.enriched-dot {
+  display: inline-block; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--purple);
+  margin-left: 6px; vertical-align: middle;
+}
 
 /* ── Badges ── */
 .badge {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: .04em;
   border-radius: 3px;
-  padding: 1px 5px;
+  padding: 2px 7px;
   white-space: nowrap;
+  line-height: 1.5;
 }
-.s-open       { background: #0d2a3a; color: var(--blue); }
-.s-in_progress{ background: #2a2500; color: var(--accent); }
-.s-done       { background: #0d2a14; color: var(--success); }
-.p-high       { background: #2a1212; color: var(--danger); }
-.p-medium     { background: #2a1c0a; color: var(--warning); }
-.p-low        { background: #0d2a14; color: var(--success); }
-.i-critical   { color: var(--accent-alt); }
-.i-high       { color: var(--danger); }
-.i-medium     { color: var(--warning); }
-.i-low        { color: var(--success); }
-.val-pass     { color: var(--success); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.val-fail     { color: var(--danger); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.val-none     { color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.label-chip   { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); background: var(--surface2); border-radius: 3px; padding: 1px 5px; margin-right: 2px; }
-.repo-chip    { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); }
+.s-open        { background: var(--b-open-bg); color: var(--b-open-fg); }
+.s-in_progress { background: var(--b-prog-bg); color: var(--b-prog-fg); }
+.s-done        { background: var(--b-done-bg); color: var(--b-done-fg); }
+.p-high        { background: var(--b-hi-bg);   color: var(--b-hi-fg); }
+.p-medium      { background: var(--b-med-bg);  color: var(--b-med-fg); }
+.p-low         { background: var(--b-lo-bg);   color: var(--b-lo-fg); }
+.i-critical    { background: var(--b-crit-bg); color: var(--b-crit-fg); }
+.i-high        { background: var(--b-hi-bg);   color: var(--b-hi-fg); }
+.i-medium      { background: var(--b-med-bg);  color: var(--b-med-fg); }
+.i-low         { background: var(--b-lo-bg);   color: var(--b-lo-fg); }
+.label-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--b-chip-fg);
+  background: var(--b-chip-bg);
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-right: 3px;
+}
+.repo-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+  display: block;
+  margin-top: 2px;
+}
+.val-pass { color: var(--success); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+.val-fail { color: var(--danger);  font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+.val-none { color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
 
-/* ── Action row ── */
-.action-btns { display: flex; gap: 4px; align-items: center; }
+/* ── Action buttons ── */
+.action-btns { display: flex; gap: 5px; align-items: center; }
 .btn-xs {
   font-family: inherit;
-  font-size: 11px;
+  font-size: 13px;
   border-radius: 3px;
-  padding: 2px 7px;
+  padding: 3px 9px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-muted);
@@ -212,148 +310,100 @@ input[type="checkbox"] {
   white-space: nowrap;
 }
 .btn-xs:hover { background: var(--surface); color: var(--text); }
-.btn-xs.enrich { color: var(--purple); border-color: #3d2e5a; }
-.btn-xs.enrich:hover { background: #221833; }
-.btn-xs.del { color: var(--danger); border-color: #3a1515; }
-.btn-xs.del:hover { background: #1e0f0f; }
-.btn-xs:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-xs.enrich { color: var(--purple); border-color: var(--border); }
+.btn-xs.enrich:hover { background: var(--surface); }
+.btn-xs.del { color: var(--danger); }
+.btn-xs.del:hover { background: var(--surface); }
+.btn-xs:disabled { opacity: 0.35; cursor: not-allowed; }
 
-/* ── Empty state ── */
-.empty {
-  text-align: center;
-  color: var(--text-dim);
-  padding: 64px 0;
-  font-size: 13px;
-}
-.empty strong { display: block; font-size: 15px; color: var(--text-muted); margin-bottom: 6px; }
+/* ── Empty ── */
+.empty { text-align: center; color: var(--text-dim); padding: 72px 0; font-size: 14px; }
+.empty strong { display: block; font-size: 16px; color: var(--text-muted); margin-bottom: 8px; }
 
 /* ── Spinner ── */
 .spinner {
-  display: inline-block;
-  width: 10px; height: 10px;
-  border: 1.5px solid rgba(250,255,105,.2);
+  display: inline-block; width: 12px; height: 12px;
+  border: 2px solid rgba(128,128,128,.2);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin .5s linear infinite;
-  margin-right: 5px;
-  vertical-align: middle;
+  margin-right: 6px; vertical-align: middle;
 }
-.spinner.dark {
-  border-color: rgba(199,169,255,.2);
-  border-top-color: var(--purple);
-}
+.spinner.dark { border-top-color: var(--purple); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Toast ── */
 #toast {
   position: fixed; bottom: 20px; right: 20px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity .2s;
-  pointer-events: none;
-  z-index: 9999;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 18px; border-radius: 4px;
+  font-size: 14px; opacity: 0; transition: opacity .2s;
+  pointer-events: none; z-index: 9999;
 }
 #toast.show { opacity: 1; }
-#toast.error { background: #2a1212; border-color: var(--danger); color: var(--danger); }
-#toast.ok { border-left: 3px solid var(--success); }
+#toast.error { background: var(--b-hi-bg); border-color: var(--danger); color: var(--danger); }
 
 /* ── Modals ── */
 .modal-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,.7);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
+  background: rgba(0,0,0,.65);
+  z-index: 200; align-items: center; justify-content: center;
 }
 .modal-overlay.open { display: flex; }
 .modal {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 24px;
-  width: 500px;
-  max-width: 95vw;
-  max-height: 92vh;
-  overflow-y: auto;
-  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: 6px; padding: 24px;
+  width: 520px; max-width: 95vw; max-height: 92vh; overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,.5);
 }
-.modal h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 18px; color: var(--text); }
 .modal label {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: var(--text-dim);
-  margin-top: 14px;
-  margin-bottom: 4px;
+  display: block; font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em;
+  color: var(--text-dim); margin-top: 14px; margin-bottom: 5px;
 }
 .modal input[type="text"],
 .modal textarea,
 .modal select {
-  width: 100%;
-  font-family: inherit;
-  font-size: 13px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  padding: 7px 10px;
-  outline: none;
+  width: 100%; font-family: inherit; font-size: 14px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text); padding: 8px 12px; outline: none;
 }
 .modal input[type="text"]:focus,
 .modal textarea:focus,
 .modal select:focus { border-color: var(--accent); }
-.modal input[type="text"]::placeholder,
-.modal textarea::placeholder { color: var(--text-dim); }
-.modal textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+.modal input::placeholder, .modal textarea::placeholder { color: var(--text-dim); }
+.modal textarea { resize: vertical; min-height: 72px; font-family: inherit; }
 .modal select option { background: var(--bg-alt); }
-.modal-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-
-/* ── Stat bar ── */
-#stat-bar {
-  padding: 6px 20px;
-  font-size: 11px;
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-  display: flex;
-  gap: 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-}
-.stat-item { display: flex; gap: 5px; align-items: center; }
-.stat-val { color: var(--text-muted); }
+.modal-hint { font-size: 14px; color: var(--text-dim); margin-top: 5px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
 </style>
 </head>
 <body>
 
 <header>
-  <span class="logo">⬡ Ticket System</span>
+  <span class="logo">⬡ Tickets</span>
   <div class="header-sep"></div>
   <a href="/logs" class="nav-link">Logs</a>
   <div class="spacer"></div>
+  <button class="btn-theme" id="theme-btn" onclick="toggleTheme()">☀ Bright</button>
+  <div class="header-sep"></div>
   <button class="btn btn-ghost" onclick="openBatchCreate()">Batch Create</button>
   <button class="btn btn-primary" onclick="openCreate()">+ New Ticket</button>
 </header>
 
 <div id="toolbar">
-  <input id="repo-input" type="text" placeholder="Repo path (../my-project) or GitHub URL" style="flex:2" />
+  <input id="repo-input" type="text" placeholder="Repo path (../my-project) or GitHub URL" />
   <button class="btn btn-primary" id="generate-btn" onclick="generateTickets()">Generate from Repo</button>
   <div class="header-sep"></div>
   <button class="btn btn-violet" id="enrich-all-btn" onclick="enrichAll()">✦ Enrich Selected</button>
 </div>
 
 <div id="stat-bar">
-  <span class="stat-item">Tickets: <span class="stat-val" id="stat-total">—</span></span>
-  <span class="stat-item">Open: <span class="stat-val" id="stat-open">—</span></span>
-  <span class="stat-item">Validated: <span class="stat-val" id="stat-validated">—</span></span>
-  <span class="stat-item">Pass rate: <span class="stat-val" id="stat-passrate">—</span></span>
+  <span>Tickets: <span class="stat-val" id="stat-total">—</span></span>
+  <span>Open: <span class="stat-val" id="stat-open">—</span></span>
+  <span>Validated: <span class="stat-val" id="stat-validated">—</span></span>
+  <span>Pass rate: <span class="stat-val" id="stat-passrate">—</span></span>
 </div>
 
 <main>
@@ -370,11 +420,11 @@ input[type="checkbox"] {
     <label>Title *</label>
     <input id="f-title" type="text" placeholder="Short, actionable title" />
     <label>Business Requirement</label>
-    <textarea id="f-business-req" style="min-height:56px" placeholder="The business need this ticket addresses"></textarea>
+    <textarea id="f-business-req" style="min-height:60px" placeholder="The business need this ticket addresses"></textarea>
     <label>Stakeholder</label>
     <input id="f-stakeholder" type="text" placeholder="e.g. Product, Engineering, Customer" />
     <label>User Story</label>
-    <textarea id="f-user-story" style="min-height:56px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
+    <textarea id="f-user-story" style="min-height:60px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
     <label>Description</label>
     <textarea id="f-desc" placeholder="What needs to be done? Leave blank — Enrich will fill it."></textarea>
     <p class="modal-hint">Leave blank and use ✦ Enrich to let AI fill this in.</p>
@@ -413,7 +463,7 @@ input[type="checkbox"] {
   <div class="modal">
     <h2>Batch Create Tickets</h2>
     <label>Ticket titles — one per line</label>
-    <textarea id="batch-titles" style="min-height:140px;font-family:'JetBrains Mono',monospace;font-size:12px" placeholder="Fix login bug&#10;Add dark mode&#10;Improve test coverage&#10;Update API docs"></textarea>
+    <textarea id="batch-titles" style="min-height:150px;font-family:'JetBrains Mono',monospace;font-size:14px" placeholder="Fix login bug&#10;Add dark mode&#10;Improve test coverage&#10;Update API docs"></textarea>
     <label>Source Repo (optional)</label>
     <input id="batch-repo" type="text" placeholder="../my-project or https://github.com/..." />
     <p class="modal-hint">Descriptions will be empty — run ✦ Enrich after to let AI fill them in.</p>
@@ -430,6 +480,22 @@ input[type="checkbox"] {
 const API = '/api';
 let enrichingIds = new Set();
 let currentTickets = [];
+
+// ── Theme ─────────────────────────────────────────────────────────────────────
+
+function initTheme() {
+  const saved = localStorage.getItem('ats-theme') || 'dark';
+  applyTheme(saved);
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ats-theme', theme);
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀ Bright' : '◗ Dark';
+}
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -463,7 +529,7 @@ async function generateTickets() {
     });
     if (!res.ok) throw new Error(await res.text());
     const tickets = await res.json();
-    toast(`Created ${tickets.length} ticket(s)`, false);
+    toast(`Created ${tickets.length} ticket(s)`);
     loadTickets();
   } catch(e) { toast('Failed: ' + e.message, true); }
   finally { btn.disabled = false; btn.textContent = 'Generate from Repo'; }
@@ -477,17 +543,15 @@ async function enrichAll() {
   btn.innerHTML = '<span class="spinner"></span>Enriching…';
   try {
     const body = {};
-    if (globalSource) {
-      if (globalSource.startsWith('http')) body.repo_url = globalSource;
-      else body.repo_path = globalSource;
-    }
+    if (globalSource.startsWith('http')) body.repo_url = globalSource;
+    else if (globalSource) body.repo_path = globalSource;
     if (checked.length) body.ticket_ids = checked;
     const res = await fetch(`${API}/agents/enrich-batch`, {
       method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
     });
     if (!res.ok) throw new Error(await res.text());
     const tickets = await res.json();
-    toast(`Enriched ${tickets.length} ticket(s)`, false);
+    toast(`Enriched ${tickets.length} ticket(s)`);
     loadTickets();
   } catch(e) { toast('Enrich failed: ' + e.message, true); }
   finally { btn.disabled = false; btn.innerHTML = '✦ Enrich Selected'; }
@@ -503,7 +567,7 @@ async function enrichTicket(id, fallbackSource) {
       method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
     });
     if (!res.ok) throw new Error(await res.text());
-    toast('Enriched', false);
+    toast('Enriched');
     loadTickets();
   } catch(e) { toast('Enrich failed: ' + e.message, true); }
   finally { enrichingIds.delete(id); setEnrichLoading(id, false); }
@@ -516,7 +580,7 @@ async function deleteTicket(id, title) {
   else toast('Delete failed', true);
 }
 
-// ── Create / Edit modal ───────────────────────────────────────────────────────
+// ── Modals ────────────────────────────────────────────────────────────────────
 
 function openCreate() {
   document.getElementById('modal-title').textContent = 'New Ticket';
@@ -568,8 +632,6 @@ async function submitTicket() {
   else toast('Save failed', true);
 }
 
-// ── Batch Create modal ────────────────────────────────────────────────────────
-
 function openBatchCreate() {
   document.getElementById('batch-titles').value = '';
   document.getElementById('batch-repo').value = '';
@@ -588,9 +650,8 @@ async function submitBatch() {
     method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
   });
   if (res.ok) {
-    const tickets = await res.json();
     closeBatchModal();
-    toast(`Created ${tickets.length} ticket(s)`);
+    toast(`Created ${(await res.json()).length} ticket(s)`);
     loadTickets();
   } else toast('Batch create failed', true);
 }
@@ -605,7 +666,8 @@ function renderTable(tickets) {
   }
 
   const rows = tickets.map(t => {
-    const enrichedDot = (t.acceptance_criteria && t.acceptance_criteria.length) ? '<span class="enriched-dot" title="Enriched"></span>' : '';
+    const dot = (t.acceptance_criteria && t.acceptance_criteria.length)
+      ? '<span class="enriched-dot" title="Enriched"></span>' : '';
     const valCell = t.validation_passed === true
       ? `<span class="val-pass">✓ ${pct(t.validation_score)}</span>`
       : t.validation_passed === false
@@ -613,22 +675,21 @@ function renderTable(tickets) {
         : '<span class="val-none">—</span>';
     const labels = (t.labels||[]).map(l=>`<span class="label-chip">${esc(l)}</span>`).join('');
     const repo = t.source_repo
-      ? `<span class="repo-chip" title="${esc(t.source_repo)}">${repoShort(t.source_repo)}</span>`
-      : '';
+      ? `<span class="repo-chip">${repoShort(t.source_repo)}</span>` : '';
     const safeSource = esc(t.source_repo || '').replace(/'/g, "\\'");
     const imp = t.importance || 'medium';
     return `<tr>
       <td class="check-col"><input type="checkbox" class="row-check" data-id="${t.id}"></td>
-      <td class="title-col" style="max-width:300px">
-        <a href="/tickets/${t.id}" class="ticket-link">${esc(t.title)}${enrichedDot}</a>
-        ${repo ? `<br><span style="margin-top:1px;display:block">${repo}</span>` : ''}
+      <td class="title-col">
+        <a href="/tickets/${t.id}" class="ticket-link">${esc(t.title)}${dot}</a>
+        ${repo}
       </td>
       <td><span class="badge s-${t.status}">${t.status.replace('_',' ')}</span></td>
       <td><span class="badge p-${t.priority}">${t.priority}</span></td>
-      <td><span class="i-${imp}" style="font-size:11px;font-weight:500">${imp}</span></td>
+      <td><span class="badge i-${imp}">${imp}</span></td>
       <td class="num">${valCell}</td>
       <td>${labels}</td>
-      <td class="num" style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px">${fmtDate(t.created_at)}</td>
+      <td class="num" style="color:var(--text-dim);font-family:'JetBrains Mono',monospace">${fmtDate(t.created_at)}</td>
       <td>
         <div class="action-btns">
           <button class="btn-xs" onclick='openEdit(${JSON.stringify(t)})'>Edit</button>
@@ -644,14 +705,8 @@ function renderTable(tickets) {
   el.innerHTML = `<table>
     <thead><tr>
       <th class="check-col"><input type="checkbox" id="select-all" onchange="toggleAll(this)" title="Select all"></th>
-      <th>Title</th>
-      <th>Status</th>
-      <th>Priority</th>
-      <th>Importance</th>
-      <th class="num">Validation</th>
-      <th>Labels</th>
-      <th class="num">Created</th>
-      <th>Actions</th>
+      <th>Title</th><th>Status</th><th>Priority</th><th>Importance</th>
+      <th class="num">Validation</th><th>Labels</th><th class="num">Created</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
@@ -660,18 +715,15 @@ function renderTable(tickets) {
 function toggleAll(master) {
   document.querySelectorAll('.row-check').forEach(cb => { cb.checked = master.checked; });
 }
-
 function setEnrichLoading(id, loading) {
   const btn = document.getElementById(`enrich-btn-${id}`);
   if (!btn) return;
   btn.disabled = loading;
   btn.innerHTML = loading ? '<span class="spinner dark"></span>…' : '✦ Enrich';
 }
-
 function pct(score) {
-  return score !== null && score !== undefined ? Math.round(score * 100) + '%' : '—';
+  return (score !== null && score !== undefined) ? Math.round(score * 100) + '%' : '—';
 }
-
 function repoShort(s) {
   if (!s) return '';
   if (s.startsWith('http')) {
@@ -680,23 +732,25 @@ function repoShort(s) {
       return '⎇ ' + (parts.length >= 2 ? parts.slice(-2).join('/') : s);
     } catch { return s; }
   }
-  return '📁 ' + s.split('/').pop();
+  return '📁 ' + (s.split('/').pop() || s);
 }
-
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function fmtDate(s) { return s ? new Date(s).toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit'}) : '—'; }
-
+function fmtDate(s) {
+  return s ? new Date(s).toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit'}) : '—';
+}
 function toast(msg, isError=false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.className = 'show' + (isError ? ' error' : ' ok');
+  el.className = 'show' + (isError ? ' error' : '');
   setTimeout(() => el.className = '', 3000);
 }
 
 document.getElementById('modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeModal(); });
 document.getElementById('batch-modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeBatchModal(); });
+
+initTheme();
 loadTickets();
 </script>
 </body>

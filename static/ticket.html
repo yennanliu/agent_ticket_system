@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +7,71 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* ── Themes ── */
 :root {
   --bg:          #181818;
   --bg-alt:      #202020;
   --surface:     #2a2a2a;
   --surface2:    #333333;
   --text:        #f5f5f5;
-  --text-muted:  #a0a0a0;
+  --text-muted:  #b0b0b0;
   --text-dim:    #6a6a6a;
   --border:      #333333;
   --accent:      #faff69;
+  --accent-fg:   #000;
   --accent-alt:  #ff6ec7;
+  --accent-alt-fg: #000;
   --success:     #b5e48c;
   --warning:     #ffa07a;
   --danger:      #ff6b6b;
   --blue:        #7bdff2;
   --purple:      #c7a9ff;
+  --b-open-bg:   #0d2a3a; --b-open-fg:   #7bdff2;
+  --b-prog-bg:   #2a2500; --b-prog-fg:   #faff69;
+  --b-done-bg:   #0d2a14; --b-done-fg:   #b5e48c;
+  --b-hi-bg:     #2a1212; --b-hi-fg:     #ff6b6b;
+  --b-med-bg:    #2a1c0a; --b-med-fg:    #ffa07a;
+  --b-lo-bg:     #0d2a14; --b-lo-fg:     #b5e48c;
+  --b-crit-bg:   #2a0f2a; --b-crit-fg:   #ff6ec7;
+  --b-chip-bg:   #333333; --b-chip-fg:   #b0b0b0;
 }
+[data-theme="light"] {
+  --bg:          #ffffff;
+  --bg-alt:      #f8f9fa;
+  --surface:     #f1f5f9;
+  --surface2:    #e2e8f0;
+  --text:        #1a1a2e;
+  --text-muted:  #334155;
+  --text-dim:    #94a3b8;
+  --border:      #e2e8f0;
+  --accent:      #4f46e5;
+  --accent-fg:   #fff;
+  --accent-alt:  #9333ea;
+  --accent-alt-fg: #fff;
+  --success:     #16a34a;
+  --warning:     #d97706;
+  --danger:      #dc2626;
+  --blue:        #1d4ed8;
+  --purple:      #6d28d9;
+  --b-open-bg:   #dbeafe; --b-open-fg:   #1d4ed8;
+  --b-prog-bg:   #fef3c7; --b-prog-fg:   #92400e;
+  --b-done-bg:   #dcfce7; --b-done-fg:   #15803d;
+  --b-hi-bg:     #fee2e2; --b-hi-fg:     #991b1b;
+  --b-med-bg:    #ffedd5; --b-med-fg:    #9a3412;
+  --b-lo-bg:     #f0fdf4; --b-lo-fg:     #166534;
+  --b-crit-bg:   #fce7f3; --b-crit-fg:   #9d174d;
+  --b-chip-bg:   #e2e8f0; --b-chip-fg:   #475569;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-variant-numeric: tabular-nums; }
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
+  transition: background .2s, color .2s;
 }
 
 /* ── Header ── */
@@ -39,7 +79,7 @@ header {
   background: var(--bg-alt);
   border-bottom: 1px solid var(--border);
   padding: 0 20px;
-  height: 44px;
+  height: 48px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -47,346 +87,240 @@ header {
   top: 0;
   z-index: 100;
 }
-.logo { font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
-.header-sep { width: 1px; height: 20px; background: var(--border); }
-.breadcrumb { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+.logo { font-size: 14px; font-weight: 600; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
+.header-sep { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
+.breadcrumb { font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
 .breadcrumb a { color: var(--text-muted); text-decoration: none; }
 .breadcrumb a:hover { color: var(--text); }
-.breadcrumb span { color: var(--text-dim); }
-#header-title { font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 360px; }
+#header-title { font-size: 14px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 400px; }
 .spacer { flex: 1; }
-.nav-link { font-size: 12px; color: var(--text-dim); text-decoration: none; padding: 4px 8px; border-radius: 4px; }
+.nav-link { font-size: 14px; color: var(--text-dim); text-decoration: none; padding: 4px 10px; border-radius: 4px; }
 .nav-link:hover { color: var(--text); background: var(--surface); }
-
+.btn-theme {
+  font-size: 13px; padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-muted); cursor: pointer; font-family: inherit;
+}
+.btn-theme:hover { color: var(--text); background: var(--surface2); }
 .btn {
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  border: none;
-  border-radius: 4px;
-  padding: 5px 12px;
-  cursor: pointer;
-  white-space: nowrap;
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  border: none; border-radius: 4px; padding: 6px 16px;
+  cursor: pointer; white-space: nowrap; line-height: 1.2;
 }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-primary { background: var(--accent); color: #000; }
-.btn-primary:hover:not(:disabled) { background: #eaef50; }
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover:not(:disabled) { filter: brightness(0.92); }
 .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 .btn-secondary:hover:not(:disabled) { background: var(--surface2); }
 .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
 .btn-ghost:hover:not(:disabled) { color: var(--text); background: var(--surface); }
-.btn-danger { background: transparent; color: var(--danger); border: 1px solid #3a1515; }
-.btn-danger:hover:not(:disabled) { background: #1e0f0f; }
-.btn-violet { background: var(--accent-alt); color: #000; }
-.btn-violet:hover:not(:disabled) { background: #e85fb0; }
-.btn-teal { background: #0d766e; color: #fff; border: none; }
-.btn-teal:hover:not(:disabled) { background: #0b6158; }
+.btn-teal { background: #0f766e; color: #fff; }
+.btn-teal:hover:not(:disabled) { background: #0d6662; }
+.btn-violet { background: var(--accent-alt); color: var(--accent-alt-fg); }
+.btn-violet:hover:not(:disabled) { filter: brightness(0.9); }
+.btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--b-hi-bg); }
+.btn-danger:hover:not(:disabled) { background: var(--b-hi-bg); }
 
-/* ── Layout ── */
-#not-found {
-  text-align: center; padding: 80px 0; color: var(--text-dim);
-}
-#not-found h2 { font-size: 20px; color: var(--text-muted); margin-bottom: 8px; }
+/* ── Not found ── */
+#not-found { text-align: center; padding: 80px 0; color: var(--text-dim); }
+#not-found h2 { font-size: 22px; color: var(--text-muted); margin-bottom: 10px; }
 
+/* ── Page layout ── */
 .page-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 0;
+  grid-template-columns: 1fr 300px;
+  gap: 0 20px;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 20px 20px 60px;
+  padding: 24px 20px 60px;
   align-items: start;
 }
 @media (max-width: 800px) {
   .page-layout { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-}
-
-/* ── Action bar ── */
-.action-bar {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
+  .sidebar { order: -1; }
 }
 
 /* ── Source row ── */
 .source-row {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 8px 12px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 16px;
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: 4px; padding: 10px 14px;
+  display: flex; gap: 10px; align-items: center; margin-bottom: 14px;
 }
 .source-row label {
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: var(--text-dim);
-  white-space: nowrap;
+  font-size: 14px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .04em; color: var(--text-dim); white-space: nowrap;
 }
 .source-row input {
-  flex: 1;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  padding: 5px 8px;
-  outline: none;
+  flex: 1; font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text); padding: 6px 10px; outline: none;
 }
 .source-row input:focus { border-color: var(--accent); }
 .source-row input::placeholder { color: var(--text-dim); }
 
+/* ── Action bar ── */
+.action-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+
 /* ── Cards ── */
 .card {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  margin-bottom: 12px;
-  overflow: hidden;
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: 6px; margin-bottom: 14px; overflow: hidden;
 }
 .card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 18px; border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
 .card-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text-dim);
+  font-size: 14px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--text-dim);
 }
-.card-body { padding: 16px; }
+.card-body { padding: 18px; }
 
 /* ── Ticket title ── */
-.ticket-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.3;
-  margin-bottom: 12px;
-}
+.ticket-title { font-size: 22px; font-weight: 600; line-height: 1.3; margin-bottom: 14px; }
 
-/* ── Meta badges ── */
-.meta-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+/* ── Meta ── */
+.meta-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
 .badge {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  border-radius: 3px;
-  padding: 2px 6px;
-  white-space: nowrap;
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .04em; border-radius: 3px; padding: 3px 8px;
+  white-space: nowrap; line-height: 1.4;
 }
-.s-open       { background: #0d2a3a; color: var(--blue); }
-.s-in_progress{ background: #2a2500; color: var(--accent); }
-.s-done       { background: #0d2a14; color: var(--success); }
-.p-high       { background: #2a1212; color: var(--danger); }
-.p-medium     { background: #2a1c0a; color: var(--warning); }
-.p-low        { background: #0d2a14; color: var(--success); }
-.i-critical   { background: #2a0f2a; color: var(--accent-alt); }
-.i-high       { background: #2a1212; color: var(--danger); }
-.i-medium     { background: #2a1c0a; color: var(--warning); }
-.i-low        { background: #0d2a14; color: var(--success); }
-.label-chip   { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); background: var(--surface2); border-radius: 3px; padding: 2px 6px; }
-.val-badge-pass { background: #0d2a14; color: var(--success); font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 3px; padding: 2px 7px; font-weight: 500; }
-.val-badge-fail { background: #2a1212; color: var(--danger); font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 3px; padding: 2px 7px; font-weight: 500; }
-.val-badge-pending { background: var(--surface2); color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 3px; padding: 2px 7px; }
+.s-open        { background: var(--b-open-bg); color: var(--b-open-fg); }
+.s-in_progress { background: var(--b-prog-bg); color: var(--b-prog-fg); }
+.s-done        { background: var(--b-done-bg); color: var(--b-done-fg); }
+.p-high        { background: var(--b-hi-bg);   color: var(--b-hi-fg); }
+.p-medium      { background: var(--b-med-bg);  color: var(--b-med-fg); }
+.p-low         { background: var(--b-lo-bg);   color: var(--b-lo-fg); }
+.i-critical    { background: var(--b-crit-bg); color: var(--b-crit-fg); }
+.i-high        { background: var(--b-hi-bg);   color: var(--b-hi-fg); }
+.i-medium      { background: var(--b-med-bg);  color: var(--b-med-fg); }
+.i-low         { background: var(--b-lo-bg);   color: var(--b-lo-fg); }
+.label-chip {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--b-chip-fg); background: var(--b-chip-bg);
+  border-radius: 3px; padding: 2px 7px;
+}
+.val-badge-pass { background: var(--b-done-bg); color: var(--b-done-fg); font-family: 'JetBrains Mono', monospace; font-size: 12px; border-radius: 3px; padding: 3px 8px; font-weight: 500; }
+.val-badge-fail { background: var(--b-hi-bg); color: var(--b-hi-fg); font-family: 'JetBrains Mono', monospace; font-size: 12px; border-radius: 3px; padding: 3px 8px; font-weight: 500; }
+.val-badge-pending { background: var(--surface2); color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 12px; border-radius: 3px; padding: 3px 8px; }
 
 /* ── Fields ── */
-.field { margin-bottom: 14px; }
+.field { margin-bottom: 16px; }
 .field:last-child { margin-bottom: 0; }
 .field-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--text-dim);
-  margin-bottom: 5px;
+  font-size: 14px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--text-dim); margin-bottom: 6px;
 }
-.field-value {
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-.field-empty {
-  font-size: 12px;
-  color: var(--text-dim);
-  font-style: italic;
-}
+.field-value { font-size: 14px; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap; }
+.field-empty { font-size: 14px; color: var(--text-dim); font-style: italic; }
 
-/* ── Criteria list ── */
+/* ── Lists ── */
 ul.criteria-list { list-style: none; padding: 0; }
 ul.criteria-list li {
-  display: flex;
-  gap: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid #1e1e1e;
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.4;
+  display: flex; gap: 10px; padding: 7px 0;
+  border-bottom: 1px solid var(--surface2);
+  font-size: 14px; color: var(--text-muted); line-height: 1.5;
 }
 ul.criteria-list li:last-child { border-bottom: none; }
 ul.criteria-list li::before { content: "✓"; color: var(--success); font-weight: 700; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
-
-/* ── Files list ── */
 ul.files-list { list-style: none; padding: 0; }
-ul.files-list li {
-  padding: 5px 0;
-  border-bottom: 1px solid #1e1e1e;
-  font-size: 12px;
-}
+ul.files-list li { padding: 6px 0; border-bottom: 1px solid var(--surface2); font-size: 14px; }
 ul.files-list li:last-child { border-bottom: none; }
 code.file {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--blue);
-  background: #0d1e26;
-  border-radius: 3px;
-  padding: 1px 5px;
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  color: var(--blue); background: var(--b-open-bg); border-radius: 3px; padding: 1px 6px;
 }
+[data-theme="light"] code.file { background: #dbeafe; }
 
 /* ── Refs table ── */
-.refs-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.refs-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .refs-table th {
-  text-align: left;
-  padding: 6px 8px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--text-dim);
+  text-align: left; padding: 7px 10px; font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em; color: var(--text-dim);
   border-bottom: 1px solid var(--border);
 }
-.refs-table td { padding: 7px 8px; border-bottom: 1px solid #1e1e1e; vertical-align: top; }
+.refs-table td { padding: 8px 10px; border-bottom: 1px solid var(--surface2); vertical-align: top; }
 .refs-table tr:last-child td { border-bottom: none; }
-.ref-type-badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; border-radius: 3px; padding: 1px 5px; text-transform: uppercase; }
-.ref-code   { background: #0d2a3a; color: var(--blue); }
-.ref-doc    { background: #0d2a14; color: var(--success); }
-.ref-design { background: #2a0f2a; color: var(--accent-alt); }
-.ref-link   { color: var(--purple); word-break: break-all; font-size: 11px; }
+.ref-type-badge { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; border-radius: 3px; padding: 2px 6px; text-transform: uppercase; }
+.ref-code   { background: var(--b-open-bg); color: var(--blue); }
+.ref-doc    { background: var(--b-done-bg); color: var(--success); }
+.ref-design { background: var(--b-crit-bg); color: var(--accent-alt); }
+.ref-link   { color: var(--purple); word-break: break-all; font-size: 14px; }
 .ref-link:hover { color: var(--accent-alt); }
 
 /* ── Validation bar ── */
-.val-bar-wrap {
-  background: var(--surface2);
-  border-radius: 2px;
-  height: 6px;
-  margin: 8px 0;
-  overflow: hidden;
-}
+.val-bar-wrap { background: var(--surface2); border-radius: 2px; height: 6px; margin: 10px 0; overflow: hidden; }
 .val-bar { height: 100%; border-radius: 2px; transition: width .4s; }
 .bar-pass { background: var(--success); }
 .bar-fail { background: var(--danger); }
 
 /* ── Sidebar ── */
-.sidebar { padding-left: 16px; }
-.sidebar .card { margin-bottom: 10px; }
-.meta-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid #1e1e1e; font-size: 12px; }
+.meta-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--surface2); font-size: 14px; }
 .meta-item:last-child { border-bottom: none; }
-.meta-key { color: var(--text-dim); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; }
-.meta-val { color: var(--text-muted); text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta-key { color: var(--text-dim); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.meta-val { color: var(--text-muted); text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 13px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .meta-val a { color: var(--purple); text-decoration: none; }
 .meta-val a:hover { color: var(--accent-alt); }
 
 /* ── Spinner ── */
 .spinner {
-  display: inline-block;
-  width: 11px; height: 11px;
-  border: 1.5px solid rgba(250,255,105,.2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .5s linear infinite;
-  margin-right: 5px;
-  vertical-align: middle;
+  display: inline-block; width: 12px; height: 12px;
+  border: 2px solid rgba(128,128,128,.2); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin .5s linear infinite;
+  margin-right: 6px; vertical-align: middle;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Toast ── */
 #toast {
   position: fixed; bottom: 20px; right: 20px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity .2s;
-  pointer-events: none;
-  z-index: 9999;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 18px; border-radius: 4px;
+  font-size: 14px; opacity: 0; transition: opacity .2s;
+  pointer-events: none; z-index: 9999;
 }
 #toast.show { opacity: 1; }
-#toast.error { background: #2a1212; border-color: var(--danger); color: var(--danger); }
+#toast.error { background: var(--b-hi-bg); border-color: var(--danger); color: var(--danger); }
 
 /* ── Modal ── */
 .modal-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,.7);
-  z-index: 200; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.65); z-index: 200;
+  align-items: center; justify-content: center;
 }
 .modal-overlay.open { display: flex; }
 .modal {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 24px;
-  width: 540px;
-  max-width: 95vw;
-  max-height: 92vh;
-  overflow-y: auto;
-  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+  background: var(--bg-alt); border: 1px solid var(--border); border-radius: 6px;
+  padding: 24px; width: 540px; max-width: 95vw; max-height: 92vh;
+  overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,.5);
 }
-.modal h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 18px; }
 .modal label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: var(--text-dim);
-  margin-top: 14px;
-  margin-bottom: 4px;
+  display: block; font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em;
+  color: var(--text-dim); margin-top: 14px; margin-bottom: 5px;
 }
 .modal input[type="text"],
 .modal textarea,
 .modal select {
-  width: 100%;
-  font-family: inherit;
-  font-size: 13px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  padding: 7px 10px;
-  outline: none;
+  width: 100%; font-family: inherit; font-size: 14px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text); padding: 8px 12px; outline: none;
 }
-.modal input[type="text"]:focus,
-.modal textarea:focus,
-.modal select:focus { border-color: var(--accent); }
+.modal input:focus, .modal textarea:focus, .modal select:focus { border-color: var(--accent); }
 .modal input::placeholder, .modal textarea::placeholder { color: var(--text-dim); }
-.modal textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+.modal textarea { resize: vertical; min-height: 72px; font-family: inherit; }
 .modal select option { background: var(--bg-alt); }
-.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
 </style>
 </head>
 <body>
 
 <header>
-  <span class="logo">⬡ Ticket System</span>
+  <span class="logo">⬡ Tickets</span>
   <div class="header-sep"></div>
   <div class="breadcrumb">
     <a href="/">All Tickets</a>
@@ -395,6 +329,7 @@ code.file {
   </div>
   <div class="spacer"></div>
   <a href="/logs" class="nav-link">Logs</a>
+  <button class="btn-theme" id="theme-btn" onclick="toggleTheme()">☀ Bright</button>
 </header>
 
 <div id="not-found" style="display:none">
@@ -406,16 +341,12 @@ code.file {
 <div id="content" style="display:none">
   <div class="page-layout">
 
-    <!-- Main column -->
     <div class="main-col">
-
-      <!-- Source row -->
       <div class="source-row">
         <label>Repo source</label>
         <input id="source-input" type="text" placeholder="Local path or GitHub URL for Enrich / Validate" />
       </div>
 
-      <!-- Action bar -->
       <div class="action-bar">
         <button class="btn btn-primary" onclick="openEdit()">Edit</button>
         <button class="btn btn-teal" id="enrich-btn" onclick="enrichTicket()">✦ Enrich</button>
@@ -423,7 +354,6 @@ code.file {
         <button class="btn btn-danger" onclick="deleteTicket()">Delete</button>
       </div>
 
-      <!-- Core card -->
       <div class="card">
         <div class="card-header">
           <span class="card-label">Ticket</span>
@@ -432,27 +362,25 @@ code.file {
         <div class="card-body">
           <div class="ticket-title" id="t-title"></div>
           <div class="meta-row" id="t-meta"></div>
-
           <div class="field">
             <div class="field-label">Business Requirement</div>
-            <div id="t-business-req" class="field-value"></div>
+            <div id="t-business-req"></div>
           </div>
           <div class="field">
             <div class="field-label">Stakeholder</div>
-            <div id="t-stakeholder" class="field-value"></div>
+            <div id="t-stakeholder"></div>
           </div>
           <div class="field">
             <div class="field-label">User Story</div>
-            <div id="t-user-story" class="field-value"></div>
+            <div id="t-user-story"></div>
           </div>
           <div class="field">
             <div class="field-label">Description</div>
-            <div id="t-desc" class="field-value"></div>
+            <div id="t-desc"></div>
           </div>
         </div>
       </div>
 
-      <!-- Enrichment card -->
       <div class="card">
         <div class="card-header"><span class="card-label">Enrichment</span></div>
         <div class="card-body">
@@ -466,70 +394,44 @@ code.file {
           </div>
           <div class="field">
             <div class="field-label">Notes</div>
-            <div id="t-notes" class="field-value"></div>
+            <div id="t-notes"></div>
           </div>
           <div class="field">
             <div class="field-label">Suggested Assignee</div>
-            <div id="t-assignee" class="field-value"></div>
+            <div id="t-assignee"></div>
           </div>
         </div>
       </div>
 
-      <!-- Change refs card -->
       <div class="card">
         <div class="card-header"><span class="card-label">Change References</span></div>
         <div class="card-body" style="padding:0">
-          <div id="t-refs" style="padding:12px 16px"></div>
+          <div id="t-refs" style="padding:14px 18px"></div>
         </div>
       </div>
 
-      <!-- Validation card -->
       <div class="card">
         <div class="card-header"><span class="card-label">Validation</span></div>
         <div class="card-body">
           <div id="t-validation"></div>
         </div>
       </div>
-
     </div>
 
-    <!-- Sidebar -->
     <div class="sidebar">
       <div class="card">
         <div class="card-header"><span class="card-label">Metadata</span></div>
-        <div class="card-body" style="padding:8px 16px">
-          <div class="meta-item">
-            <span class="meta-key">ID</span>
-            <span class="meta-val" id="s-id"></span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-key">Status</span>
-            <span class="meta-val" id="s-status"></span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-key">Priority</span>
-            <span class="meta-val" id="s-priority"></span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-key">Importance</span>
-            <span class="meta-val" id="s-importance"></span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-key">Source</span>
-            <span class="meta-val" id="s-repo"></span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-key">Created</span>
-            <span class="meta-val" id="s-created"></span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-key">Updated</span>
-            <span class="meta-val" id="s-updated"></span>
-          </div>
+        <div class="card-body" style="padding:6px 18px">
+          <div class="meta-item"><span class="meta-key">ID</span><span class="meta-val" id="s-id"></span></div>
+          <div class="meta-item"><span class="meta-key">Status</span><span class="meta-val" id="s-status"></span></div>
+          <div class="meta-item"><span class="meta-key">Priority</span><span class="meta-val" id="s-priority"></span></div>
+          <div class="meta-item"><span class="meta-key">Importance</span><span class="meta-val" id="s-importance"></span></div>
+          <div class="meta-item"><span class="meta-key">Source</span><span class="meta-val" id="s-repo"></span></div>
+          <div class="meta-item"><span class="meta-key">Created</span><span class="meta-val" id="s-created"></span></div>
+          <div class="meta-item"><span class="meta-key">Updated</span><span class="meta-val" id="s-updated"></span></div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -540,11 +442,11 @@ code.file {
     <label>Title *</label>
     <input id="f-title" type="text" />
     <label>Business Requirement</label>
-    <textarea id="f-business-req" style="min-height:56px"></textarea>
+    <textarea id="f-business-req" style="min-height:60px"></textarea>
     <label>Stakeholder</label>
     <input id="f-stakeholder" type="text" placeholder="Product, Engineering, Customer…" />
     <label>User Story</label>
-    <textarea id="f-user-story" style="min-height:56px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
+    <textarea id="f-user-story" style="min-height:60px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
     <label>Description</label>
     <textarea id="f-desc"></textarea>
     <label>Status</label>
@@ -584,6 +486,20 @@ const API = '/api';
 const ticketId = window.location.pathname.split('/').pop();
 let currentTicket = null;
 
+function initTheme() {
+  const saved = localStorage.getItem('ats-theme') || 'dark';
+  applyTheme(saved);
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ats-theme', theme);
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀ Bright' : '◗ Dark';
+}
+
 async function loadTicket() {
   const res = await fetch(`${API}/tickets/${ticketId}`);
   if (res.status === 404) { document.getElementById('not-found').style.display = 'block'; return; }
@@ -597,20 +513,17 @@ function renderTicket(t) {
   document.title = t.title + ' — Agent Ticket System';
   document.getElementById('t-title').textContent = t.title;
 
-  // Auto-fill source input
   const srcInput = document.getElementById('source-input');
   if (!srcInput.value && t.source_repo) srcInput.value = t.source_repo;
 
-  // Meta badges
   const imp = t.importance || 'medium';
-  const labels = (t.labels || []).map(l => `<span class="label-chip">${esc(l)}</span>`).join(' ');
+  const labels = (t.labels||[]).map(l=>`<span class="label-chip">${esc(l)}</span>`).join(' ');
   document.getElementById('t-meta').innerHTML =
     `<span class="badge s-${t.status}">${t.status.replace('_',' ')}</span>
      <span class="badge p-${t.priority}">${t.priority}</span>
      <span class="badge i-${imp}">⚡ ${imp}</span>
      ${labels}`;
 
-  // Validation badge (card header)
   const vb = document.getElementById('t-val-badge');
   if (t.validation_passed === true)
     vb.innerHTML = `<span class="val-badge-pass">✓ VALIDATED ${pct(t.validation_score)}</span>`;
@@ -619,31 +532,24 @@ function renderTicket(t) {
   else
     vb.innerHTML = `<span class="val-badge-pending">NOT VALIDATED</span>`;
 
-  // Content fields
   setField('t-business-req', t.business_req, 'No business requirement — use Enrich to generate.');
   setField('t-stakeholder', t.stakeholder, '—');
   setField('t-user-story', t.user_story, 'No user story — use Enrich to generate.');
   setField('t-desc', t.description, 'No description — use Enrich to generate.');
 
-  // Acceptance criteria
   const ac = t.acceptance_criteria || [];
   document.getElementById('t-ac').innerHTML = ac.length
     ? `<ul class="criteria-list">${ac.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`
     : '<span class="field-empty">None — use ✦ Enrich to generate.</span>';
 
-  // Related files
   const files = t.related_files || [];
   document.getElementById('t-files').innerHTML = files.length
     ? `<ul class="files-list">${files.map(f=>`<li><code class="file">${esc(f)}</code></li>`).join('')}</ul>`
     : '<span class="field-empty">None.</span>';
 
-  // Notes
   setField('t-notes', t.technical_notes, 'None.');
-
-  // Assignee
   setField('t-assignee', t.suggested_assignee, '—');
 
-  // Change refs
   const refs = t.suggested_change_refs || [];
   document.getElementById('t-refs').innerHTML = refs.length
     ? `<table class="refs-table">
@@ -658,17 +564,17 @@ function renderTicket(t) {
       </table>`
     : '<span class="field-empty">No refs — Enrich from a GitHub URL to auto-generate.</span>';
 
-  // Validation detail
   renderValidation(t);
 
-  // Sidebar metadata
-  document.getElementById('s-id').textContent = t.id.slice(0, 8) + '…';
+  document.getElementById('s-id').textContent = t.id.slice(0,8) + '…';
   document.getElementById('s-status').innerHTML = `<span class="badge s-${t.status}">${t.status.replace('_',' ')}</span>`;
   document.getElementById('s-priority').innerHTML = `<span class="badge p-${t.priority}">${t.priority}</span>`;
   document.getElementById('s-importance').innerHTML = `<span class="badge i-${imp}">${imp}</span>`;
   const repo = t.source_repo;
   document.getElementById('s-repo').innerHTML = repo
-    ? (repo.startsWith('http') ? `<a href="${esc(repo)}" target="_blank" title="${esc(repo)}">${repoShort(repo)}</a>` : esc(repoShort(repo)))
+    ? (repo.startsWith('http')
+      ? `<a href="${esc(repo)}" target="_blank" title="${esc(repo)}">${repoShort(repo)}</a>`
+      : esc(repoShort(repo)))
     : '—';
   document.getElementById('s-created').textContent = fmt(t.created_at);
   document.getElementById('s-updated').textContent = fmt(t.updated_at);
@@ -689,21 +595,19 @@ function renderValidation(t) {
   const p = Math.round(t.validation_score * 100);
   const pass = t.validation_passed;
   el.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:${pass?'var(--success)':'var(--danger)'}">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;color:${pass?'var(--success)':'var(--danger)'}">
         ${p}%
       </span>
-      <span style="font-size:12px;color:${pass?'var(--success)':'var(--danger)'}">
+      <span style="font-size:14px;color:${pass?'var(--success)':'var(--danger)'}">
         ${pass ? '✓ Passed' : '✗ Failed'}
       </span>
     </div>
     <div class="val-bar-wrap">
       <div class="val-bar ${pass?'bar-pass':'bar-fail'}" style="width:${p}%"></div>
     </div>
-    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.6">${esc(t.validation_notes||'')}</p>`;
+    <p style="font-size:14px;color:var(--text-muted);margin-top:10px;line-height:1.6">${esc(t.validation_notes||'')}</p>`;
 }
-
-// ── Actions ───────────────────────────────────────────────────────────────────
 
 async function enrichTicket() {
   const source = document.getElementById('source-input').value.trim();
@@ -744,8 +648,6 @@ async function deleteTicket() {
   else toast('Delete failed', true);
 }
 
-// ── Edit modal ────────────────────────────────────────────────────────────────
-
 function openEdit() {
   const t = currentTicket;
   document.getElementById('f-title').value = t.title;
@@ -756,11 +658,10 @@ function openEdit() {
   document.getElementById('f-status').value = t.status;
   document.getElementById('f-priority').value = t.priority;
   document.getElementById('f-importance').value = t.importance || 'medium';
-  document.getElementById('f-labels').value = (t.labels || []).join(', ');
+  document.getElementById('f-labels').value = (t.labels||[]).join(', ');
   document.getElementById('f-repo').value = t.source_repo || '';
   document.getElementById('modal').classList.add('open');
 }
-
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
 async function submitEdit() {
@@ -790,26 +691,21 @@ async function submitEdit() {
 
 document.getElementById('modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeModal(); });
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function pct(score) {
-  return (score !== null && score !== undefined) ? Math.round(score * 100) + '%' : '';
-}
+function pct(s) { return (s !== null && s !== undefined) ? Math.round(s*100)+'%' : ''; }
 function repoShort(s) {
   if (!s) return '—';
   if (s.startsWith('http')) {
-    try {
-      const parts = new URL(s).pathname.split('/').filter(Boolean);
-      return parts.length >= 2 ? parts.slice(-2).join('/') : s;
-    } catch { return s; }
+    try { const p = new URL(s).pathname.split('/').filter(Boolean); return p.length>=2?p.slice(-2).join('/'):s; }
+    catch { return s; }
   }
   return s.split('/').pop() || s;
 }
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function fmt(s) { return s ? new Date(s).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'; }
-
+function fmt(s) {
+  return s ? new Date(s).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+}
 function toast(msg, isError=false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -817,6 +713,7 @@ function toast(msg, isError=false) {
   setTimeout(() => el.className = '', 3000);
 }
 
+initTheme();
 loadTicket();
 </script>
 </body>
