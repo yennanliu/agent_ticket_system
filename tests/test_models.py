@@ -7,8 +7,12 @@ def test_ticket_defaults():
     t = Ticket(title="T", description="D")
     assert t.status == "open"
     assert t.priority == "medium"
+    assert t.importance == "medium"
     assert t.labels == []
     assert t.source_repo == ""
+    assert t.business_req == ""
+    assert t.stakeholder == ""
+    assert t.user_story == ""
     assert t.acceptance_criteria == []
     assert t.related_files == []
     assert t.technical_notes == ""

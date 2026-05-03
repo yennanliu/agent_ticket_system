@@ -57,6 +57,10 @@
   .priority-medium { background: #ffedd5; color: #9a3412; }
   .priority-low { background: #f0fdf4; color: #166534; }
   .label { background: #e0e7ff; color: #3730a3; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin-right: 3px; }
+  .importance-critical { background: #7f1d1d; color: #fef2f2; }
+  .importance-high { background: #fee2e2; color: #991b1b; }
+  .importance-medium { background: #ffedd5; color: #9a3412; }
+  .importance-low { background: #f0fdf4; color: #166534; }
 
   /* ── Repo chip ── */
   .repo-chip { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; font-size: 0.72rem; color: #64748b; background: #f1f5f9; border-radius: 3px; padding: 1px 6px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -118,11 +122,17 @@
 
 <!-- Create/Edit modal -->
 <div class="modal-overlay" id="modal">
-  <div class="modal">
+  <div class="modal" style="width:520px;max-height:90vh;overflow-y:auto">
     <h2 id="modal-title">New Ticket</h2>
     <input type="hidden" id="modal-id" />
     <label>Title *</label>
     <input id="f-title" type="text" placeholder="Short, actionable title" />
+    <label>Business Requirement</label>
+    <textarea id="f-business-req" style="min-height:60px" placeholder="The business need this addresses"></textarea>
+    <label>Stakeholder</label>
+    <input id="f-stakeholder" type="text" placeholder="e.g. Product, Engineering, Customer" />
+    <label>User Story</label>
+    <textarea id="f-user-story" style="min-height:60px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
     <label>Description</label>
     <textarea id="f-desc" placeholder="What needs to be done? (optional — AI can generate this via Enrich)"></textarea>
     <p class="hint">Leave blank and use ✨ Enrich to let AI fill this in.</p>
@@ -137,6 +147,13 @@
       <option value="low">Low</option>
       <option value="medium" selected>Medium</option>
       <option value="high">High</option>
+    </select>
+    <label>Importance</label>
+    <select id="f-importance">
+      <option value="low">Low</option>
+      <option value="medium" selected>Medium</option>
+      <option value="high">High</option>
+      <option value="critical">Critical</option>
     </select>
     <label>Labels (comma-separated)</label>
     <input id="f-labels" type="text" placeholder="bug, feature, docs" />
@@ -170,13 +187,14 @@
 <script>
 const API = '/api';
 let enrichingIds = new Set();
+let currentTickets = [];
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
 async function loadTickets() {
   const res = await fetch(`${API}/tickets`);
-  const tickets = await res.json();
-  renderTable(tickets);
+  currentTickets = await res.json();
+  renderTable(currentTickets);
 }
 
 async function generateTickets() {
@@ -199,14 +217,17 @@ async function generateTickets() {
 }
 
 async function enrichAll() {
-  const source = document.getElementById('repo-input').value.trim();
-  if (!source) { toast('Enter a local path or GitHub URL to enrich from', true); return; }
+  const globalSource = document.getElementById('repo-input').value.trim();
   const checked = [...document.querySelectorAll('.row-check:checked')].map(el => el.dataset.id);
   const btn = document.getElementById('enrich-all-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Enriching…';
   try {
-    const body = source.startsWith('http') ? { repo_url: source } : { repo_path: source };
+    const body = {};
+    if (globalSource) {
+      if (globalSource.startsWith('http')) body.repo_url = globalSource;
+      else body.repo_path = globalSource;
+    }
     if (checked.length) body.ticket_ids = checked;
     const res = await fetch(`${API}/agents/enrich-batch`, {
       method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
@@ -219,13 +240,12 @@ async function enrichAll() {
   finally { btn.disabled = false; btn.innerHTML = '✨ Enrich Selected'; }
 }
 
-async function enrichTicket(id) {
-  const source = document.getElementById('repo-input').value.trim();
-  if (!source) { toast('Enter a local path or GitHub URL to enrich from', true); return; }
+async function enrichTicket(id, fallbackSource) {
+  const source = document.getElementById('repo-input').value.trim() || fallbackSource || '';
   enrichingIds.add(id);
   setEnrichLoading(id, true);
   try {
-    const body = source.startsWith('http') ? { repo_url: source } : { repo_path: source };
+    const body = source.startsWith('http') ? { repo_url: source } : (source ? { repo_path: source } : {});
     const res = await fetch(`${API}/agents/enrich/${id}`, {
       method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
     });
@@ -248,9 +268,10 @@ async function deleteTicket(id, title) {
 function openCreate() {
   document.getElementById('modal-title').textContent = 'New Ticket';
   document.getElementById('modal-id').value = '';
-  ['f-title','f-desc','f-labels','f-repo'].forEach(id => document.getElementById(id).value = '');
+  ['f-title','f-business-req','f-stakeholder','f-user-story','f-desc','f-labels','f-repo'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-status').value = 'open';
   document.getElementById('f-priority').value = 'medium';
+  document.getElementById('f-importance').value = 'medium';
   document.getElementById('modal').classList.add('open');
 }
 
@@ -258,9 +279,13 @@ function openEdit(t) {
   document.getElementById('modal-title').textContent = 'Edit Ticket';
   document.getElementById('modal-id').value = t.id;
   document.getElementById('f-title').value = t.title;
+  document.getElementById('f-business-req').value = t.business_req || '';
+  document.getElementById('f-stakeholder').value = t.stakeholder || '';
+  document.getElementById('f-user-story').value = t.user_story || '';
   document.getElementById('f-desc').value = t.description || '';
   document.getElementById('f-status').value = t.status;
   document.getElementById('f-priority').value = t.priority;
+  document.getElementById('f-importance').value = t.importance || 'medium';
   document.getElementById('f-labels').value = (t.labels || []).join(', ');
   document.getElementById('f-repo').value = t.source_repo || '';
   document.getElementById('modal').classList.add('open');
@@ -272,9 +297,13 @@ async function submitTicket() {
   const id = document.getElementById('modal-id').value;
   const payload = {
     title: document.getElementById('f-title').value.trim(),
+    business_req: document.getElementById('f-business-req').value.trim(),
+    stakeholder: document.getElementById('f-stakeholder').value.trim(),
+    user_story: document.getElementById('f-user-story').value.trim(),
     description: document.getElementById('f-desc').value.trim(),
     status: document.getElementById('f-status').value,
     priority: document.getElementById('f-priority').value,
+    importance: document.getElementById('f-importance').value,
     labels: document.getElementById('f-labels').value.split(',').map(s=>s.trim()).filter(Boolean),
     source_repo: document.getElementById('f-repo').value.trim(),
   };
@@ -332,27 +361,30 @@ function renderTable(tickets) {
          </div>`
       : '';
 
-    const validBadge = t.validation_passed === true
-      ? '<span style="font-size:.7rem;color:#10b981;margin-left:4px">✅</span>'
+    const validCell = t.validation_passed === true
+      ? `<span style="color:#10b981;font-size:.85rem" title="Score: ${Math.round((t.validation_score||0)*100)}%">✅ ${Math.round((t.validation_score||0)*100)}%</span>`
       : t.validation_passed === false
-        ? '<span style="font-size:.7rem;color:#dc2626;margin-left:4px">❌</span>'
-        : '';
+        ? `<span style="color:#dc2626;font-size:.85rem" title="Score: ${Math.round((t.validation_score||0)*100)}%">❌ ${Math.round((t.validation_score||0)*100)}%</span>`
+        : '<span style="color:#94a3b8;font-size:.8rem">—</span>';
 
+    const safeSource = esc(t.source_repo || '').replace(/'/g, "\\'");
     return `<tr>
       <td><input type="checkbox" class="row-check" data-id="${t.id}"></td>
       <td class="title-cell">
         <a href="/tickets/${t.id}" style="text-decoration:none;color:inherit">
-          <strong>${esc(t.title)}</strong>${enrichedBadge(t)}${validBadge}
+          <strong>${esc(t.title)}</strong>${enrichedBadge(t)}
         </a>
         ${repoChip}
       </td>
       <td><span class="badge status-${t.status}">${t.status.replace('_',' ')}</span></td>
       <td><span class="badge priority-${t.priority}">${t.priority}</span></td>
+      <td><span class="badge importance-${t.importance||'medium'}">${t.importance||'medium'}</span></td>
+      <td>${validCell}</td>
       <td>${(t.labels||[]).map(l=>`<span class="label">${esc(l)}</span>`).join('')}</td>
       <td style="color:#94a3b8;font-size:.8rem;white-space:nowrap">${fmtDate(t.created_at)}</td>
       <td class="actions">
         <button class="btn-icon" onclick='openEdit(${JSON.stringify(t)})'>✏️ Edit</button>
-        <button class="btn-icon enrich" id="enrich-btn-${t.id}" onclick="enrichTicket('${t.id}')" ${enrichingIds.has(t.id)?'disabled':''}>
+        <button class="btn-icon enrich" id="enrich-btn-${t.id}" onclick="enrichTicket('${t.id}','${safeSource}')" ${enrichingIds.has(t.id)?'disabled':''}>
           ${enrichingIds.has(t.id)?'<span class="spinner dark"></span>Enriching…':'✨ Enrich'}
         </button>
         <button class="btn-icon danger" onclick="deleteTicket('${t.id}','${esc(t.title).replace(/'/g,"\\'")}')">🗑️</button>
@@ -363,7 +395,7 @@ function renderTable(tickets) {
   el.innerHTML = `<table>
     <thead><tr>
       <th class="check-col"><input type="checkbox" id="select-all" onchange="toggleAll(this)" title="Select all"></th>
-      <th>Title / Repo</th><th>Status</th><th>Priority</th><th>Labels</th><th>Created</th><th>Actions</th>
+      <th>Title / Repo</th><th>Status</th><th>Priority</th><th>Importance</th><th>Validation</th><th>Labels</th><th>Created</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;

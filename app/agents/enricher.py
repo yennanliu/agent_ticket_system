@@ -29,6 +29,9 @@ Ticket:
 - Title: {ticket['title']}
 - Description: {ticket['description']}
 - Priority: {ticket['priority']}
+- Business Req: {ticket.get('business_req', '')}
+- Stakeholder: {ticket.get('stakeholder', '')}
+- User Story: {ticket.get('user_story', '')}
 
 Repository: {repo_context['name']}
 README:
@@ -45,9 +48,12 @@ Return ONLY a JSON object with these keys:
 - related_files (array of file paths from the repo relevant to this ticket)
 - technical_notes (string — implementation hints, edge cases, or gotchas)
 - suggested_assignee (string — role or team best suited, e.g. "frontend", "devops", "")
+- business_req (string — fill in if empty, otherwise refine the existing business requirement)
+- stakeholder (string — fill in if empty, otherwise keep existing)
+- user_story (string — fill in if empty, otherwise refine the existing user story)
 
 Example:
-{{"acceptance_criteria": ["..."], "related_files": ["..."], "technical_notes": "...", "suggested_assignee": "..."}}"""
+{{"acceptance_criteria": ["..."], "related_files": ["..."], "technical_notes": "...", "suggested_assignee": "...", "business_req": "...", "stakeholder": "...", "user_story": "As a user, I want ..."}}"""
 
     response = llm.invoke(prompt)
     content = response.content.strip()

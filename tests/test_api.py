@@ -170,9 +170,11 @@ async def test_enrich_batch_selected_ids(client, store, sample_ticket):
     assert len(r.json()) == 1
 
 
-async def test_enrich_batch_missing_source(client):
+async def test_enrich_batch_no_source_returns_empty(client):
+    # No source + empty store → no tickets to enrich → 200 []
     r = await client.post("/api/agents/enrich-batch", json={})
-    assert r.status_code == 422
+    assert r.status_code == 200
+    assert r.json() == []
 
 
 async def test_enrich_batch_skips_missing_tickets(client):

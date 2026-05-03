@@ -9,6 +9,7 @@ from langgraph.graph import StateGraph, END
 from app.models import Ticket
 from app.repo_tools import read_repo
 from app.storage import TicketStore
+from app.agents.validator import run_validator
 
 
 class CreatorState(TypedDict):
@@ -37,14 +38,17 @@ Return ONLY a JSON array of tickets. Each ticket must have these keys:
 - title (string, max 80 chars)
 - description (string, 1-3 sentences)
 - priority ("low", "medium", or "high")
+- importance ("low", "medium", "high", or "critical")
 - labels (array of short strings like ["bug", "feature", "ci", "docs"])
+- business_req (string — the business need or goal this ticket addresses)
+- stakeholder (string — who requested or benefits from this, e.g. "Product", "Engineering", "Customer")
+- user_story (string — "As a <role>, I want <goal> so that <benefit>")
 
 Example format:
-[{{"title": "...", "description": "...", "priority": "medium", "labels": ["feature"]}}]"""
+[{{"title": "...", "description": "...", "priority": "medium", "importance": "medium", "labels": ["feature"], "business_req": "...", "stakeholder": "Product", "user_story": "As a user, I want ..."}}]"""
 
     response = llm.invoke(prompt)
     content = response.content.strip()
-    # Strip markdown code fences if present
     if content.startswith("```"):
         content = content.split("```")[1]
         if content.startswith("json"):
@@ -69,8 +73,12 @@ def _node_save(state: CreatorState, store: TicketStore) -> CreatorState:
             title=draft.get("title", "Untitled"),
             description=draft.get("description", ""),
             priority=draft.get("priority", "medium"),
+            importance=draft.get("importance", "medium"),
             labels=draft.get("labels", []),
             source_repo=state["source"],
+            business_req=draft.get("business_req", ""),
+            stakeholder=draft.get("stakeholder", ""),
+            user_story=draft.get("user_story", ""),
         )
         store.create(ticket)
         tickets.append(ticket)
@@ -96,10 +104,18 @@ def run_creator(source: str, store: TicketStore, logger=None) -> list[Ticket]:
         app = _build_graph(store)
         result = app.invoke({"source": source, "repo_context": {}, "ticket_drafts": [], "created_tickets": []})
         tickets = result["created_tickets"]
+
+        validated = []
+        for ticket in tickets:
+            try:
+                validated.append(run_validator(ticket.id, store))
+            except Exception:
+                validated.append(store.get(ticket.id) or ticket)
+
         if logger:
             logger.log("create", "creator", duration_ms=(time.time() - start) * 1000,
-                       status="success", details=f"created {len(tickets)} tickets from {source}")
-        return tickets
+                       status="success", details=f"created {len(validated)} tickets from {source}")
+        return validated
     except Exception as e:
         if logger:
             logger.log("create", "creator", duration_ms=(time.time() - start) * 1000,

@@ -24,7 +24,16 @@ class RepoSource(BaseModel):
         return self.repo_url if self.repo_url else self.repo_path
 
 
-class EnrichBatchRequest(RepoSource):
+class OptionalRepoSource(BaseModel):
+    repo_path: Optional[str] = None
+    repo_url: Optional[str] = None
+
+    @property
+    def source(self) -> Optional[str]:
+        return self.repo_url if self.repo_url else (self.repo_path or None)
+
+
+class EnrichBatchRequest(OptionalRepoSource):
     ticket_ids: Optional[list[str]] = None
 
 
@@ -60,9 +69,16 @@ def make_router(store: TicketStore, logger=None) -> APIRouter:
         return tickets
 
     @r.post("/enrich/{ticket_id}", response_model=Ticket)
-    def enrich_ticket(ticket_id: str, body: RepoSource):
+    def enrich_ticket(ticket_id: str, body: OptionalRepoSource = OptionalRepoSource()):
+        source = body.source
+        if not source:
+            ticket = store.get(ticket_id)
+            if ticket and ticket.source_repo:
+                source = ticket.source_repo
+        if not source:
+            raise HTTPException(status_code=422, detail="No repo source: provide repo_path/repo_url or set source_repo on the ticket")
         try:
-            return run_enricher(ticket_id, body.source, store, logger=logger)
+            return run_enricher(ticket_id, source, store, logger=logger)
         except ValueError as e:
             raise HTTPException(status_code=404, detail=str(e))
 
@@ -72,7 +88,13 @@ def make_router(store: TicketStore, logger=None) -> APIRouter:
         results = []
         for ticket_id in ids:
             try:
-                results.append(run_enricher(ticket_id, body.source, store, logger=logger))
+                source = body.source
+                if not source:
+                    ticket = store.get(ticket_id)
+                    source = ticket.source_repo if ticket and ticket.source_repo else None
+                if not source:
+                    continue
+                results.append(run_enricher(ticket_id, source, store, logger=logger))
             except ValueError:
                 pass
         return results

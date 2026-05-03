@@ -28,6 +28,13 @@
   .priority-medium { background: #ffedd5; color: #9a3412; }
   .priority-low { background: #f0fdf4; color: #166534; }
   .label { background: #e0e7ff; color: #3730a3; border-radius: 3px; padding: 2px 6px; font-size: 0.75rem; }
+  .importance-critical { background: #7f1d1d; color: #fef2f2; }
+  .importance-high { background: #fee2e2; color: #991b1b; }
+  .importance-medium { background: #ffedd5; color: #9a3412; }
+  .importance-low { background: #f0fdf4; color: #166534; }
+  .validation-status-pass { background: #d1fae5; color: #065f46; border-radius: 4px; padding: 3px 9px; font-size: 0.78rem; font-weight: 600; }
+  .validation-status-fail { background: #fee2e2; color: #991b1b; border-radius: 4px; padding: 3px 9px; font-size: 0.78rem; font-weight: 600; }
+  .validation-status-pending { background: #f1f5f9; color: #64748b; border-radius: 4px; padding: 3px 9px; font-size: 0.78rem; }
 
   .field-label { font-size: 0.78rem; color: #64748b; margin-bottom: 4px; margin-top: 16px; font-weight: 600; }
   .field-value { font-size: 0.9rem; color: #334155; line-height: 1.7; white-space: pre-wrap; }
@@ -147,6 +154,15 @@
       <div class="field-label">Source Repo</div>
       <div id="t-repo" class="repo-link"></div>
 
+      <div class="field-label">Business Requirement</div>
+      <div id="t-business-req" class="field-value"></div>
+
+      <div class="field-label">Stakeholder</div>
+      <div id="t-stakeholder" class="field-value"></div>
+
+      <div class="field-label">User Story</div>
+      <div id="t-user-story" class="field-value"></div>
+
       <div class="field-label">Description</div>
       <div id="t-desc" class="field-value"></div>
 
@@ -165,7 +181,7 @@
       <div class="field-label">Related Files</div>
       <div id="t-files"></div>
 
-      <div class="field-label">Technical Notes</div>
+      <div class="field-label">Notes</div>
       <div id="t-notes" class="field-value"></div>
 
       <div class="field-label">Suggested Assignee</div>
@@ -189,10 +205,16 @@
 
 <!-- Edit modal -->
 <div class="modal-overlay" id="modal">
-  <div class="modal">
+  <div class="modal" style="width:560px;max-height:90vh;overflow-y:auto">
     <h2>Edit Ticket</h2>
     <label>Title *</label>
     <input id="f-title" type="text" />
+    <label>Business Requirement</label>
+    <textarea id="f-business-req" style="min-height:60px"></textarea>
+    <label>Stakeholder</label>
+    <input id="f-stakeholder" type="text" placeholder="e.g. Product, Engineering, Customer" />
+    <label>User Story</label>
+    <textarea id="f-user-story" style="min-height:60px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
     <label>Description</label>
     <textarea id="f-desc"></textarea>
     <label>Status</label>
@@ -206,6 +228,13 @@
       <option value="low">Low</option>
       <option value="medium">Medium</option>
       <option value="high">High</option>
+    </select>
+    <label>Importance</label>
+    <select id="f-importance">
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+      <option value="critical">Critical</option>
     </select>
     <label>Labels (comma-separated)</label>
     <input id="f-labels" type="text" />
@@ -243,11 +272,23 @@ function renderTicket(t) {
 
   document.getElementById('t-title').textContent = t.title;
 
-  // Meta badges
+  // Auto-fill source input from ticket's source_repo
+  const sourceInput = document.getElementById('source-input');
+  if (!sourceInput.value && t.source_repo) sourceInput.value = t.source_repo;
+
+  // Meta badges (status, priority, importance, validation, labels)
+  const importanceCls = `importance-${t.importance || 'medium'}`;
+  const valBadge = t.validation_passed === true
+    ? '<span class="validation-status-pass">✅ Validated</span>'
+    : t.validation_passed === false
+      ? '<span class="validation-status-fail">❌ Validation failed</span>'
+      : '<span class="validation-status-pending">⏳ Not validated</span>';
   const labels = (t.labels || []).map(l => `<span class="label">${esc(l)}</span>`).join(' ');
   document.getElementById('t-meta').innerHTML =
     `<span class="badge status-${t.status}">${t.status.replace('_',' ')}</span>
      <span class="badge priority-${t.priority}">${t.priority}</span>
+     <span class="badge ${importanceCls}">⚡ ${t.importance || 'medium'}</span>
+     ${valBadge}
      ${labels}`;
 
   // Repo
@@ -255,6 +296,14 @@ function renderTicket(t) {
   document.getElementById('t-repo').innerHTML = repo
     ? (repo.startsWith('http') ? `<a href="${esc(repo)}" target="_blank">${esc(repo)}</a>` : esc(repo))
     : '<span class="field-empty">—</span>';
+
+  // Content fields
+  document.getElementById('t-business-req').innerHTML = t.business_req
+    ? esc(t.business_req) : '<span class="field-empty">—</span>';
+  document.getElementById('t-stakeholder').innerHTML = t.stakeholder
+    ? esc(t.stakeholder) : '<span class="field-empty">—</span>';
+  document.getElementById('t-user-story').innerHTML = t.user_story
+    ? esc(t.user_story) : '<span class="field-empty">—</span>';
 
   // Description
   document.getElementById('t-desc').innerHTML = t.description
@@ -276,7 +325,7 @@ function renderTicket(t) {
     ? `<ul class="files-list">${files.map(f=>`<li><code class="file">${esc(f)}</code></li>`).join('')}</ul>`
     : '<span class="field-empty">None.</span>';
 
-  // Technical notes
+  // Notes
   document.getElementById('t-notes').innerHTML = t.technical_notes
     ? esc(t.technical_notes) : '<span class="field-empty">None.</span>';
 
@@ -370,9 +419,13 @@ async function deleteTicket() {
 function openEdit() {
   const t = currentTicket;
   document.getElementById('f-title').value = t.title;
+  document.getElementById('f-business-req').value = t.business_req || '';
+  document.getElementById('f-stakeholder').value = t.stakeholder || '';
+  document.getElementById('f-user-story').value = t.user_story || '';
   document.getElementById('f-desc').value = t.description || '';
   document.getElementById('f-status').value = t.status;
   document.getElementById('f-priority').value = t.priority;
+  document.getElementById('f-importance').value = t.importance || 'medium';
   document.getElementById('f-labels').value = (t.labels || []).join(', ');
   document.getElementById('f-repo').value = t.source_repo || '';
   document.getElementById('modal').classList.add('open');
@@ -383,9 +436,13 @@ function closeModal() { document.getElementById('modal').classList.remove('open'
 async function submitEdit() {
   const payload = {
     title: document.getElementById('f-title').value.trim(),
+    business_req: document.getElementById('f-business-req').value.trim(),
+    stakeholder: document.getElementById('f-stakeholder').value.trim(),
+    user_story: document.getElementById('f-user-story').value.trim(),
     description: document.getElementById('f-desc').value.trim(),
     status: document.getElementById('f-status').value,
     priority: document.getElementById('f-priority').value,
+    importance: document.getElementById('f-importance').value,
     labels: document.getElementById('f-labels').value.split(',').map(s=>s.trim()).filter(Boolean),
     source_repo: document.getElementById('f-repo').value.trim(),
   };

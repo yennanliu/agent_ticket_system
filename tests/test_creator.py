@@ -2,11 +2,30 @@ import pytest
 from unittest.mock import patch, MagicMock
 from app.storage import TicketStore
 from app.agents.creator import run_creator
+from app.models import Ticket
 
 
 MOCK_DRAFTS = [
-    {"title": "Add job filter", "description": "Filter by seniority", "priority": "high", "labels": ["feature"]},
-    {"title": "Fix retry logic", "description": "Retry on 429", "priority": "medium", "labels": ["bug"]},
+    {
+        "title": "Add job filter",
+        "description": "Filter by seniority",
+        "priority": "high",
+        "importance": "high",
+        "labels": ["feature"],
+        "business_req": "Users need to narrow results",
+        "stakeholder": "Product",
+        "user_story": "As a job seeker, I want to filter by seniority so that I see relevant listings",
+    },
+    {
+        "title": "Fix retry logic",
+        "description": "Retry on 429",
+        "priority": "medium",
+        "importance": "medium",
+        "labels": ["bug"],
+        "business_req": "Improve reliability",
+        "stakeholder": "Engineering",
+        "user_story": "As an engineer, I want automatic retries so that transient errors don't break the flow",
+    },
 ]
 
 
@@ -14,10 +33,15 @@ def make_store(tmp_data_dir):
     return TicketStore(data_dir=str(tmp_data_dir))
 
 
+def _mock_validator(ticket_id, store, **kwargs):
+    return store.get(ticket_id)
+
+
 def test_creator_returns_ticket_list(tmp_data_dir, repo_context):
     store = make_store(tmp_data_dir)
     with patch("app.agents.creator.read_repo", return_value=repo_context), \
-         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS):
+         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS), \
+         patch("app.agents.creator.run_validator", side_effect=_mock_validator):
         tickets = run_creator("../linkedin-skill", store)
     assert len(tickets) == 2
     assert tickets[0].title == "Add job filter"
@@ -27,7 +51,8 @@ def test_creator_returns_ticket_list(tmp_data_dir, repo_context):
 def test_creator_saves_to_store(tmp_data_dir, repo_context):
     store = make_store(tmp_data_dir)
     with patch("app.agents.creator.read_repo", return_value=repo_context), \
-         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS):
+         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS), \
+         patch("app.agents.creator.run_validator", side_effect=_mock_validator):
         tickets = run_creator("../linkedin-skill", store)
     for t in tickets:
         assert store.get(t.id) is not None
@@ -36,7 +61,8 @@ def test_creator_saves_to_store(tmp_data_dir, repo_context):
 def test_creator_sets_source_repo(tmp_data_dir, repo_context):
     store = make_store(tmp_data_dir)
     with patch("app.agents.creator.read_repo", return_value=repo_context), \
-         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS):
+         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS), \
+         patch("app.agents.creator.run_validator", side_effect=_mock_validator):
         tickets = run_creator("../linkedin-skill", store)
     assert all(t.source_repo == "../linkedin-skill" for t in tickets)
 
@@ -44,7 +70,44 @@ def test_creator_sets_source_repo(tmp_data_dir, repo_context):
 def test_creator_tickets_have_valid_ids(tmp_data_dir, repo_context):
     store = make_store(tmp_data_dir)
     with patch("app.agents.creator.read_repo", return_value=repo_context), \
-         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS):
+         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS), \
+         patch("app.agents.creator.run_validator", side_effect=_mock_validator):
         tickets = run_creator("../linkedin-skill", store)
     for t in tickets:
         assert len(t.id) == 36
+
+
+def test_creator_maps_new_content_fields(tmp_data_dir, repo_context):
+    store = make_store(tmp_data_dir)
+    with patch("app.agents.creator.read_repo", return_value=repo_context), \
+         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS), \
+         patch("app.agents.creator.run_validator", side_effect=_mock_validator):
+        tickets = run_creator("../linkedin-skill", store)
+    t = tickets[0]
+    assert t.business_req == "Users need to narrow results"
+    assert t.stakeholder == "Product"
+    assert "seniority" in t.user_story
+    assert t.importance == "high"
+
+
+def test_creator_auto_validates_tickets(tmp_data_dir, repo_context):
+    store = make_store(tmp_data_dir)
+    validated_ticket = Ticket(
+        title="Add job filter", description="...",
+        validation_score=0.75, validation_passed=True, validation_notes="Good",
+    )
+    with patch("app.agents.creator.read_repo", return_value=repo_context), \
+         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS[:1]), \
+         patch("app.agents.creator.run_validator", return_value=validated_ticket) as mock_val:
+        tickets = run_creator("../linkedin-skill", store)
+    mock_val.assert_called_once()
+    assert tickets[0].validation_score == 0.75
+
+
+def test_creator_continues_if_validation_fails(tmp_data_dir, repo_context):
+    store = make_store(tmp_data_dir)
+    with patch("app.agents.creator.read_repo", return_value=repo_context), \
+         patch("app.agents.creator._llm_generate_tickets", return_value=MOCK_DRAFTS), \
+         patch("app.agents.creator.run_validator", side_effect=Exception("llm error")):
+        tickets = run_creator("../linkedin-skill", store)
+    assert len(tickets) == 2

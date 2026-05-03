@@ -1,205 +1,175 @@
 [
   {
-    "id": "64847de2-b954-4a96-884f-d0219c7c6662",
-    "title": "Translate README to japanese",
-    "description": "",
+    "id": "ec5d007b-c852-4da1-9924-eeef4c04320d",
+    "title": "https://github.com/BrotherSupport/ai_consultant",
+    "description": "refactor",
     "status": "open",
     "priority": "medium",
+    "importance": "medium",
     "labels": [
-      "docs",
-      "update"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:11:41.838251Z",
-    "updated_at": "2026-05-02T08:11:51.504715Z",
-    "acceptance_criteria": [
-      "The README file is accurately translated into Japanese, maintaining the original structure and formatting.",
-      "All technical terms and code snippets are preserved and correctly translated.",
-      "Links and references within the README are updated to point to the correct Japanese versions if available.",
-      "The translated README is reviewed by a native Japanese speaker for accuracy and clarity."
-    ],
-    "related_files": [
-      "README.md",
-      "README_zh-TW.md"
-    ],
-    "technical_notes": "Ensure that the translation preserves the technical terminology used in the context of LinkedIn automation and Playwright MCP tools. Pay special attention to the translation of skill names and agent descriptions to maintain consistency with the original English version. Consider using a translation service or tool that specializes in technical documentation to ensure accuracy. Be aware of potential cultural differences in the interpretation of certain terms or phrases.",
-    "suggested_assignee": "frontend",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "f95b3fc8-e66d-406f-8c7c-f4e92a7a9e65",
-    "title": "Translate README to Traditional Chinese",
-    "description": "Translate the main README.md file into Traditional Chinese to ensure accessibility for Chinese-speaking users.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "docs",
-      "translation"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:40:24.095446Z",
-    "updated_at": "2026-05-02T08:40:24.095450Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "fd5a7ef5-09b5-41fe-a555-3d5ca35f0cec",
-    "title": "Add Setup Guide for MacBook Air M1 Chips",
-    "description": "Extend the setup guide to include instructions for MacBook Air models with M1 chips, ensuring compatibility and ease of use.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "feature",
       "docs"
     ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:40:24.096840Z",
-    "updated_at": "2026-05-02T08:40:24.096845Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "a4c780f0-54f8-4b10-b68d-ef972bc7b8dd",
-    "title": "Create Automated Test for setup-openclaw.sh",
-    "description": "Develop an automated test script to verify the functionality of setup-openclaw.sh, ensuring it executes correctly on supported systems.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "ci",
-      "testing"
+    "source_repo": "",
+    "created_at": "2026-05-03T06:51:15.345897Z",
+    "updated_at": "2026-05-03T06:56:03.006032Z",
+    "business_req": "",
+    "stakeholder": "",
+    "user_story": "",
+    "acceptance_criteria": [
+      "Codebase is refactored to improve readability and maintainability without altering existing functionality.",
+      "All existing tests pass successfully after the refactor.",
+      "No performance degradation is observed post-refactor.",
+      "Code adheres to the project's style guidelines as defined in scalastyle-config.xml."
     ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:40:24.097270Z",
-    "updated_at": "2026-05-02T08:40:24.097272Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "f8a9f272-40e2-4860-95f6-b80a09b6e208",
-    "title": "Document Telegram Integration Process",
-    "description": "Expand the documentation to include detailed steps for integrating Telegram, as referenced in tg_integration.txt.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "docs",
-      "integration"
+    "related_files": [
+      "pom.xml",
+      "scalastyle-config.xml",
+      ".pre-commit-config.yaml"
     ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:40:24.097490Z",
-    "updated_at": "2026-05-02T08:40:24.097491Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "858e4beb-3a95-4ad0-939e-7247e095b273",
-    "title": "Resolve Open Issue #1: Test 1",
-    "description": "Investigate and resolve the open issue labeled 'Test 1' to ensure all tests are passing and the system is stable.",
-    "status": "open",
-    "priority": "high",
-    "labels": [
-      "bug",
-      "testing"
+    "technical_notes": "Focus on simplifying complex methods and reducing code duplication. Pay attention to the dependency management in pom.xml to ensure no unnecessary dependencies are included. Consider using the pre-commit hooks defined in .pre-commit-config.yaml to catch any style issues early. Be cautious of any changes that might affect the public API or backward compatibility.",
+    "suggested_assignee": "backend",
+    "suggested_change_refs": [
+      {
+        "file": "pom.xml",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/pom.xml",
+        "title": "pom.xml"
+      },
+      {
+        "file": "scalastyle-config.xml",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/scalastyle-config.xml",
+        "title": "scalastyle-config.xml"
+      },
+      {
+        "file": ".pre-commit-config.yaml",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/.pre-commit-config.yaml",
+        "title": ".pre-commit-config.yaml"
+      }
     ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:40:24.097951Z",
-    "updated_at": "2026-05-02T08:40:24.097952Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
     "validation_score": null,
     "validation_notes": "",
     "validation_passed": null
   },
   {
-    "id": "65874174-4029-442b-aad4-b1ac6698622e",
-    "title": "Standardize Markdown File Naming",
-    "description": "Rename all markdown files to follow a consistent naming convention, improving organization and readability.",
-    "status": "open",
-    "priority": "low",
-    "labels": [
-      "docs",
-      "cleanup"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:40:24.098553Z",
-    "updated_at": "2026-05-02T08:40:24.098554Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "4c75e616-b0fd-4414-8f2e-4280f3158105",
-    "title": "Add English Version of OLLAMA-INSTALL Guide",
-    "description": "Translate OLLAMA-INSTALL.zh-TW.md to English to cater to a broader audience, ensuring non-Chinese speakers can follow the installation guide.",
-    "status": "open",
-    "priority": "medium",
-    "labels": [
-      "docs",
-      "translation"
-    ],
-    "source_repo": "https://github.com/yennanliu/OpenClaw-mba-intel-1",
-    "created_at": "2026-05-02T08:40:24.099199Z",
-    "updated_at": "2026-05-02T08:40:24.099200Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "bce75593-ba31-4c48-8bc7-111d1d4ada7c",
-    "title": "fix bugs",
+    "id": "bcfc56f8-c977-48dd-9a8f-ca342fae5a21",
+    "title": "add e2e test",
     "description": "",
     "status": "open",
     "priority": "medium",
+    "importance": "medium",
     "labels": [],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-02T08:40:39.222151Z",
-    "updated_at": "2026-05-02T08:40:39.222161Z",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
+    "source_repo": "https://github.com/apache/spark",
+    "created_at": "2026-05-03T06:53:27.581736Z",
+    "updated_at": "2026-05-03T06:56:20.612365Z",
+    "business_req": "",
+    "stakeholder": "",
+    "user_story": "",
+    "acceptance_criteria": [
+      "The end-to-end test should cover a complete workflow from data ingestion to result output using Spark's APIs.",
+      "The test should be executable in the current CI/CD pipeline without manual intervention.",
+      "The test should validate the integration of Spark SQL, MLlib, and Structured Streaming components.",
+      "The test should pass consistently across supported environments (Scala, Java, Python)."
+    ],
+    "related_files": [
+      "pom.xml",
+      "pyproject.toml",
+      "README.md",
+      "CONTRIBUTING.md"
+    ],
+    "technical_notes": "Consider using the existing test frameworks and utilities provided in the repository to ensure consistency with current testing practices. Pay attention to the setup and teardown processes to avoid resource leaks. Ensure that the test is isolated and does not depend on external systems or data. Utilize mock data where applicable to simulate real-world scenarios.",
+    "suggested_assignee": "QA team",
+    "suggested_change_refs": [
+      {
+        "file": "pom.xml",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/pom.xml",
+        "title": "pom.xml"
+      },
+      {
+        "file": "pyproject.toml",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/pyproject.toml",
+        "title": "pyproject.toml"
+      },
+      {
+        "file": "README.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/README.md",
+        "title": "README.md"
+      },
+      {
+        "file": "CONTRIBUTING.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/CONTRIBUTING.md",
+        "title": "CONTRIBUTING.md"
+      }
+    ],
+    "validation_score": 1.0,
+    "validation_notes": "The ticket is well-structured with specific acceptance criteria, plausible related files, actionable technical notes, and includes change references.",
+    "validation_passed": true
+  },
+  {
+    "id": "1466c337-b59b-46dc-9f08-5b56851fd301",
+    "title": "add new UI for spark stream",
+    "description": "",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [
+      "feature"
+    ],
+    "source_repo": "https://github.com/apache/spark",
+    "created_at": "2026-05-03T06:55:34.835503Z",
+    "updated_at": "2026-05-03T06:59:57.722213Z",
+    "business_req": "",
+    "stakeholder": "",
+    "user_story": "",
+    "acceptance_criteria": [
+      "The new UI for Spark Streaming is accessible from the main dashboard.",
+      "The UI displays real-time data metrics such as throughput, latency, and error rates.",
+      "Users can filter and sort streaming data by various parameters.",
+      "The UI is responsive and works across different screen sizes.",
+      "All new UI components pass accessibility checks and are compliant with WCAG standards.",
+      "Unit and integration tests cover at least 90% of the new UI code."
+    ],
+    "related_files": [
+      "spark/ui/src/main/scala/org/apache/spark/ui/streaming/StreamingPage.scala",
+      "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.html",
+      "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.css",
+      "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.js"
+    ],
+    "technical_notes": "Consider leveraging existing components from the Spark UI framework to maintain consistency. Pay attention to the performance impact of real-time data updates on the UI. Ensure that the UI can handle large volumes of streaming data without significant lag. Be mindful of the security implications of exposing streaming data metrics.",
+    "suggested_assignee": "frontend",
+    "suggested_change_refs": [
+      {
+        "file": "spark/ui/src/main/scala/org/apache/spark/ui/streaming/StreamingPage.scala",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/spark/ui/src/main/scala/org/apache/spark/ui/streaming/StreamingPage.scala",
+        "title": "spark/ui/src/main/scala/org/apache/spark/ui/streaming/StreamingPage.scala"
+      },
+      {
+        "file": "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.html",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.html",
+        "title": "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.html"
+      },
+      {
+        "file": "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.css",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/apache/spark/blob/main/spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.css",
+        "title": "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.css"
+      },
+      {
+        "file": "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.js",
+        "ref_type": "code",
+        "ref_url": "https://github.com/apache/spark/blob/main/spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.js",
+        "title": "spark/ui/src/main/resources/org/apache/spark/ui/streaming/streamingpage.js"
+      }
+    ],
+    "validation_score": 1.0,
+    "validation_notes": "The ticket is well-structured with specific acceptance criteria, plausible related files, actionable technical notes, and includes change references.",
+    "validation_passed": true
   }
 ]
