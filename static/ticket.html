@@ -3,218 +3,548 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ticket Detail — Agent Ticket System</title>
+<title>Ticket — Agent Ticket System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; color: #222; }
+:root {
+  --bg:          #181818;
+  --bg-alt:      #202020;
+  --surface:     #2a2a2a;
+  --surface2:    #333333;
+  --text:        #f5f5f5;
+  --text-muted:  #a0a0a0;
+  --text-dim:    #6a6a6a;
+  --border:      #333333;
+  --accent:      #faff69;
+  --accent-alt:  #ff6ec7;
+  --success:     #b5e48c;
+  --warning:     #ffa07a;
+  --danger:      #ff6b6b;
+  --blue:        #7bdff2;
+  --purple:      #c7a9ff;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-variant-numeric: tabular-nums; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
 
-  header { background: #1a1a2e; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
-  header a { color: #a5b4fc; text-decoration: none; font-size: 0.85rem; }
-  header a:hover { color: #fff; }
-  header h1 { font-size: 1rem; font-weight: 600; flex: 1; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ── Header ── */
+header {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo { font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
+.header-sep { width: 1px; height: 20px; background: var(--border); }
+.breadcrumb { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+.breadcrumb a { color: var(--text-muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--text); }
+.breadcrumb span { color: var(--text-dim); }
+#header-title { font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 360px; }
+.spacer { flex: 1; }
+.nav-link { font-size: 12px; color: var(--text-dim); text-decoration: none; padding: 4px 8px; border-radius: 4px; }
+.nav-link:hover { color: var(--text); background: var(--surface); }
 
-  main { max-width: 860px; margin: 32px auto; padding: 0 24px 48px; }
+.btn {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover:not(:disabled) { background: #eaef50; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover:not(:disabled) { background: var(--surface2); }
+.btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+.btn-ghost:hover:not(:disabled) { color: var(--text); background: var(--surface); }
+.btn-danger { background: transparent; color: var(--danger); border: 1px solid #3a1515; }
+.btn-danger:hover:not(:disabled) { background: #1e0f0f; }
+.btn-violet { background: var(--accent-alt); color: #000; }
+.btn-violet:hover:not(:disabled) { background: #e85fb0; }
+.btn-teal { background: #0d766e; color: #fff; border: none; }
+.btn-teal:hover:not(:disabled) { background: #0b6158; }
 
-  .card { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.07); padding: 28px; margin-bottom: 20px; }
-  .card-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; margin-bottom: 14px; font-weight: 600; }
+/* ── Layout ── */
+#not-found {
+  text-align: center; padding: 80px 0; color: var(--text-dim);
+}
+#not-found h2 { font-size: 20px; color: var(--text-muted); margin-bottom: 8px; }
 
-  .ticket-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 14px; line-height: 1.3; }
-  .meta-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
-  .badge { display: inline-block; border-radius: 4px; padding: 3px 9px; font-size: 0.78rem; font-weight: 600; }
-  .status-open { background: #dbeafe; color: #1d4ed8; }
-  .status-in_progress { background: #fef3c7; color: #92400e; }
-  .status-done { background: #d1fae5; color: #065f46; }
-  .priority-high { background: #fee2e2; color: #991b1b; }
-  .priority-medium { background: #ffedd5; color: #9a3412; }
-  .priority-low { background: #f0fdf4; color: #166534; }
-  .label { background: #e0e7ff; color: #3730a3; border-radius: 3px; padding: 2px 6px; font-size: 0.75rem; }
-  .importance-critical { background: #7f1d1d; color: #fef2f2; }
-  .importance-high { background: #fee2e2; color: #991b1b; }
-  .importance-medium { background: #ffedd5; color: #9a3412; }
-  .importance-low { background: #f0fdf4; color: #166534; }
-  .validation-status-pass { background: #d1fae5; color: #065f46; border-radius: 4px; padding: 3px 9px; font-size: 0.78rem; font-weight: 600; }
-  .validation-status-fail { background: #fee2e2; color: #991b1b; border-radius: 4px; padding: 3px 9px; font-size: 0.78rem; font-weight: 600; }
-  .validation-status-pending { background: #f1f5f9; color: #64748b; border-radius: 4px; padding: 3px 9px; font-size: 0.78rem; }
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 20px 60px;
+  align-items: start;
+}
+@media (max-width: 800px) {
+  .page-layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+}
 
-  .field-label { font-size: 0.78rem; color: #64748b; margin-bottom: 4px; margin-top: 16px; font-weight: 600; }
-  .field-value { font-size: 0.9rem; color: #334155; line-height: 1.7; white-space: pre-wrap; }
-  .field-empty { font-size: 0.85rem; color: #94a3b8; font-style: italic; }
+/* ── Action bar ── */
+.action-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
 
-  ul.criteria-list { list-style: none; padding: 0; }
-  ul.criteria-list li { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.88rem; color: #334155; }
-  ul.criteria-list li:last-child { border-bottom: none; }
-  ul.criteria-list li::before { content: "✓"; color: #10b981; font-weight: 700; flex-shrink: 0; }
+/* ── Source row ── */
+.source-row {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.source-row label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.source-row input {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 5px 8px;
+  outline: none;
+}
+.source-row input:focus { border-color: var(--accent); }
+.source-row input::placeholder { color: var(--text-dim); }
 
-  ul.files-list { list-style: none; padding: 0; }
-  ul.files-list li { padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
-  ul.files-list li:last-child { border-bottom: none; }
-  code.file { font-family: monospace; background: #f8fafc; border-radius: 3px; padding: 2px 6px; color: #475569; }
+/* ── Cards ── */
+.card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.card-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-dim);
+}
+.card-body { padding: 16px; }
 
-  .refs-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  .refs-table th { text-align: left; padding: 8px 10px; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: .04em; border-bottom: 2px solid #e2e8f0; }
-  .refs-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
-  .refs-table tr:last-child td { border-bottom: none; }
-  .ref-type-badge { font-size: 0.72rem; font-weight: 600; border-radius: 3px; padding: 1px 6px; }
-  .ref-code { background: #dbeafe; color: #1d4ed8; }
-  .ref-doc  { background: #dcfce7; color: #15803d; }
-  .ref-design { background: #fae8ff; color: #9333ea; }
-  .ref-link { color: #4f46e5; word-break: break-all; }
+/* ── Ticket title ── */
+.ticket-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
 
-  .validation-bar-wrap { background: #f1f5f9; border-radius: 999px; height: 10px; margin: 10px 0; overflow: hidden; }
-  .validation-bar { height: 100%; border-radius: 999px; transition: width .4s; }
-  .bar-pass { background: #10b981; }
-  .bar-fail { background: #f87171; }
-  .validation-pass { color: #065f46; font-weight: 600; font-size: 0.85rem; }
-  .validation-fail { color: #991b1b; font-weight: 600; font-size: 0.85rem; }
+/* ── Meta badges ── */
+.meta-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-radius: 3px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+.s-open       { background: #0d2a3a; color: var(--blue); }
+.s-in_progress{ background: #2a2500; color: var(--accent); }
+.s-done       { background: #0d2a14; color: var(--success); }
+.p-high       { background: #2a1212; color: var(--danger); }
+.p-medium     { background: #2a1c0a; color: var(--warning); }
+.p-low        { background: #0d2a14; color: var(--success); }
+.i-critical   { background: #2a0f2a; color: var(--accent-alt); }
+.i-high       { background: #2a1212; color: var(--danger); }
+.i-medium     { background: #2a1c0a; color: var(--warning); }
+.i-low        { background: #0d2a14; color: var(--success); }
+.label-chip   { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); background: var(--surface2); border-radius: 3px; padding: 2px 6px; }
+.val-badge-pass { background: #0d2a14; color: var(--success); font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 3px; padding: 2px 7px; font-weight: 500; }
+.val-badge-fail { background: #2a1212; color: var(--danger); font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 3px; padding: 2px 7px; font-weight: 500; }
+.val-badge-pending { background: var(--surface2); color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 3px; padding: 2px 7px; }
 
-  .repo-link { color: #4f46e5; word-break: break-all; font-size: 0.9rem; }
-  .repo-link a { color: inherit; }
-  .timestamp { font-size: 0.8rem; color: #94a3b8; }
+/* ── Fields ── */
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+.field-value {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.field-empty {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+}
 
-  .actions-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
-  .btn { border: none; border-radius: 6px; padding: 8px 18px; cursor: pointer; font-size: 0.88rem; font-family: inherit; }
-  .btn-primary { background: #4f46e5; color: #fff; }
-  .btn-primary:hover { background: #4338ca; }
-  .btn-teal   { background: #0f766e; color: #fff; }
-  .btn-teal:hover { background: #0d6662; }
-  .btn-violet { background: #7c3aed; color: #fff; }
-  .btn-violet:hover { background: #6d28d9; }
-  .btn-outline { background: #fff; border: 1px solid #e2e8f0; color: #475569; }
-  .btn-outline:hover { background: #f8fafc; }
-  .btn-danger { background: #dc2626; color: #fff; }
-  .btn-danger:hover { background: #b91c1c; }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* ── Criteria list ── */
+ul.criteria-list { list-style: none; padding: 0; }
+ul.criteria-list li {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #1e1e1e;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+ul.criteria-list li:last-child { border-bottom: none; }
+ul.criteria-list li::before { content: "✓"; color: var(--success); font-weight: 700; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
 
-  .source-row { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
-  .source-row input { flex: 1; border: 1px solid #cbd5e1; border-radius: 5px; padding: 5px 8px; font-size: 0.85rem; }
-  .source-row label { font-size: 0.8rem; color: #64748b; white-space: nowrap; }
+/* ── Files list ── */
+ul.files-list { list-style: none; padding: 0; }
+ul.files-list li {
+  padding: 5px 0;
+  border-bottom: 1px solid #1e1e1e;
+  font-size: 12px;
+}
+ul.files-list li:last-child { border-bottom: none; }
+code.file {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--blue);
+  background: #0d1e26;
+  border-radius: 3px;
+  padding: 1px 5px;
+}
 
-  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; margin-right: 6px; vertical-align: middle; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── Refs table ── */
+.refs-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.refs-table th {
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+}
+.refs-table td { padding: 7px 8px; border-bottom: 1px solid #1e1e1e; vertical-align: top; }
+.refs-table tr:last-child td { border-bottom: none; }
+.ref-type-badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; border-radius: 3px; padding: 1px 5px; text-transform: uppercase; }
+.ref-code   { background: #0d2a3a; color: var(--blue); }
+.ref-doc    { background: #0d2a14; color: var(--success); }
+.ref-design { background: #2a0f2a; color: var(--accent-alt); }
+.ref-link   { color: var(--purple); word-break: break-all; font-size: 11px; }
+.ref-link:hover { color: var(--accent-alt); }
 
-  #toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; }
-  #toast.show { opacity: 1; }
-  #toast.error { background: #dc2626; }
+/* ── Validation bar ── */
+.val-bar-wrap {
+  background: var(--surface2);
+  border-radius: 2px;
+  height: 6px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+.val-bar { height: 100%; border-radius: 2px; transition: width .4s; }
+.bar-pass { background: var(--success); }
+.bar-fail { background: var(--danger); }
 
-  #not-found { text-align: center; padding: 80px 0; color: #94a3b8; }
-  #not-found h2 { font-size: 1.5rem; margin-bottom: 8px; color: #334155; }
+/* ── Sidebar ── */
+.sidebar { padding-left: 16px; }
+.sidebar .card { margin-bottom: 10px; }
+.meta-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid #1e1e1e; font-size: 12px; }
+.meta-item:last-child { border-bottom: none; }
+.meta-key { color: var(--text-dim); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; }
+.meta-val { color: var(--text-muted); text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta-val a { color: var(--purple); text-decoration: none; }
+.meta-val a:hover { color: var(--accent-alt); }
 
-  /* Edit modal */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #fff; border-radius: 12px; padding: 28px; width: 480px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
-  .modal h2 { font-size: 1.05rem; margin-bottom: 18px; }
-  .modal label { display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 3px; margin-top: 12px; }
-  .modal input, .modal textarea, .modal select { width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 0.9rem; font-family: inherit; }
-  .modal textarea { resize: vertical; min-height: 80px; }
-  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-  .modal-actions button { border: none; border-radius: 6px; padding: 8px 18px; cursor: pointer; font-size: 0.88rem; }
-  .btn-cancel { background: #f1f5f9; color: #475569; }
-  .btn-cancel:hover { background: #e2e8f0; }
+/* ── Spinner ── */
+.spinner {
+  display: inline-block;
+  width: 11px; height: 11px;
+  border: 1.5px solid rgba(250,255,105,.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .5s linear infinite;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Toast ── */
+#toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity .2s;
+  pointer-events: none;
+  z-index: 9999;
+}
+#toast.show { opacity: 1; }
+#toast.error { background: #2a1212; border-color: var(--danger); color: var(--danger); }
+
+/* ── Modal ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 200; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  width: 540px;
+  max-width: 95vw;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+.modal h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.modal label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-dim);
+  margin-top: 14px;
+  margin-bottom: 4px;
+}
+.modal input[type="text"],
+.modal textarea,
+.modal select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 7px 10px;
+  outline: none;
+}
+.modal input[type="text"]:focus,
+.modal textarea:focus,
+.modal select:focus { border-color: var(--accent); }
+.modal input::placeholder, .modal textarea::placeholder { color: var(--text-dim); }
+.modal textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+.modal select option { background: var(--bg-alt); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
 </style>
 </head>
 <body>
 
 <header>
-  <a href="/">← All Tickets</a>
-  <h1 id="header-title">Ticket Detail</h1>
-  <a href="/logs">Logs</a>
+  <span class="logo">⬡ Ticket System</span>
+  <div class="header-sep"></div>
+  <div class="breadcrumb">
+    <a href="/">All Tickets</a>
+    <span>/</span>
+    <span id="header-title">Loading…</span>
+  </div>
+  <div class="spacer"></div>
+  <a href="/logs" class="nav-link">Logs</a>
 </header>
 
-<main>
-  <div id="not-found" style="display:none">
-    <h2>Ticket not found</h2>
-    <p>This ticket may have been deleted.</p>
-    <br>
-    <a href="/" class="btn btn-outline" style="display:inline-block;margin-top:12px">← Back to list</a>
-  </div>
+<div id="not-found" style="display:none">
+  <h2>Ticket not found</h2>
+  <p style="color:var(--text-dim);margin-bottom:20px">This ticket may have been deleted.</p>
+  <a href="/" class="btn btn-ghost">← Back to list</a>
+</div>
 
-  <div id="content" style="display:none">
+<div id="content" style="display:none">
+  <div class="page-layout">
 
-    <!-- Source repo input for agent actions -->
-    <div class="source-row">
-      <label>Repo source:</label>
-      <input id="source-input" type="text" placeholder="Local path or GitHub URL for Enrich / Validate" />
+    <!-- Main column -->
+    <div class="main-col">
+
+      <!-- Source row -->
+      <div class="source-row">
+        <label>Repo source</label>
+        <input id="source-input" type="text" placeholder="Local path or GitHub URL for Enrich / Validate" />
+      </div>
+
+      <!-- Action bar -->
+      <div class="action-bar">
+        <button class="btn btn-primary" onclick="openEdit()">Edit</button>
+        <button class="btn btn-teal" id="enrich-btn" onclick="enrichTicket()">✦ Enrich</button>
+        <button class="btn btn-secondary" id="validate-btn" onclick="validateTicket()">⬡ Validate</button>
+        <button class="btn btn-danger" onclick="deleteTicket()">Delete</button>
+      </div>
+
+      <!-- Core card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Ticket</span>
+          <div id="t-val-badge"></div>
+        </div>
+        <div class="card-body">
+          <div class="ticket-title" id="t-title"></div>
+          <div class="meta-row" id="t-meta"></div>
+
+          <div class="field">
+            <div class="field-label">Business Requirement</div>
+            <div id="t-business-req" class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Stakeholder</div>
+            <div id="t-stakeholder" class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">User Story</div>
+            <div id="t-user-story" class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Description</div>
+            <div id="t-desc" class="field-value"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enrichment card -->
+      <div class="card">
+        <div class="card-header"><span class="card-label">Enrichment</span></div>
+        <div class="card-body">
+          <div class="field">
+            <div class="field-label">Acceptance Criteria</div>
+            <div id="t-ac"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Related Files</div>
+            <div id="t-files"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Notes</div>
+            <div id="t-notes" class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Suggested Assignee</div>
+            <div id="t-assignee" class="field-value"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change refs card -->
+      <div class="card">
+        <div class="card-header"><span class="card-label">Change References</span></div>
+        <div class="card-body" style="padding:0">
+          <div id="t-refs" style="padding:12px 16px"></div>
+        </div>
+      </div>
+
+      <!-- Validation card -->
+      <div class="card">
+        <div class="card-header"><span class="card-label">Validation</span></div>
+        <div class="card-body">
+          <div id="t-validation"></div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Action buttons -->
-    <div class="actions-bar">
-      <button class="btn btn-primary" onclick="openEdit()">✏️ Edit</button>
-      <button class="btn btn-teal" id="enrich-btn" onclick="enrichTicket()">✨ Enrich</button>
-      <button class="btn btn-violet" id="validate-btn" onclick="validateTicket()">🔍 Validate</button>
-      <button class="btn btn-danger" onclick="deleteTicket()">🗑️ Delete</button>
-    </div>
-
-    <!-- Core info card -->
-    <div class="card">
-      <div class="card-title">Ticket</div>
-      <div class="ticket-title" id="t-title"></div>
-      <div class="meta-row" id="t-meta"></div>
-
-      <div class="field-label">Source Repo</div>
-      <div id="t-repo" class="repo-link"></div>
-
-      <div class="field-label">Business Requirement</div>
-      <div id="t-business-req" class="field-value"></div>
-
-      <div class="field-label">Stakeholder</div>
-      <div id="t-stakeholder" class="field-value"></div>
-
-      <div class="field-label">User Story</div>
-      <div id="t-user-story" class="field-value"></div>
-
-      <div class="field-label">Description</div>
-      <div id="t-desc" class="field-value"></div>
-
-      <div class="field-label" style="margin-top:20px;color:#94a3b8;font-size:.75rem">
-        Created <span id="t-created"></span> · Updated <span id="t-updated"></span>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-header"><span class="card-label">Metadata</span></div>
+        <div class="card-body" style="padding:8px 16px">
+          <div class="meta-item">
+            <span class="meta-key">ID</span>
+            <span class="meta-val" id="s-id"></span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Status</span>
+            <span class="meta-val" id="s-status"></span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Priority</span>
+            <span class="meta-val" id="s-priority"></span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Importance</span>
+            <span class="meta-val" id="s-importance"></span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Source</span>
+            <span class="meta-val" id="s-repo"></span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Created</span>
+            <span class="meta-val" id="s-created"></span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Updated</span>
+            <span class="meta-val" id="s-updated"></span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Enriched fields card -->
-    <div class="card">
-      <div class="card-title">Enrichment</div>
-
-      <div class="field-label">Acceptance Criteria</div>
-      <div id="t-ac"></div>
-
-      <div class="field-label">Related Files</div>
-      <div id="t-files"></div>
-
-      <div class="field-label">Notes</div>
-      <div id="t-notes" class="field-value"></div>
-
-      <div class="field-label">Suggested Assignee</div>
-      <div id="t-assignee" class="field-value"></div>
-    </div>
-
-    <!-- Change refs card -->
-    <div class="card" id="refs-card">
-      <div class="card-title">Suggested Change References</div>
-      <div id="t-refs"></div>
-    </div>
-
-    <!-- Validation card -->
-    <div class="card" id="validation-card">
-      <div class="card-title">Validation</div>
-      <div id="t-validation"></div>
-    </div>
-
   </div>
-</main>
+</div>
 
 <!-- Edit modal -->
 <div class="modal-overlay" id="modal">
-  <div class="modal" style="width:560px;max-height:90vh;overflow-y:auto">
+  <div class="modal">
     <h2>Edit Ticket</h2>
     <label>Title *</label>
     <input id="f-title" type="text" />
     <label>Business Requirement</label>
-    <textarea id="f-business-req" style="min-height:60px"></textarea>
+    <textarea id="f-business-req" style="min-height:56px"></textarea>
     <label>Stakeholder</label>
-    <input id="f-stakeholder" type="text" placeholder="e.g. Product, Engineering, Customer" />
+    <input id="f-stakeholder" type="text" placeholder="Product, Engineering, Customer…" />
     <label>User Story</label>
-    <textarea id="f-user-story" style="min-height:60px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
+    <textarea id="f-user-story" style="min-height:56px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
     <label>Description</label>
     <textarea id="f-desc"></textarea>
     <label>Status</label>
@@ -241,7 +571,7 @@
     <label>Source Repo</label>
     <input id="f-repo" type="text" />
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" onclick="submitEdit()">Save</button>
     </div>
   </div>
@@ -256,68 +586,50 @@ let currentTicket = null;
 
 async function loadTicket() {
   const res = await fetch(`${API}/tickets/${ticketId}`);
-  if (res.status === 404) { showNotFound(); return; }
+  if (res.status === 404) { document.getElementById('not-found').style.display = 'block'; return; }
   currentTicket = await res.json();
   renderTicket(currentTicket);
-}
-
-function showNotFound() {
-  document.getElementById('not-found').style.display = 'block';
 }
 
 function renderTicket(t) {
   document.getElementById('content').style.display = 'block';
   document.getElementById('header-title').textContent = t.title;
   document.title = t.title + ' — Agent Ticket System';
-
   document.getElementById('t-title').textContent = t.title;
 
-  // Auto-fill source input from ticket's source_repo
-  const sourceInput = document.getElementById('source-input');
-  if (!sourceInput.value && t.source_repo) sourceInput.value = t.source_repo;
+  // Auto-fill source input
+  const srcInput = document.getElementById('source-input');
+  if (!srcInput.value && t.source_repo) srcInput.value = t.source_repo;
 
-  // Meta badges (status, priority, importance, validation, labels)
-  const importanceCls = `importance-${t.importance || 'medium'}`;
-  const valBadge = t.validation_passed === true
-    ? '<span class="validation-status-pass">✅ Validated</span>'
-    : t.validation_passed === false
-      ? '<span class="validation-status-fail">❌ Validation failed</span>'
-      : '<span class="validation-status-pending">⏳ Not validated</span>';
-  const labels = (t.labels || []).map(l => `<span class="label">${esc(l)}</span>`).join(' ');
+  // Meta badges
+  const imp = t.importance || 'medium';
+  const labels = (t.labels || []).map(l => `<span class="label-chip">${esc(l)}</span>`).join(' ');
   document.getElementById('t-meta').innerHTML =
-    `<span class="badge status-${t.status}">${t.status.replace('_',' ')}</span>
-     <span class="badge priority-${t.priority}">${t.priority}</span>
-     <span class="badge ${importanceCls}">⚡ ${t.importance || 'medium'}</span>
-     ${valBadge}
+    `<span class="badge s-${t.status}">${t.status.replace('_',' ')}</span>
+     <span class="badge p-${t.priority}">${t.priority}</span>
+     <span class="badge i-${imp}">⚡ ${imp}</span>
      ${labels}`;
 
-  // Repo
-  const repo = t.source_repo;
-  document.getElementById('t-repo').innerHTML = repo
-    ? (repo.startsWith('http') ? `<a href="${esc(repo)}" target="_blank">${esc(repo)}</a>` : esc(repo))
-    : '<span class="field-empty">—</span>';
+  // Validation badge (card header)
+  const vb = document.getElementById('t-val-badge');
+  if (t.validation_passed === true)
+    vb.innerHTML = `<span class="val-badge-pass">✓ VALIDATED ${pct(t.validation_score)}</span>`;
+  else if (t.validation_passed === false)
+    vb.innerHTML = `<span class="val-badge-fail">✗ FAILED ${pct(t.validation_score)}</span>`;
+  else
+    vb.innerHTML = `<span class="val-badge-pending">NOT VALIDATED</span>`;
 
   // Content fields
-  document.getElementById('t-business-req').innerHTML = t.business_req
-    ? esc(t.business_req) : '<span class="field-empty">—</span>';
-  document.getElementById('t-stakeholder').innerHTML = t.stakeholder
-    ? esc(t.stakeholder) : '<span class="field-empty">—</span>';
-  document.getElementById('t-user-story').innerHTML = t.user_story
-    ? esc(t.user_story) : '<span class="field-empty">—</span>';
-
-  // Description
-  document.getElementById('t-desc').innerHTML = t.description
-    ? esc(t.description) : '<span class="field-empty">No description — use Enrich to generate.</span>';
-
-  // Timestamps
-  document.getElementById('t-created').textContent = fmt(t.created_at);
-  document.getElementById('t-updated').textContent = fmt(t.updated_at);
+  setField('t-business-req', t.business_req, 'No business requirement — use Enrich to generate.');
+  setField('t-stakeholder', t.stakeholder, '—');
+  setField('t-user-story', t.user_story, 'No user story — use Enrich to generate.');
+  setField('t-desc', t.description, 'No description — use Enrich to generate.');
 
   // Acceptance criteria
   const ac = t.acceptance_criteria || [];
   document.getElementById('t-ac').innerHTML = ac.length
     ? `<ul class="criteria-list">${ac.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`
-    : '<span class="field-empty">None — use Enrich to generate.</span>';
+    : '<span class="field-empty">None — use ✦ Enrich to generate.</span>';
 
   // Related files
   const files = t.related_files || [];
@@ -326,71 +638,89 @@ function renderTicket(t) {
     : '<span class="field-empty">None.</span>';
 
   // Notes
-  document.getElementById('t-notes').innerHTML = t.technical_notes
-    ? esc(t.technical_notes) : '<span class="field-empty">None.</span>';
+  setField('t-notes', t.technical_notes, 'None.');
 
   // Assignee
-  document.getElementById('t-assignee').innerHTML = t.suggested_assignee
-    ? esc(t.suggested_assignee) : '<span class="field-empty">—</span>';
+  setField('t-assignee', t.suggested_assignee, '—');
 
   // Change refs
   const refs = t.suggested_change_refs || [];
-  if (refs.length) {
-    document.getElementById('t-refs').innerHTML =
-      `<table class="refs-table">
+  document.getElementById('t-refs').innerHTML = refs.length
+    ? `<table class="refs-table">
         <thead><tr><th>File</th><th>Type</th><th>Reference</th></tr></thead>
-        <tbody>${refs.map(r => `
+        <tbody>${refs.map(r=>`
           <tr>
             <td><code class="file">${esc(r.file)}</code></td>
             <td><span class="ref-type-badge ref-${r.ref_type}">${r.ref_type}</span></td>
-            <td><a href="${esc(r.ref_url)}" class="ref-link" target="_blank">${esc(r.title || r.ref_url)}</a></td>
+            <td><a href="${esc(r.ref_url)}" class="ref-link" target="_blank">${esc(r.title||r.ref_url)}</a></td>
           </tr>`).join('')}
         </tbody>
-      </table>`;
-  } else {
-    document.getElementById('t-refs').innerHTML =
-      '<span class="field-empty">No refs — Enrich from a GitHub URL to auto-generate.</span>';
-  }
+      </table>`
+    : '<span class="field-empty">No refs — Enrich from a GitHub URL to auto-generate.</span>';
 
-  // Validation
+  // Validation detail
   renderValidation(t);
+
+  // Sidebar metadata
+  document.getElementById('s-id').textContent = t.id.slice(0, 8) + '…';
+  document.getElementById('s-status').innerHTML = `<span class="badge s-${t.status}">${t.status.replace('_',' ')}</span>`;
+  document.getElementById('s-priority').innerHTML = `<span class="badge p-${t.priority}">${t.priority}</span>`;
+  document.getElementById('s-importance').innerHTML = `<span class="badge i-${imp}">${imp}</span>`;
+  const repo = t.source_repo;
+  document.getElementById('s-repo').innerHTML = repo
+    ? (repo.startsWith('http') ? `<a href="${esc(repo)}" target="_blank" title="${esc(repo)}">${repoShort(repo)}</a>` : esc(repoShort(repo)))
+    : '—';
+  document.getElementById('s-created').textContent = fmt(t.created_at);
+  document.getElementById('s-updated').textContent = fmt(t.updated_at);
+}
+
+function setField(id, val, emptyMsg) {
+  document.getElementById(id).innerHTML = val
+    ? `<span class="field-value">${esc(val)}</span>`
+    : `<span class="field-empty">${emptyMsg}</span>`;
 }
 
 function renderValidation(t) {
   const el = document.getElementById('t-validation');
   if (t.validation_score === null || t.validation_score === undefined) {
-    el.innerHTML = '<span class="field-empty">Not validated yet — click 🔍 Validate.</span>';
+    el.innerHTML = '<span class="field-empty">Not validated yet — click ⬡ Validate.</span>';
     return;
   }
-  const pct = Math.round(t.validation_score * 100);
+  const p = Math.round(t.validation_score * 100);
   const pass = t.validation_passed;
-  const barClass = pass ? 'bar-pass' : 'bar-fail';
-  const labelClass = pass ? 'validation-pass' : 'validation-fail';
   el.innerHTML = `
-    <div class="${labelClass}">${pass ? '✅ Passed' : '❌ Failed'} — ${pct}%</div>
-    <div class="validation-bar-wrap"><div class="validation-bar ${barClass}" style="width:${pct}%"></div></div>
-    <p style="font-size:.85rem;color:#475569;margin-top:6px">${esc(t.validation_notes || '')}</p>`;
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:${pass?'var(--success)':'var(--danger)'}">
+        ${p}%
+      </span>
+      <span style="font-size:12px;color:${pass?'var(--success)':'var(--danger)'}">
+        ${pass ? '✓ Passed' : '✗ Failed'}
+      </span>
+    </div>
+    <div class="val-bar-wrap">
+      <div class="val-bar ${pass?'bar-pass':'bar-fail'}" style="width:${p}%"></div>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.6">${esc(t.validation_notes||'')}</p>`;
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 
 async function enrichTicket() {
   const source = document.getElementById('source-input').value.trim();
-  if (!source) { toast('Enter a local path or GitHub URL in the repo source field', true); return; }
   const btn = document.getElementById('enrich-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Enriching…';
   try {
-    const body = source.startsWith('http') ? { repo_url: source } : { repo_path: source };
+    const body = source.startsWith('http') ? { repo_url: source } : (source ? { repo_path: source } : {});
     const res = await fetch(`${API}/agents/enrich/${ticketId}`, {
       method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
     });
     if (!res.ok) throw new Error(await res.text());
     currentTicket = await res.json();
     renderTicket(currentTicket);
-    toast('Ticket enriched');
+    toast('Enriched');
   } catch(e) { toast('Enrich failed: ' + e.message, true); }
-  finally { btn.disabled = false; btn.innerHTML = '✨ Enrich'; }
+  finally { btn.disabled = false; btn.innerHTML = '✦ Enrich'; }
 }
 
 async function validateTicket() {
@@ -401,16 +731,16 @@ async function validateTicket() {
     const res = await fetch(`${API}/agents/validate/${ticketId}`, { method: 'POST' });
     if (!res.ok) throw new Error(await res.text());
     currentTicket = await res.json();
-    renderValidation(currentTicket);
+    renderTicket(currentTicket);
     toast('Validation complete');
   } catch(e) { toast('Validate failed: ' + e.message, true); }
-  finally { btn.disabled = false; btn.innerHTML = '🔍 Validate'; }
+  finally { btn.disabled = false; btn.innerHTML = '⬡ Validate'; }
 }
 
 async function deleteTicket() {
   if (!confirm(`Delete "${currentTicket.title}"?`)) return;
   const res = await fetch(`${API}/tickets/${ticketId}`, { method: 'DELETE' });
-  if (res.ok) { window.location.href = '/'; }
+  if (res.ok) window.location.href = '/';
   else toast('Delete failed', true);
 }
 
@@ -454,7 +784,7 @@ async function submitEdit() {
     currentTicket = await res.json();
     renderTicket(currentTicket);
     closeModal();
-    toast('Ticket updated');
+    toast('Updated');
   } else toast('Save failed', true);
 }
 
@@ -462,10 +792,23 @@ document.getElementById('modal').addEventListener('click', e => { if (e.target==
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function pct(score) {
+  return (score !== null && score !== undefined) ? Math.round(score * 100) + '%' : '';
 }
-function fmt(s) { return s ? new Date(s).toLocaleString() : '—'; }
+function repoShort(s) {
+  if (!s) return '—';
+  if (s.startsWith('http')) {
+    try {
+      const parts = new URL(s).pathname.split('/').filter(Boolean);
+      return parts.length >= 2 ? parts.slice(-2).join('/') : s;
+    } catch { return s; }
+  }
+  return s.split('/').pop() || s;
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmt(s) { return s ? new Date(s).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'; }
 
 function toast(msg, isError=false) {
   const el = document.getElementById('toast');

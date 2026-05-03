@@ -4,138 +4,380 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Ticket System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; color: #222; }
+:root {
+  --bg:          #181818;
+  --bg-alt:      #202020;
+  --surface:     #2a2a2a;
+  --surface2:    #333333;
+  --text:        #f5f5f5;
+  --text-muted:  #a0a0a0;
+  --text-dim:    #6a6a6a;
+  --border:      #333333;
+  --accent:      #faff69;
+  --accent-alt:  #ff6ec7;
+  --success:     #b5e48c;
+  --warning:     #ffa07a;
+  --danger:      #ff6b6b;
+  --blue:        #7bdff2;
+  --purple:      #c7a9ff;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-variant-numeric: tabular-nums; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+}
 
-  /* ── Header ── */
-  header { background: #1a1a2e; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 10px; }
-  header h1 { font-size: 1.2rem; font-weight: 600; flex: 1; }
-  header a.nav-link { color: #a5b4fc; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 5px; }
-  header a.nav-link:hover { background: rgba(255,255,255,.1); color: #fff; }
-  header button { background: #4f46e5; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-size: 0.85rem; }
-  header button:hover { background: #4338ca; }
-  header button.btn-outline-white { background: transparent; border: 1px solid rgba(255,255,255,.3); color: #fff; }
-  header button.btn-outline-white:hover { background: rgba(255,255,255,.1); }
+/* ── Header ── */
+header {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.header-sep { width: 1px; height: 20px; background: var(--border); }
+.nav-link {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.nav-link:hover { color: var(--text); background: var(--surface); }
+.spacer { flex: 1; }
+.btn {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover:not(:disabled) { background: #eaef50; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover:not(:disabled) { background: var(--surface2); }
+.btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+.btn-ghost:hover:not(:disabled) { color: var(--text); background: var(--surface); }
+.btn-danger-ghost { background: transparent; color: var(--danger); border: 1px solid #4a2020; }
+.btn-danger-ghost:hover:not(:disabled) { background: #2a1515; }
+.btn-violet { background: var(--accent-alt); color: #000; }
+.btn-violet:hover:not(:disabled) { background: #e85fb0; }
 
-  /* ── Repo panel ── */
-  #repo-panel { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  #repo-panel input { flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 0.9rem; }
-  #repo-panel button { border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
-  #repo-panel button:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-teal { background: #0f766e; color: #fff; }
-  .btn-teal:hover { background: #0d6662; }
-  .btn-violet { background: #7c3aed; color: #fff; }
-  .btn-violet:hover { background: #6d28d9; }
-  .btn-slate { background: #475569; color: #fff; }
-  .btn-slate:hover { background: #334155; }
+/* ── Toolbar ── */
+#toolbar {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#toolbar input[type="text"] {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 5px 10px;
+  flex: 1;
+  min-width: 220px;
+  outline: none;
+}
+#toolbar input[type="text"]::placeholder { color: var(--text-dim); }
+#toolbar input[type="text"]:focus { border-color: var(--accent); }
 
-  /* ── Toast ── */
-  #toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; }
-  #toast.show { opacity: 1; }
-  #toast.error { background: #dc2626; }
+/* ── Main ── */
+main { padding: 0; }
 
-  /* ── Main layout ── */
-  main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+/* ── Table ── */
+.table-wrap {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+thead th {
+  background: var(--bg-alt);
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 0 12px;
+  height: 32px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 44px;
+  white-space: nowrap;
+  user-select: none;
+}
+thead th.num { text-align: right; }
+thead th.check-col { width: 36px; padding: 0 8px; }
+tbody tr { height: 30px; }
+tbody tr:nth-child(even) td { background: var(--bg-alt); }
+tbody tr:hover td { background: var(--surface) !important; }
+tbody td {
+  padding: 0 12px;
+  border-bottom: 1px solid #1e1e1e;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+tbody td.check-col { padding: 0 8px; }
+tbody td.title-col { max-width: 340px; cursor: pointer; }
+tbody td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+tbody tr:last-child td { border-bottom: none; }
 
-  /* ── Table ── */
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
-  th { background: #f8fafc; text-align: left; padding: 10px 12px; font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #e2e8f0; }
-  th.check-col { width: 36px; }
-  td { padding: 10px 12px; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #f8fafc; }
-  .title-cell { cursor: pointer; }
-  .title-cell strong:hover { color: #4f46e5; text-decoration: underline; }
+input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+}
 
-  /* ── Badges ── */
-  .badge { display: inline-block; border-radius: 4px; padding: 2px 7px; font-size: 0.75rem; font-weight: 600; }
-  .status-open { background: #dbeafe; color: #1d4ed8; }
-  .status-in_progress { background: #fef3c7; color: #92400e; }
-  .status-done { background: #d1fae5; color: #065f46; }
-  .priority-high { background: #fee2e2; color: #991b1b; }
-  .priority-medium { background: #ffedd5; color: #9a3412; }
-  .priority-low { background: #f0fdf4; color: #166534; }
-  .label { background: #e0e7ff; color: #3730a3; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin-right: 3px; }
-  .importance-critical { background: #7f1d1d; color: #fef2f2; }
-  .importance-high { background: #fee2e2; color: #991b1b; }
-  .importance-medium { background: #ffedd5; color: #9a3412; }
-  .importance-low { background: #f0fdf4; color: #166534; }
+/* ── Title link ── */
+.ticket-link { color: var(--text); text-decoration: none; font-weight: 500; }
+.ticket-link:hover { color: var(--accent); }
+.enriched-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); margin-left: 5px; vertical-align: middle; }
 
-  /* ── Repo chip ── */
-  .repo-chip { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; font-size: 0.72rem; color: #64748b; background: #f1f5f9; border-radius: 3px; padding: 1px 6px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .repo-chip a { color: inherit; text-decoration: none; }
-  .repo-chip a:hover { color: #4f46e5; }
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-radius: 3px;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+.s-open       { background: #0d2a3a; color: var(--blue); }
+.s-in_progress{ background: #2a2500; color: var(--accent); }
+.s-done       { background: #0d2a14; color: var(--success); }
+.p-high       { background: #2a1212; color: var(--danger); }
+.p-medium     { background: #2a1c0a; color: var(--warning); }
+.p-low        { background: #0d2a14; color: var(--success); }
+.i-critical   { color: var(--accent-alt); }
+.i-high       { color: var(--danger); }
+.i-medium     { color: var(--warning); }
+.i-low        { color: var(--success); }
+.val-pass     { color: var(--success); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.val-fail     { color: var(--danger); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.val-none     { color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.label-chip   { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); background: var(--surface2); border-radius: 3px; padding: 1px 5px; margin-right: 2px; }
+.repo-chip    { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); }
 
-  /* ── Action buttons ── */
-  .actions { display: flex; gap: 5px; flex-wrap: wrap; }
-  .btn-icon { background: none; border: 1px solid #e2e8f0; border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 0.78rem; color: #475569; white-space: nowrap; }
-  .btn-icon:hover { background: #f1f5f9; }
-  .btn-icon.enrich { color: #7c3aed; border-color: #c4b5fd; }
-  .btn-icon.enrich:hover { background: #ede9fe; }
-  .btn-icon.danger { color: #dc2626; border-color: #fecaca; }
-  .btn-icon.danger:hover { background: #fef2f2; }
-  .btn-icon:disabled { opacity: 0.4; cursor: not-allowed; }
+/* ── Action row ── */
+.action-btns { display: flex; gap: 4px; align-items: center; }
+.btn-xs {
+  font-family: inherit;
+  font-size: 11px;
+  border-radius: 3px;
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-xs:hover { background: var(--surface); color: var(--text); }
+.btn-xs.enrich { color: var(--purple); border-color: #3d2e5a; }
+.btn-xs.enrich:hover { background: #221833; }
+.btn-xs.del { color: var(--danger); border-color: #3a1515; }
+.btn-xs.del:hover { background: #1e0f0f; }
+.btn-xs:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  .empty { text-align: center; color: #94a3b8; padding: 48px 0; font-size: 0.95rem; }
+/* ── Empty state ── */
+.empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 64px 0;
+  font-size: 13px;
+}
+.empty strong { display: block; font-size: 15px; color: var(--text-muted); margin-bottom: 6px; }
 
-  /* ── Modals ── */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #fff; border-radius: 12px; padding: 28px; width: 480px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
-  .modal h2 { font-size: 1.05rem; margin-bottom: 18px; }
-  .modal label { display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 3px; margin-top: 12px; }
-  .modal .hint { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
-  .modal input, .modal textarea, .modal select { width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; font-size: 0.9rem; font-family: inherit; }
-  .modal textarea { resize: vertical; min-height: 80px; }
-  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-  .modal-actions button { border: none; border-radius: 6px; padding: 8px 18px; cursor: pointer; font-size: 0.88rem; }
-  .btn-cancel { background: #f1f5f9; color: #475569; }
-  .btn-cancel:hover { background: #e2e8f0; }
-  .btn-submit { background: #4f46e5; color: #fff; }
-  .btn-submit:hover { background: #4338ca; }
+/* ── Spinner ── */
+.spinner {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border: 1.5px solid rgba(250,255,105,.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .5s linear infinite;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.spinner.dark {
+  border-color: rgba(199,169,255,.2);
+  border-top-color: var(--purple);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Spinner ── */
-  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; margin-right: 6px; vertical-align: middle; }
-  .spinner.dark { border-color: rgba(79,70,229,.2); border-top-color: #4f46e5; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── Toast ── */
+#toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity .2s;
+  pointer-events: none;
+  z-index: 9999;
+}
+#toast.show { opacity: 1; }
+#toast.error { background: #2a1212; border-color: var(--danger); color: var(--danger); }
+#toast.ok { border-left: 3px solid var(--success); }
+
+/* ── Modals ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  width: 500px;
+  max-width: 95vw;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+.modal h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.modal label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-dim);
+  margin-top: 14px;
+  margin-bottom: 4px;
+}
+.modal input[type="text"],
+.modal textarea,
+.modal select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 7px 10px;
+  outline: none;
+}
+.modal input[type="text"]:focus,
+.modal textarea:focus,
+.modal select:focus { border-color: var(--accent); }
+.modal input[type="text"]::placeholder,
+.modal textarea::placeholder { color: var(--text-dim); }
+.modal textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+.modal select option { background: var(--bg-alt); }
+.modal-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+/* ── Stat bar ── */
+#stat-bar {
+  padding: 6px 20px;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.stat-item { display: flex; gap: 5px; align-items: center; }
+.stat-val { color: var(--text-muted); }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Agent Ticket System</h1>
-  <a href="/logs" class="nav-link">📋 Logs</a>
-  <button class="btn-outline-white" onclick="openBatchCreate()">Batch Create</button>
-  <button onclick="openCreate()">+ New Ticket</button>
+  <span class="logo">⬡ Ticket System</span>
+  <div class="header-sep"></div>
+  <a href="/logs" class="nav-link">Logs</a>
+  <div class="spacer"></div>
+  <button class="btn btn-ghost" onclick="openBatchCreate()">Batch Create</button>
+  <button class="btn btn-primary" onclick="openCreate()">+ New Ticket</button>
 </header>
 
-<div id="repo-panel">
-  <input id="repo-input" type="text" placeholder="Local path (e.g. ../linkedin-skill) or GitHub URL" />
-  <button class="btn-teal" id="generate-btn" onclick="generateTickets()">Generate from Repo</button>
-  <button class="btn-violet" id="enrich-all-btn" onclick="enrichAll()">✨ Enrich Selected</button>
+<div id="toolbar">
+  <input id="repo-input" type="text" placeholder="Repo path (../my-project) or GitHub URL" style="flex:2" />
+  <button class="btn btn-primary" id="generate-btn" onclick="generateTickets()">Generate from Repo</button>
+  <div class="header-sep"></div>
+  <button class="btn btn-violet" id="enrich-all-btn" onclick="enrichAll()">✦ Enrich Selected</button>
+</div>
+
+<div id="stat-bar">
+  <span class="stat-item">Tickets: <span class="stat-val" id="stat-total">—</span></span>
+  <span class="stat-item">Open: <span class="stat-val" id="stat-open">—</span></span>
+  <span class="stat-item">Validated: <span class="stat-val" id="stat-validated">—</span></span>
+  <span class="stat-item">Pass rate: <span class="stat-val" id="stat-passrate">—</span></span>
 </div>
 
 <main>
-  <div id="ticket-container"></div>
+  <div class="table-wrap">
+    <div id="ticket-container"></div>
+  </div>
 </main>
 
 <!-- Create/Edit modal -->
 <div class="modal-overlay" id="modal">
-  <div class="modal" style="width:520px;max-height:90vh;overflow-y:auto">
+  <div class="modal">
     <h2 id="modal-title">New Ticket</h2>
     <input type="hidden" id="modal-id" />
     <label>Title *</label>
     <input id="f-title" type="text" placeholder="Short, actionable title" />
     <label>Business Requirement</label>
-    <textarea id="f-business-req" style="min-height:60px" placeholder="The business need this addresses"></textarea>
+    <textarea id="f-business-req" style="min-height:56px" placeholder="The business need this ticket addresses"></textarea>
     <label>Stakeholder</label>
     <input id="f-stakeholder" type="text" placeholder="e.g. Product, Engineering, Customer" />
     <label>User Story</label>
-    <textarea id="f-user-story" style="min-height:60px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
+    <textarea id="f-user-story" style="min-height:56px" placeholder="As a <role>, I want <goal> so that <benefit>"></textarea>
     <label>Description</label>
-    <textarea id="f-desc" placeholder="What needs to be done? (optional — AI can generate this via Enrich)"></textarea>
-    <p class="hint">Leave blank and use ✨ Enrich to let AI fill this in.</p>
+    <textarea id="f-desc" placeholder="What needs to be done? Leave blank — Enrich will fill it."></textarea>
+    <p class="modal-hint">Leave blank and use ✦ Enrich to let AI fill this in.</p>
     <label>Status</label>
     <select id="f-status">
       <option value="open">Open</option>
@@ -160,8 +402,8 @@
     <label>Source Repo</label>
     <input id="f-repo" type="text" placeholder="../my-project or https://github.com/..." />
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-submit" onclick="submitTicket()">Save</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitTicket()">Save</button>
     </div>
   </div>
 </div>
@@ -170,14 +412,14 @@
 <div class="modal-overlay" id="batch-modal">
   <div class="modal">
     <h2>Batch Create Tickets</h2>
-    <label>Ticket titles (one per line)</label>
-    <textarea id="batch-titles" style="min-height:160px" placeholder="Fix login bug&#10;Add dark mode&#10;Improve test coverage&#10;Update API docs"></textarea>
+    <label>Ticket titles — one per line</label>
+    <textarea id="batch-titles" style="min-height:140px;font-family:'JetBrains Mono',monospace;font-size:12px" placeholder="Fix login bug&#10;Add dark mode&#10;Improve test coverage&#10;Update API docs"></textarea>
     <label>Source Repo (optional)</label>
     <input id="batch-repo" type="text" placeholder="../my-project or https://github.com/..." />
-    <p class="hint">Descriptions will be empty — run ✨ Enrich after to let AI fill them in.</p>
+    <p class="modal-hint">Descriptions will be empty — run ✦ Enrich after to let AI fill them in.</p>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeBatchModal()">Cancel</button>
-      <button class="btn-submit" onclick="submitBatch()">Create All</button>
+      <button class="btn btn-ghost" onclick="closeBatchModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitBatch()">Create All</button>
     </div>
   </div>
 </div>
@@ -195,11 +437,22 @@ async function loadTickets() {
   const res = await fetch(`${API}/tickets`);
   currentTickets = await res.json();
   renderTable(currentTickets);
+  updateStats(currentTickets);
+}
+
+function updateStats(tickets) {
+  document.getElementById('stat-total').textContent = tickets.length;
+  document.getElementById('stat-open').textContent = tickets.filter(t => t.status === 'open').length;
+  const validated = tickets.filter(t => t.validation_passed !== null && t.validation_passed !== undefined);
+  const passed = tickets.filter(t => t.validation_passed === true);
+  document.getElementById('stat-validated').textContent = validated.length;
+  document.getElementById('stat-passrate').textContent = validated.length
+    ? Math.round(passed.length / validated.length * 100) + '%' : '—';
 }
 
 async function generateTickets() {
   const source = document.getElementById('repo-input').value.trim();
-  if (!source) { toast('Enter a local path or GitHub URL', true); return; }
+  if (!source) { toast('Enter a repo path or GitHub URL', true); return; }
   const btn = document.getElementById('generate-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Generating…';
@@ -210,7 +463,7 @@ async function generateTickets() {
     });
     if (!res.ok) throw new Error(await res.text());
     const tickets = await res.json();
-    toast(`Created ${tickets.length} ticket(s) from repo`);
+    toast(`Created ${tickets.length} ticket(s)`, false);
     loadTickets();
   } catch(e) { toast('Failed: ' + e.message, true); }
   finally { btn.disabled = false; btn.textContent = 'Generate from Repo'; }
@@ -234,10 +487,10 @@ async function enrichAll() {
     });
     if (!res.ok) throw new Error(await res.text());
     const tickets = await res.json();
-    toast(`Enriched ${tickets.length} ticket(s)`);
+    toast(`Enriched ${tickets.length} ticket(s)`, false);
     loadTickets();
   } catch(e) { toast('Enrich failed: ' + e.message, true); }
-  finally { btn.disabled = false; btn.innerHTML = '✨ Enrich Selected'; }
+  finally { btn.disabled = false; btn.innerHTML = '✦ Enrich Selected'; }
 }
 
 async function enrichTicket(id, fallbackSource) {
@@ -250,7 +503,7 @@ async function enrichTicket(id, fallbackSource) {
       method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
     });
     if (!res.ok) throw new Error(await res.text());
-    toast('Ticket enriched');
+    toast('Enriched', false);
     loadTickets();
   } catch(e) { toast('Enrich failed: ' + e.message, true); }
   finally { enrichingIds.delete(id); setEnrichLoading(id, false); }
@@ -259,7 +512,7 @@ async function enrichTicket(id, fallbackSource) {
 async function deleteTicket(id, title) {
   if (!confirm(`Delete "${title}"?`)) return;
   const res = await fetch(`${API}/tickets/${id}`, { method: 'DELETE' });
-  if (res.ok) { toast('Ticket deleted'); loadTickets(); }
+  if (res.ok) { toast('Deleted'); loadTickets(); }
   else toast('Delete failed', true);
 }
 
@@ -311,7 +564,7 @@ async function submitTicket() {
   const url = id ? `${API}/tickets/${id}` : `${API}/tickets`;
   const method = id ? 'PUT' : 'POST';
   const res = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-  if (res.ok) { closeModal(); toast(id ? 'Ticket updated' : 'Ticket created'); loadTickets(); }
+  if (res.ok) { closeModal(); toast(id ? 'Updated' : 'Created'); loadTickets(); }
   else toast('Save failed', true);
 }
 
@@ -347,47 +600,43 @@ async function submitBatch() {
 function renderTable(tickets) {
   const el = document.getElementById('ticket-container');
   if (!tickets.length) {
-    el.innerHTML = '<div class="empty">No tickets yet — create one or generate from a repo.</div>';
+    el.innerHTML = '<div class="empty"><strong>No tickets yet</strong>Generate from a repo, batch create, or add one manually.</div>';
     return;
   }
 
   const rows = tickets.map(t => {
-    const repoChip = t.source_repo
-      ? `<div class="repo-chip" title="${esc(t.source_repo)}">
-           ${t.source_repo.startsWith('http') ? '⎇' : '📁'}
-           ${t.source_repo.startsWith('http')
-             ? `<a href="${esc(t.source_repo)}" target="_blank" rel="noopener">${repoLabel(t.source_repo)}</a>`
-             : esc(t.source_repo)}
-         </div>`
-      : '';
-
-    const validCell = t.validation_passed === true
-      ? `<span style="color:#10b981;font-size:.85rem" title="Score: ${Math.round((t.validation_score||0)*100)}%">✅ ${Math.round((t.validation_score||0)*100)}%</span>`
+    const enrichedDot = (t.acceptance_criteria && t.acceptance_criteria.length) ? '<span class="enriched-dot" title="Enriched"></span>' : '';
+    const valCell = t.validation_passed === true
+      ? `<span class="val-pass">✓ ${pct(t.validation_score)}</span>`
       : t.validation_passed === false
-        ? `<span style="color:#dc2626;font-size:.85rem" title="Score: ${Math.round((t.validation_score||0)*100)}%">❌ ${Math.round((t.validation_score||0)*100)}%</span>`
-        : '<span style="color:#94a3b8;font-size:.8rem">—</span>';
-
+        ? `<span class="val-fail">✗ ${pct(t.validation_score)}</span>`
+        : '<span class="val-none">—</span>';
+    const labels = (t.labels||[]).map(l=>`<span class="label-chip">${esc(l)}</span>`).join('');
+    const repo = t.source_repo
+      ? `<span class="repo-chip" title="${esc(t.source_repo)}">${repoShort(t.source_repo)}</span>`
+      : '';
     const safeSource = esc(t.source_repo || '').replace(/'/g, "\\'");
+    const imp = t.importance || 'medium';
     return `<tr>
-      <td><input type="checkbox" class="row-check" data-id="${t.id}"></td>
-      <td class="title-cell">
-        <a href="/tickets/${t.id}" style="text-decoration:none;color:inherit">
-          <strong>${esc(t.title)}</strong>${enrichedBadge(t)}
-        </a>
-        ${repoChip}
+      <td class="check-col"><input type="checkbox" class="row-check" data-id="${t.id}"></td>
+      <td class="title-col" style="max-width:300px">
+        <a href="/tickets/${t.id}" class="ticket-link">${esc(t.title)}${enrichedDot}</a>
+        ${repo ? `<br><span style="margin-top:1px;display:block">${repo}</span>` : ''}
       </td>
-      <td><span class="badge status-${t.status}">${t.status.replace('_',' ')}</span></td>
-      <td><span class="badge priority-${t.priority}">${t.priority}</span></td>
-      <td><span class="badge importance-${t.importance||'medium'}">${t.importance||'medium'}</span></td>
-      <td>${validCell}</td>
-      <td>${(t.labels||[]).map(l=>`<span class="label">${esc(l)}</span>`).join('')}</td>
-      <td style="color:#94a3b8;font-size:.8rem;white-space:nowrap">${fmtDate(t.created_at)}</td>
-      <td class="actions">
-        <button class="btn-icon" onclick='openEdit(${JSON.stringify(t)})'>✏️ Edit</button>
-        <button class="btn-icon enrich" id="enrich-btn-${t.id}" onclick="enrichTicket('${t.id}','${safeSource}')" ${enrichingIds.has(t.id)?'disabled':''}>
-          ${enrichingIds.has(t.id)?'<span class="spinner dark"></span>Enriching…':'✨ Enrich'}
-        </button>
-        <button class="btn-icon danger" onclick="deleteTicket('${t.id}','${esc(t.title).replace(/'/g,"\\'")}')">🗑️</button>
+      <td><span class="badge s-${t.status}">${t.status.replace('_',' ')}</span></td>
+      <td><span class="badge p-${t.priority}">${t.priority}</span></td>
+      <td><span class="i-${imp}" style="font-size:11px;font-weight:500">${imp}</span></td>
+      <td class="num">${valCell}</td>
+      <td>${labels}</td>
+      <td class="num" style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px">${fmtDate(t.created_at)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-xs" onclick='openEdit(${JSON.stringify(t)})'>Edit</button>
+          <button class="btn-xs enrich" id="enrich-btn-${t.id}" onclick="enrichTicket('${t.id}','${safeSource}')" ${enrichingIds.has(t.id)?'disabled':''}>
+            ${enrichingIds.has(t.id)?'<span class="spinner dark"></span>…':'✦ Enrich'}
+          </button>
+          <button class="btn-xs del" onclick="deleteTicket('${t.id}','${esc(t.title).replace(/'/g,"\\'")}')">Del</button>
+        </div>
       </td>
     </tr>`;
   }).join('');
@@ -395,7 +644,14 @@ function renderTable(tickets) {
   el.innerHTML = `<table>
     <thead><tr>
       <th class="check-col"><input type="checkbox" id="select-all" onchange="toggleAll(this)" title="Select all"></th>
-      <th>Title / Repo</th><th>Status</th><th>Priority</th><th>Importance</th><th>Validation</th><th>Labels</th><th>Created</th><th>Actions</th>
+      <th>Title</th>
+      <th>Status</th>
+      <th>Priority</th>
+      <th>Importance</th>
+      <th class="num">Validation</th>
+      <th>Labels</th>
+      <th class="num">Created</th>
+      <th>Actions</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
@@ -409,30 +665,33 @@ function setEnrichLoading(id, loading) {
   const btn = document.getElementById(`enrich-btn-${id}`);
   if (!btn) return;
   btn.disabled = loading;
-  btn.innerHTML = loading ? '<span class="spinner dark"></span>Enriching…' : '✨ Enrich';
+  btn.innerHTML = loading ? '<span class="spinner dark"></span>…' : '✦ Enrich';
 }
 
-function enrichedBadge(t) {
-  return (t.acceptance_criteria && t.acceptance_criteria.length)
-    ? ' <span style="font-size:.7rem;color:#7c3aed;margin-left:4px">✨</span>' : '';
+function pct(score) {
+  return score !== null && score !== undefined ? Math.round(score * 100) + '%' : '—';
 }
 
-function repoLabel(url) {
-  try {
-    const parts = new URL(url).pathname.split('/').filter(Boolean);
-    return parts.length >= 2 ? parts.slice(-2).join('/') : url;
-  } catch { return url; }
+function repoShort(s) {
+  if (!s) return '';
+  if (s.startsWith('http')) {
+    try {
+      const parts = new URL(s).pathname.split('/').filter(Boolean);
+      return '⎇ ' + (parts.length >= 2 ? parts.slice(-2).join('/') : s);
+    } catch { return s; }
+  }
+  return '📁 ' + s.split('/').pop();
 }
 
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function fmtDate(s) { return s ? new Date(s).toLocaleDateString() : '—'; }
+function fmtDate(s) { return s ? new Date(s).toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit'}) : '—'; }
 
 function toast(msg, isError=false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.className = 'show' + (isError ? ' error' : '');
+  el.className = 'show' + (isError ? ' error' : ' ok');
   setTimeout(() => el.className = '', 3000);
 }
 
