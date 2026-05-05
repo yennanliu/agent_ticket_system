@@ -1,146 +1,9 @@
 [
   {
-    "id": "73ad9b95-c55a-4f46-8a50-145d321bfb69",
-    "title": "Implement Comprehensive Error Handling for Job Auto-Apply",
-    "description": "Enhance error handling in the Job Auto-Apply skill to ensure it continues operation even when some jobs fail.",
-    "status": "open",
-    "priority": "high",
-    "importance": "critical",
-    "labels": [
-      "feature",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-05T06:15:33.966384Z",
-    "updated_at": "2026-05-05T06:17:11.134869Z",
-    "business_req": "Ensure reliable job application automation to improve user satisfaction by minimizing disruptions due to errors.",
-    "stakeholder": "Engineering",
-    "user_story": "As a job seeker, I want the automation to continue applying for jobs even if some applications fail so that I maximize my job application reach and increase my chances of securing employment.",
-    "acceptance_criteria": [
-      "The Job Auto-Apply skill should log errors without terminating the entire application process.",
-      "Failed job applications should be retried up to a configurable number of times before being skipped.",
-      "The system should provide a summary report of successful and failed applications at the end of the process.",
-      "Error handling should cover network issues, DOM changes, and unexpected LinkedIn responses.",
-      "The implementation should not degrade the performance of the Job Auto-Apply skill."
-    ],
-    "related_files": [
-      "check_session.js",
-      "package.json",
-      "SKILL.md"
-    ],
-    "technical_notes": "Consider using the 'linkedin-automation-agent' for implementing retry logic and handling rate limits. Ensure that the error handling mechanism is robust against LinkedIn's anti-bot measures. Use logging to capture detailed error information for debugging purposes. Pay attention to the Playwright MCP tool's capabilities for handling network and DOM-related errors.",
-    "suggested_assignee": "backend",
-    "suggested_change_refs": [
-      {
-        "file": "check_session.js",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/check_session.js",
-        "title": "check_session.js"
-      },
-      {
-        "file": "package.json",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
-        "title": "package.json"
-      },
-      {
-        "file": "SKILL.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/SKILL.md",
-        "title": "SKILL.md"
-      }
-    ],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false,
-    "validation_iterations": 0
-  },
-  {
-    "id": "f5c59b65-7660-4557-84cb-54336965b1fd",
-    "title": "Add Human-Like Delays to Avoid Detection",
-    "description": "Implement random delays in the Job Auto-Apply skill to mimic human behavior and avoid detection by LinkedIn.",
-    "status": "draft",
-    "priority": "medium",
-    "importance": "high",
-    "labels": [
-      "feature",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-05T06:15:33.967337Z",
-    "updated_at": "2026-05-05T06:15:36.493446Z",
-    "business_req": "Reduce the risk of account suspension by making automation less detectable.",
-    "stakeholder": "Product",
-    "user_story": "As a user, I want the automation to include human-like delays so that my LinkedIn account remains safe from detection.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false,
-    "validation_iterations": 0
-  },
-  {
-    "id": "74588d59-3d86-43b9-bf5d-5d9391649941",
-    "title": "Develop Visual Progress Indicator for Job Auto-Apply",
-    "description": "Create an on-page visual progress indicator to show the status of job applications in real-time.",
-    "status": "draft",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "feature",
-      "ui"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-05T06:15:33.967971Z",
-    "updated_at": "2026-05-05T06:15:37.553141Z",
-    "business_req": "Provide users with real-time feedback on the status of their job applications.",
-    "stakeholder": "Customer",
-    "user_story": "As a job seeker, I want to see a visual progress indicator so that I know how many applications have been submitted.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false,
-    "validation_iterations": 0
-  },
-  {
-    "id": "daa1c235-befb-4b75-8ef7-928bb156bfff",
-    "title": "Enhance Smart Filtering to Skip Non-Easy Apply Jobs",
-    "description": "Improve the smart filtering feature to ensure non-Easy Apply jobs are skipped efficiently.",
-    "status": "draft",
-    "priority": "medium",
-    "importance": "high",
-    "labels": [
-      "feature",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-05T06:15:33.968346Z",
-    "updated_at": "2026-05-05T06:15:38.543231Z",
-    "business_req": "Increase the efficiency of job applications by focusing only on Easy Apply jobs.",
-    "stakeholder": "Product",
-    "user_story": "As a user, I want the system to skip non-Easy Apply jobs so that I can focus on jobs that are quicker to apply for.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false,
-    "validation_iterations": 0
-  },
-  {
     "id": "3491e91b-9e3c-4b1f-8787-7d6c967bf3cb",
     "title": "Implement Connection Note Templates in Outreach Agent",
     "description": "Develop a feature to use predefined connection note templates to optimize acceptance rates in the Contact Reacher skill.",
-    "status": "draft",
+    "status": "open",
     "priority": "medium",
     "importance": "medium",
     "labels": [
@@ -149,7 +12,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/linkedin-skill",
     "created_at": "2026-05-05T06:15:33.968825Z",
-    "updated_at": "2026-05-05T06:15:39.890875Z",
+    "updated_at": "2026-05-05T06:17:36.166548Z",
     "business_req": "Improve connection request acceptance rates by using personalized templates.",
     "stakeholder": "Product",
     "user_story": "As a networker, I want to use connection note templates so that my connection requests are more likely to be accepted.",
@@ -167,7 +30,7 @@
     "id": "465ee8f1-3dae-46d1-ad8f-9cbf094a207e",
     "title": "Create Detailed Documentation for Specialized Agents",
     "description": "Develop comprehensive documentation for each specialized agent to aid developers in understanding their roles and functionalities.",
-    "status": "draft",
+    "status": "open",
     "priority": "low",
     "importance": "medium",
     "labels": [
@@ -175,15 +38,99 @@
     ],
     "source_repo": "https://github.com/yennanliu/linkedin-skill",
     "created_at": "2026-05-05T06:15:33.969743Z",
-    "updated_at": "2026-05-05T06:15:41.318380Z",
-    "business_req": "Provide clear documentation to support developers in maintaining and enhancing the system.",
+    "updated_at": "2026-05-05T06:18:47.188021Z",
+    "business_req": "Provide clear and comprehensive documentation to support developers in maintaining and enhancing the system, ensuring they can quickly understand and modify agent functionalities.",
     "stakeholder": "Engineering",
-    "user_story": "As a developer, I want detailed documentation for each agent so that I can easily understand and modify their functionalities.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
+    "user_story": "As a developer, I want detailed documentation for each specialized agent so that I can easily understand their roles and functionalities, enabling me to maintain and enhance the system effectively.",
+    "acceptance_criteria": [
+      "Documentation for each specialized agent is created and accessible in the repository.",
+      "Each agent's documentation includes purpose, key functionalities, and usage examples.",
+      "Documentation is reviewed and approved by at least one other developer.",
+      "Documentation is linked from the main README and QUICKSTART.md for easy access."
+    ],
+    "related_files": [
+      "README.md",
+      "QUICKSTART.md",
+      "SKILL.md",
+      "USAGE_EXAMPLES.md",
+      "linkedin-strategy-agent.md",
+      "linkedin-automation-agent.md",
+      "linkedin-web-structure-agent.md",
+      "linkedin-qa-agent.md",
+      "linkedin-contact-discovery-agent.md",
+      "linkedin-outreach-agent.md",
+      "linkedin-email-generator-agent.md"
+    ],
+    "technical_notes": "Ensure that the documentation is consistent with existing documentation style and format. Consider using markdown features like tables and code blocks to enhance readability. Pay attention to any recent changes in the agents' code that might not yet be reflected in the documentation.",
+    "suggested_assignee": "technical_writer",
+    "suggested_change_refs": [
+      {
+        "file": "README.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/README.md",
+        "title": "README.md"
+      },
+      {
+        "file": "QUICKSTART.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/QUICKSTART.md",
+        "title": "QUICKSTART.md"
+      },
+      {
+        "file": "SKILL.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/SKILL.md",
+        "title": "SKILL.md"
+      },
+      {
+        "file": "USAGE_EXAMPLES.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/USAGE_EXAMPLES.md",
+        "title": "USAGE_EXAMPLES.md"
+      },
+      {
+        "file": "linkedin-strategy-agent.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/linkedin-strategy-agent.md",
+        "title": "linkedin-strategy-agent.md"
+      },
+      {
+        "file": "linkedin-automation-agent.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/linkedin-automation-agent.md",
+        "title": "linkedin-automation-agent.md"
+      },
+      {
+        "file": "linkedin-web-structure-agent.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/linkedin-web-structure-agent.md",
+        "title": "linkedin-web-structure-agent.md"
+      },
+      {
+        "file": "linkedin-qa-agent.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/linkedin-qa-agent.md",
+        "title": "linkedin-qa-agent.md"
+      },
+      {
+        "file": "linkedin-contact-discovery-agent.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/linkedin-contact-discovery-agent.md",
+        "title": "linkedin-contact-discovery-agent.md"
+      },
+      {
+        "file": "linkedin-outreach-agent.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/linkedin-outreach-agent.md",
+        "title": "linkedin-outreach-agent.md"
+      },
+      {
+        "file": "linkedin-email-generator-agent.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/linkedin-email-generator-agent.md",
+        "title": "linkedin-email-generator-agent.md"
+      }
+    ],
     "validation_score": 0.0,
     "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
     "validation_passed": false,
@@ -250,5 +197,77 @@
     "validation_notes": "The ticket is well-structured with specific acceptance criteria, plausible related files, actionable technical notes, and includes change references.",
     "validation_passed": true,
     "validation_iterations": 1
+  },
+  {
+    "id": "cab0f31f-e1b0-4aa4-99f4-d4056b892039",
+    "title": "fix login",
+    "description": "",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [],
+    "source_repo": "https://github.com/yennanliu/cooragent",
+    "created_at": "2026-05-05T06:19:47.881609Z",
+    "updated_at": "2026-05-05T06:20:02.832692Z",
+    "business_req": "",
+    "stakeholder": "",
+    "user_story": "",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
+  },
+  {
+    "id": "5c75f5f1-db91-453a-a2ed-55e106b1f0d0",
+    "title": "add admin panel",
+    "description": "",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [],
+    "source_repo": "https://github.com/yennanliu/cooragent",
+    "created_at": "2026-05-05T06:19:47.883874Z",
+    "updated_at": "2026-05-05T06:20:02.839330Z",
+    "business_req": "",
+    "stakeholder": "",
+    "user_story": "",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
+  },
+  {
+    "id": "5a4a7095-9807-43ac-b5f1-ed4aaeaf27d8",
+    "title": "fix UI",
+    "description": "",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [],
+    "source_repo": "https://github.com/yennanliu/cooragent",
+    "created_at": "2026-05-05T06:19:47.885507Z",
+    "updated_at": "2026-05-05T06:20:02.846112Z",
+    "business_req": "",
+    "stakeholder": "",
+    "user_story": "",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
   }
 ]

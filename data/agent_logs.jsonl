@@ -45,3 +45,11 @@
 {"timestamp": "2026-05-05T06:16:33.521844+00:00", "event": "validate", "ticket_id": "94d26b53-b672-4bf9-9b5e-acf26f4d6823", "agent": "validator", "duration_ms": 871.3, "status": "success", "details": "score=1.0"}
 {"timestamp": "2026-05-05T06:16:33.523240+00:00", "event": "heal", "ticket_id": "94d26b53-b672-4bf9-9b5e-acf26f4d6823", "agent": "healer", "duration_ms": 7320.4, "status": "success", "details": "score=1.0, iters=1"}
 {"timestamp": "2026-05-05T06:17:11.136333+00:00", "event": "enrich", "ticket_id": "73ad9b95-c55a-4f46-8a50-145d321bfb69", "agent": "enricher", "duration_ms": 6117.2, "status": "success", "details": ""}
+{"timestamp": "2026-05-05T06:18:25.069805+00:00", "event": "enrich", "ticket_id": "73ad9b95-c55a-4f46-8a50-145d321bfb69", "agent": "enricher", "duration_ms": 5984.4, "status": "success", "details": ""}
+{"timestamp": "2026-05-05T06:18:31.830741+00:00", "event": "enrich", "ticket_id": "f5c59b65-7660-4557-84cb-54336965b1fd", "agent": "enricher", "duration_ms": 6760.5, "status": "success", "details": ""}
+{"timestamp": "2026-05-05T06:18:42.183512+00:00", "event": "validate", "ticket_id": "465ee8f1-3dae-46d1-ad8f-9cbf094a207e", "agent": "validator", "duration_ms": 733.7, "status": "success", "details": "score=0.0"}
+{"timestamp": "2026-05-05T06:18:47.189049+00:00", "event": "enrich", "ticket_id": "465ee8f1-3dae-46d1-ad8f-9cbf094a207e", "agent": "enricher", "duration_ms": 6689.1, "status": "success", "details": ""}
+{"timestamp": "2026-05-05T06:19:47.886839+00:00", "event": "create_batch", "ticket_id": "", "agent": "api", "duration_ms": 0, "status": "success", "details": "created 3 tickets manually"}
+{"timestamp": "2026-05-05T06:19:49.120837+00:00", "event": "validate", "ticket_id": "cab0f31f-e1b0-4aa4-99f4-d4056b892039", "agent": "validator", "duration_ms": 1229.4, "status": "success", "details": "score=0.0"}
+{"timestamp": "2026-05-05T06:19:49.862848+00:00", "event": "validate", "ticket_id": "5c75f5f1-db91-453a-a2ed-55e106b1f0d0", "agent": "validator", "duration_ms": 736.0, "status": "success", "details": "score=0.0"}
+{"timestamp": "2026-05-05T06:19:50.516837+00:00", "event": "validate", "ticket_id": "5a4a7095-9807-43ac-b5f1-ed4aaeaf27d8", "agent": "validator", "duration_ms": 648.5, "status": "success", "details": "score=0.0"}

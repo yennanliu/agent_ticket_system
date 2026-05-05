@@ -173,7 +173,7 @@ header {
 }
 #toolbar input[type="text"]::placeholder { color: var(--text-dim); }
 #toolbar input[type="text"]:focus { border-color: var(--accent); }
-#repo-filter {
+#repo-filter, #status-filter {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   background: var(--bg);
@@ -186,8 +186,24 @@ header {
   white-space: nowrap;
   flex-shrink: 0;
 }
-#repo-filter:focus { border-color: var(--accent); }
-#repo-filter option { background: var(--bg-alt); }
+#repo-filter:focus, #status-filter:focus { border-color: var(--accent); }
+#repo-filter option, #status-filter option { background: var(--bg-alt); }
+
+.stat-action-btn {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.stat-action-btn:hover { color: var(--text); background: var(--surface); }
+.stat-action-btn.danger { color: var(--danger); border-color: var(--b-hi-bg); }
+.stat-action-btn.danger:hover { background: var(--b-hi-bg); }
 
 /* ── Stat bar ── */
 #stat-bar {
@@ -420,6 +436,14 @@ tr.is-rejected td { opacity: 0.5; text-decoration: line-through; }
   <div class="header-sep"></div>
   <button class="btn btn-violet" id="enrich-all-btn" onclick="enrichAll()">✦ Enrich Selected</button>
   <div class="header-sep"></div>
+  <select id="status-filter" onchange="applyFilters()" title="Filter by status">
+    <option value="">All statuses</option>
+    <option value="open">Open</option>
+    <option value="in_progress">In Progress</option>
+    <option value="done">Done</option>
+    <option value="draft">Draft</option>
+    <option value="rejected">Rejected</option>
+  </select>
   <select id="repo-filter" onchange="applyFilters()" title="Filter by repo">
     <option value="">All repos</option>
   </select>
@@ -431,6 +455,11 @@ tr.is-rejected td { opacity: 0.5; text-decoration: line-through; }
   <span>Open: <span class="stat-val" id="stat-open">—</span></span>
   <span>Validated: <span class="stat-val" id="stat-validated">—</span></span>
   <span>Pass rate: <span class="stat-val" id="stat-passrate">—</span></span>
+  <div style="flex:1"></div>
+  <button class="stat-action-btn" onclick="selectAll()">Select All</button>
+  <button class="stat-action-btn" onclick="deselectAll()">Deselect All</button>
+  <span id="selection-info" style="display:none;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent)"></span>
+  <button class="stat-action-btn danger" id="delete-selected-btn" onclick="deleteSelected()" style="display:none">Delete</button>
 </div>
 
 <main>
@@ -565,7 +594,10 @@ function populateRepoFilter(tickets) {
 
 function applyFilters() {
   let filtered = currentTickets;
-  if (!showDrafts) {
+  const statusFilter = document.getElementById('status-filter').value;
+  if (statusFilter) {
+    filtered = filtered.filter(t => t.status === statusFilter);
+  } else if (!showDrafts) {
     filtered = filtered.filter(t => t.status !== 'draft' && t.status !== 'rejected');
   }
   const repoFilter = document.getElementById('repo-filter').value;
@@ -796,10 +828,58 @@ function renderTable(tickets) {
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
+  updateSelectionUI();
 }
 
 function toggleAll(master) {
   document.querySelectorAll('.row-check').forEach(cb => { cb.checked = master.checked; });
+  updateSelectionUI();
+}
+
+function selectAll() {
+  const master = document.getElementById('select-all');
+  if (master) master.checked = true;
+  document.querySelectorAll('.row-check').forEach(cb => { cb.checked = true; });
+  updateSelectionUI();
+}
+
+function deselectAll() {
+  const master = document.getElementById('select-all');
+  if (master) master.checked = false;
+  document.querySelectorAll('.row-check').forEach(cb => { cb.checked = false; });
+  updateSelectionUI();
+}
+
+function updateSelectionUI() {
+  const checked = document.querySelectorAll('.row-check:checked');
+  const n = checked.length;
+  const info = document.getElementById('selection-info');
+  const btn = document.getElementById('delete-selected-btn');
+  if (n > 0) {
+    info.textContent = `${n} selected`;
+    info.style.display = '';
+    btn.textContent = `Delete ${n}`;
+    btn.style.display = '';
+  } else {
+    info.style.display = 'none';
+    btn.style.display = 'none';
+  }
+}
+
+async function deleteSelected() {
+  const ids = [...document.querySelectorAll('.row-check:checked')].map(el => el.dataset.id);
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} ticket(s)?`)) return;
+  const btn = document.getElementById('delete-selected-btn');
+  btn.disabled = true;
+  btn.textContent = 'Deleting…';
+  let deleted = 0;
+  for (const id of ids) {
+    const res = await fetch(`${API}/tickets/${id}`, { method: 'DELETE' });
+    if (res.ok) deleted++;
+  }
+  toast(`Deleted ${deleted} ticket(s)`);
+  loadTickets();
 }
 function setEnrichLoading(id, loading) {
   const btn = document.getElementById(`enrich-btn-${id}`);
@@ -835,6 +915,9 @@ function toast(msg, isError=false) {
 
 document.getElementById('modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeModal(); });
 document.getElementById('batch-modal').addEventListener('click', e => { if (e.target===e.currentTarget) closeBatchModal(); });
+document.getElementById('ticket-container').addEventListener('change', e => {
+  if (e.target.classList.contains('row-check')) updateSelectionUI();
+});
 
 initTheme();
 loadTickets();
