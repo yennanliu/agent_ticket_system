@@ -297,3 +297,357 @@ uv run pytest tests/ -v
 4. `POST /api/agents/enrich/{id}` with `{"repo_path": "../linkedin-skill"}` → ticket now has `acceptance_criteria`, `technical_notes`, `related_files`
 5. UI at `http://localhost:8000` renders the ticket table
 6. Create, edit, and delete a ticket via the UI — changes persist after page reload
+
+---
+
+---
+
+# Sprint 2 — Feature Roadmap
+
+> Status: **Planning** — no code written yet.
+> Priority order: Feature 1 → 2 → 3 → 4. Features 1–2 are pure backend-first; 3–4 need both.
+
+---
+
+## Feature 1: Self-healing Validation Loop
+
+### Problem
+
+The current validator runs once and stops. A ticket that scores 0.55 stays at 0.55 forever — the user has to manually re-enrich and re-validate. The validation notes already contain actionable feedback (e.g. "missing acceptance criteria", "description too vague") but nothing acts on them.
+
+### Goal
+
+After validation, if the score is below a threshold, automatically feed the validation notes back into the enricher as additional context and re-validate. Repeat up to a fixed cap. This makes the system self-improving without human intervention.
+
+### Design
+
+**New concept: heal loop**
+
+```
+validate
+  → if score >= threshold OR iterations >= max: done
+  → else: enrich_with_feedback → validate again
+```
+
+**Threshold and cap** (configurable via env or constants):
+- `HEAL_THRESHOLD = 0.75` — below this, trigger a heal iteration
+- `HEAL_MAX_ITERATIONS = 3` — hard cap to prevent infinite loops
+
+**Data model changes** (add to `Ticket`):
+- `validation_iterations: int = 0` — how many heal loops have run on this ticket
+- No other model changes needed; existing `validation_notes`, `validation_score`, `validation_passed` already store the latest result
+
+**New agent: `app/agents/healer.py`**
+
+LangGraph graph:
+```
+load_ticket → validate_node → check_threshold (conditional) → enrich_with_feedback → validate_node → ... → save_ticket → END
+```
+
+Key detail: the `enrich_with_feedback` node calls the enricher with an augmented prompt that includes the previous `validation_notes` as explicit instructions. Example extra context injected: *"The previous validation flagged: 'acceptance criteria too vague'. Please improve them."*
+
+**New API endpoint:**
+- `POST /api/agents/heal/{ticket_id}` — runs the full self-healing loop and returns the final ticket
+- The existing `POST /api/agents/validate/{ticket_id}` can optionally auto-trigger heal (with a query param `?auto_heal=true`) — this keeps backward compatibility
+
+**UI changes:**
+- Ticket detail page: "Heal" button next to "Validate"
+- Shows `validation_iterations` count as a small label (e.g. "healed 2×")
+- After healing, re-renders the validation score bar and notes
+
+### Edge cases / open questions
+
+- If the ticket has no `source_repo`, the heal loop cannot re-enrich (no repo context). In this case, skip the enrich step and just log that healing is limited.
+- The heal loop should only run on tickets that have been enriched at least once (have `acceptance_criteria`). On bare tickets, direct the user to enrich first.
+- Should manual re-validation also auto-heal? Propose: no by default, opt-in via button.
+
+---
+
+## Feature 2: Draft Status + Human Approval Flow
+
+### Problem
+
+AI-generated tickets (from repo, batch, or inbox) go directly to `open` status. Teams can't trust or audit AI output without a review gate. There's no way to distinguish "AI suggested, unreviewed" from "human approved, ready to work on."
+
+### Goal
+
+AI-generated tickets land in `draft` status. A dedicated Review Queue lets a human quickly approve, edit, or reject each draft before it enters the active backlog.
+
+### Design
+
+**Data model changes:**
+
+Extend the `status` enum to include `draft` and `rejected`:
+```
+status: "draft" | "open" | "in_progress" | "done" | "rejected"
+```
+
+- `draft` — AI-generated, awaiting human review
+- `rejected` — reviewed and dismissed (soft-delete; stays queryable but hidden by default)
+
+**Which creation paths produce drafts:**
+- `POST /api/agents/create-from-repo` → all tickets created as `draft`
+- `POST /api/agents/inbox-import` (Feature 4) → all tickets as `draft`
+- `POST /api/agents/create-batch` → `draft`
+- `POST /api/tickets` (manual) → `open` (human created, no review needed)
+
+**New API endpoints:**
+- `POST /api/tickets/{id}/approve` — sets status `draft → open`, optionally triggers auto-enrich+validate
+- `POST /api/tickets/{id}/reject` — sets status `draft → rejected`
+- `GET /api/tickets?status=draft` — filter endpoint (extend existing list query)
+
+**UI changes:**
+
+1. **Header badge** — a count indicator on the nav: `Drafts (4)` in accent color, links to the Review Queue
+2. **Review Queue page** (`/review` or a tab on the main page)
+   - Card grid layout (not a table) — each card shows: title, source repo, creation timestamp, a short excerpt of description
+   - Three actions per card: **Approve** (green, sets to open), **Edit** (opens edit modal), **Reject** (red, soft-deletes)
+   - Bulk action bar at top: "Approve All" and "Reject All" for power users
+   - Empty state: "No drafts pending review"
+3. **Main ticket table** — by default hides `draft` and `rejected` tickets; a toggle to show them
+4. **Ticket detail page** — if the ticket is in draft, show a prominent banner: *"This ticket is a draft — Approve or Edit before starting work."* with inline Approve / Reject buttons
+
+**Approval flow with auto-actions (optional):**
+
+On approval, offer a checkbox: *"Auto-enrich and validate after approving."* If checked, the system runs `enrich → validate` (and heal if score low) in the background and updates the ticket. The ticket is immediately `open`; enrichment result arrives asynchronously and the page refreshes.
+
+### Edge cases / open questions
+
+- What happens if a draft is manually edited? It stays `draft` until explicitly approved. Editing is not approving.
+- Should rejected tickets be permanently deletable? Yes — a "Delete rejected" bulk action can clean them up. But they're not auto-deleted, so the history is preserved.
+- The existing stats bar (Total, Open, Validated, Pass rate) should exclude drafts and rejected tickets from its counts. Add a separate draft count display.
+
+---
+
+## Feature 3: Ticket Closure Verification
+
+### Problem
+
+After a developer marks a ticket `done`, there's no way to verify the work actually satisfies the acceptance criteria. This is purely a human judgement call today.
+
+### Goal
+
+The developer (or team lead) pastes a brief summary of what was done — a few sentences, commit messages, or a paste of the relevant diff. An agent checks it against the ticket's acceptance criteria and returns a breakdown: which criteria are covered, which are missing, and an overall coverage score.
+
+**Deliberately simple:** no GitHub integration, no PR fetching. Just text input → structured verdict.
+
+### Design
+
+**New fields on `Ticket`:**
+- `closure_summary: str = ""` — the text the user provided ("what was done")
+- `closure_score: float | None = None` — 0.0–1.0 coverage score
+- `closure_verified: bool | None = None` — True if score >= threshold (e.g. 0.8)
+- `closure_notes: str = ""` — agent's free-text assessment
+- `closure_criteria_status: list[dict] = []` — per-criterion result:
+  ```
+  [{"criterion": "...", "covered": true, "evidence": "..."}]
+  ```
+
+**New agent: `app/agents/closure_verifier.py`**
+
+LangGraph graph:
+```
+load_ticket → verify_closure (LLM call) → save_closure_result → END
+```
+
+LLM call details:
+- Input: ticket title, description, acceptance criteria list, user-provided `completion_text`
+- If no acceptance criteria exist, fall back to evaluating against the description
+- Output (structured): per-criterion covered/not, evidence snippet, overall score, notes
+- If the ticket has no acceptance_criteria AND no description, return an error (nothing to verify against)
+
+**New API endpoint:**
+- `POST /api/agents/verify-closure/{ticket_id}` — body: `{completion_text: str}`
+- Returns the updated ticket with closure fields populated
+
+**UI changes (ticket detail page):**
+
+A new "Closure Verification" card below the Validation card:
+- **Input area:** text area labeled *"What was done — paste commit messages, a summary, or a diff excerpt"*
+- **Verify button** — calls the API, shows spinner
+- **Result display** (after verification):
+  - Overall score as a progress bar (green/red like the validation bar)
+  - Criteria table: each acceptance criterion with ✓ Covered / ✗ Missing and an evidence snippet
+  - Agent's free-text notes
+  - A "Re-verify" button to run again with updated text
+
+**Closure-driven status change:**
+- If `closure_verified` is true, the UI suggests (but does not force): *"All criteria covered — mark this ticket Done?"* with a one-click confirm button.
+
+### Edge cases / open questions
+
+- Tickets without acceptance criteria: the verifier falls back to checking the description. Warn the user: *"No acceptance criteria found — verifying against description only."*
+- The `completion_text` is stored on the ticket. A second verification overwrites it. This is intentional — the last run's input is what matters.
+- Closure verification is independent of validation. A ticket can be "validated" (well-defined) but not yet "closure-verified" (not yet done).
+
+---
+
+## Feature 4: Batch Import Inbox
+
+### Problem
+
+The current "Batch Create" takes just a list of titles — it's a mechanical operation, not intelligent. There's no way to paste a bunch of raw requirement text (e.g., copied from a meeting notes doc, Slack thread, or spec) and let the system turn it into proper tickets automatically.
+
+### Goal
+
+A simple **Inbox** where the user pastes unstructured requirement text. The system:
+1. Intelligently splits it into individual requirements
+2. For each requirement, generates a proper title + description using an LLM
+3. Creates tickets (in `draft` status)
+4. Optionally auto-validates each one
+
+This is "AI-powered intake" — the front door for capturing work before it's been refined.
+
+### Design
+
+**Inbox input format — keep it flexible:**
+The user can paste:
+- One sentence per line: `Fix the login page\nAdd dark mode\n...`
+- A numbered/bulleted list (LLM handles parsing)
+- Full paragraphs: *"We need to improve the onboarding flow. Users are dropping off at step 3..."*
+- Mixed (LLM splits intelligently)
+
+The user can also optionally paste a **context block** (e.g., project name, sprint goal) that the LLM uses to disambiguate vague requirements.
+
+**New API endpoint:**
+- `POST /api/agents/inbox-import`
+- Request body:
+  ```
+  {
+    "raw_text": str,              # the pasted requirements blob
+    "context": str = "",          # optional project context
+    "repo_path": str | None,      # for enrichment (optional)
+    "repo_url": str | None,       # for enrichment (optional)
+    "auto_validate": bool = true  # validate each ticket after creation
+  }
+  ```
+- Response: list of created draft tickets
+
+**New agent: `app/agents/inbox_processor.py`**
+
+LangGraph graph:
+```
+parse_requirements (LLM) → for each: create_ticket → [validate] → save → END
+```
+
+Step 1 — **Parse** (`parse_requirements` node):
+- LLM receives `raw_text` + optional `context`
+- Outputs a structured list: `[{title: str, description: str, priority: str}]`
+- The LLM is instructed to: split, clean up titles to be imperative/actionable, write a one-paragraph description for each, and infer priority from language cues ("urgent", "critical", "nice to have")
+
+Step 2 — **Create** (loop over parsed items):
+- Creates each ticket with `status = "draft"`
+- Sets `source_repo` if provided
+
+Step 3 — **Validate** (if `auto_validate=True`):
+- Runs the validator on each created ticket
+- Heal loop is NOT triggered automatically here (would be too slow for large batches); user can heal individually from the Review Queue
+
+**UI changes:**
+
+1. **New "Inbox" button** in the main header (or a dedicated `/inbox` page)
+2. **Inbox modal:**
+   - Title: *"Import Requirements"*
+   - Large text area: *"Paste requirements, meeting notes, or a feature list..."*
+   - Optional text area: *"Project context (optional) — e.g., 'Mobile app sprint 4, user onboarding focus'"*
+   - Repo source input (same as the main toolbar — optional, for enrichment later)
+   - Toggle: *"Auto-validate after creating"* (default: on)
+   - Submit button: *"Import & Create Drafts"*
+3. **Progress indicator:**
+   - After submit, show a list of parsed requirement titles with status icons: ⏳ Creating… → ✓ Created → ✓ Validated
+   - If any fail, show ✗ with error message
+4. **After completion:**
+   - Toast: *"Imported N tickets — review them in the Draft Queue"*
+   - Link directly to the Review Queue filtered to the just-created tickets
+
+### Interaction with Feature 2 (Draft Flow)
+
+Inbox import is the primary source of drafts. The full intended flow is:
+```
+Inbox Import → Draft Queue → [Edit?] → Approve → Enrich → Heal/Validate → In Progress → Done → Closure Verify
+```
+
+### Edge cases / open questions
+
+- **Empty parse result:** if the LLM can't identify any discrete requirements (e.g., user pasted random text), return a 422 with message *"Could not extract any requirements from the provided text."*
+- **Large inputs:** cap `raw_text` at 10,000 characters. Longer inputs should be broken into multiple inbox submissions.
+- **Duplicate detection:** if a parsed title is semantically very similar to an existing ticket, flag it in the result (don't block creation, just warn). This is a light version of the backlog deduplication idea.
+- **Rate limiting for large batches:** if > 20 requirements are parsed, warn the user that validation will take a while. Offer to skip auto-validate and do it later from the Review Queue.
+
+---
+
+## Backlog (not in current sprint)
+
+| Feature | Reason for deferral |
+|---|---|
+| **RAG from past tickets** | Requires a vector store (infra overhead). Worth revisiting after the ticket corpus grows large enough to make retrieval meaningful. |
+| **Jira / Linear integration** | Pure plumbing — doesn't improve AI quality. High effort, low learning. Add when there's a real integration request. |
+| **Story point estimation** | No historical completion data yet to calibrate against. Revisit after 3+ months of usage data. |
+| **Ticket deduplication (embeddings)** | Partially addressed in inbox import (light warning). Full embedding-based dedup needs a vector store — same blocker as RAG. |
+
+---
+
+## Revised Data Model (after all Sprint 2 features)
+
+```python
+class Ticket(BaseModel):
+    # Core (unchanged)
+    id: str
+    title: str
+    description: str
+    status: Literal["draft", "open", "in_progress", "done", "rejected"]
+    priority: str
+    importance: str
+    labels: list[str]
+    source_repo: str
+    business_req: str
+    stakeholder: str
+    user_story: str
+    created_at: datetime
+    updated_at: datetime
+
+    # Enrichment (unchanged)
+    acceptance_criteria: list[str]
+    related_files: list[str]
+    technical_notes: str
+    suggested_assignee: str
+    suggested_change_refs: list[dict]
+
+    # Validation (unchanged)
+    validation_score: float | None
+    validation_passed: bool | None
+    validation_notes: str
+
+    # Feature 1: Heal loop (new)
+    validation_iterations: int          # how many heal cycles have run
+
+    # Feature 3: Closure verification (new)
+    closure_summary: str                # user-provided "what was done" text
+    closure_score: float | None         # 0.0–1.0 coverage
+    closure_verified: bool | None       # True if score >= 0.8
+    closure_notes: str                  # agent's free-text assessment
+    closure_criteria_status: list[dict] # per-criterion {criterion, covered, evidence}
+```
+
+---
+
+## Revised API Surface (after all Sprint 2 features)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/tickets` | List tickets (supports `?status=draft\|open\|...`) |
+| GET | `/api/tickets/{id}` | Get one ticket |
+| POST | `/api/tickets` | Create manually (status: open) |
+| PUT | `/api/tickets/{id}` | Update ticket |
+| DELETE | `/api/tickets/{id}` | Delete ticket |
+| POST | `/api/tickets/{id}/approve` | Draft → Open |
+| POST | `/api/tickets/{id}/reject` | Draft → Rejected |
+| POST | `/api/agents/create-from-repo` | Generate tickets from repo (status: draft) |
+| POST | `/api/agents/create-batch` | Batch create by title (status: draft) |
+| POST | `/api/agents/enrich/{id}` | Enrich one ticket |
+| POST | `/api/agents/enrich-batch` | Enrich selected tickets |
+| POST | `/api/agents/validate/{id}` | Validate one ticket |
+| **POST** | **`/api/agents/heal/{id}`** | **Self-healing loop (Feature 1)** |
+| **POST** | **`/api/agents/verify-closure/{id}`** | **Closure verification (Feature 3)** |
+| **POST** | **`/api/agents/inbox-import`** | **Batch import from raw text (Feature 4)** |
+| GET | `/api/logs` | Agent run logs |

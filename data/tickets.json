@@ -34,25 +34,25 @@
     "labels": [],
     "source_repo": "https://github.com/yennanliu/linkedin-skill",
     "created_at": "2026-05-03T07:24:32.607072Z",
-    "updated_at": "2026-05-03T07:25:28.766363Z",
+    "updated_at": "2026-05-05T05:55:20.792550Z",
     "business_req": "Integrate Claude to enhance automation and efficiency of LinkedIn skills, providing users with more powerful tools for job applications and networking.",
     "stakeholder": "Product Manager",
     "user_story": "As a user, I want to leverage Claude's advanced capabilities to improve the efficiency and effectiveness of LinkedIn automation tasks, such as applying for jobs and reaching out to contacts, so that I can maximize my professional networking opportunities.",
     "acceptance_criteria": [
-      "Claude integration is successfully added to the existing LinkedIn skills.",
-      "All existing skills (Job Auto-Apply, Profile Scraper, Contact Reacher) can utilize Claude's capabilities without errors.",
-      "New tests are written and existing tests are updated to cover Claude integration.",
-      "Documentation is updated to reflect the integration of Claude, including usage examples and any new commands.",
-      "Performance benchmarks show no significant degradation in task execution times after Claude integration."
+      "Claude integration is implemented and functional within the existing LinkedIn skills.",
+      "All three skills (Job Auto-Apply, Profile Scraper, Contact Reacher) are enhanced with Claude's capabilities.",
+      "The integration does not break existing functionalities and passes all pre-existing tests.",
+      "New tests are added to cover Claude's integration, ensuring reliability and performance.",
+      "Documentation is updated to reflect the changes and new capabilities provided by Claude."
     ],
     "related_files": [
       "CLAUDE.md",
-      "QUICKSTART.md",
       "SKILL.md",
+      "QUICKSTART.md",
       "package.json",
       "check_session.js"
     ],
-    "technical_notes": "Ensure that Claude's API is compatible with the existing Playwright MCP tools. Consider potential rate limits and authentication requirements when integrating Claude. Review the existing agents to determine if any need to be modified to support Claude's capabilities. Pay special attention to the Automation Agent and Web Structure Agent for potential updates.",
+    "technical_notes": "Consider leveraging Claude's natural language processing capabilities to enhance the Strategy Agent for better job scoring and filtering. Ensure that the Automation Agent is updated to handle any new timing or rate limiting requirements introduced by Claude. Pay attention to the Web Structure Agent to ensure that any changes in DOM manipulation are compatible with Claude's integration. Test thoroughly for any anti-detection patterns that may be affected by Claude's operations.",
     "suggested_assignee": "backend",
     "suggested_change_refs": [
       {
@@ -62,16 +62,16 @@
         "title": "CLAUDE.md"
       },
       {
-        "file": "QUICKSTART.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/QUICKSTART.md",
-        "title": "QUICKSTART.md"
-      },
-      {
         "file": "SKILL.md",
         "ref_type": "doc",
         "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/SKILL.md",
         "title": "SKILL.md"
+      },
+      {
+        "file": "QUICKSTART.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/QUICKSTART.md",
+        "title": "QUICKSTART.md"
       },
       {
         "file": "package.json",
@@ -317,15 +317,58 @@
     ],
     "source_repo": "https://github.com/yennanliu/agent_ticket_system",
     "created_at": "2026-05-05T05:42:32.681586Z",
-    "updated_at": "2026-05-05T05:42:33.695681Z",
+    "updated_at": "2026-05-05T05:55:25.505005Z",
     "business_req": "Automate the ticket creation process to improve efficiency and reduce manual workload.",
     "stakeholder": "Engineering",
     "user_story": "As a developer, I want the system to automatically create tickets from a repository so that I can focus on resolving issues rather than documenting them.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
+    "acceptance_criteria": [
+      "The system should automatically generate a ticket draft when a new issue is detected in the repository.",
+      "The generated ticket should include a title, description, and relevant metadata extracted from the repository.",
+      "The ticket creation process should be triggered by the creator agent and should not require manual intervention.",
+      "The generated ticket should be stored in the in-memory TicketStore and written to data/tickets.json.",
+      "The feature should be tested with both unit and integration tests to ensure reliability."
+    ],
+    "related_files": [
+      "app/api/agents.py",
+      "app/agents/creator.py",
+      "app/repo_tools.py",
+      "main.py",
+      "data/tickets.json"
+    ],
+    "technical_notes": "Ensure that the creator agent leverages the LangGraph to parse and analyze the repository effectively. Consider edge cases where the repository might not have clear issue indicators. The system should handle such cases gracefully without generating incomplete tickets.",
+    "suggested_assignee": "backend",
+    "suggested_change_refs": [
+      {
+        "file": "app/api/agents.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/api/agents.py",
+        "title": "app/api/agents.py"
+      },
+      {
+        "file": "app/agents/creator.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/agents/creator.py",
+        "title": "app/agents/creator.py"
+      },
+      {
+        "file": "app/repo_tools.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/repo_tools.py",
+        "title": "app/repo_tools.py"
+      },
+      {
+        "file": "main.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/main.py",
+        "title": "main.py"
+      },
+      {
+        "file": "data/tickets.json",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/data/tickets.json",
+        "title": "data/tickets.json"
+      }
+    ],
     "validation_score": 0.0,
     "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
     "validation_passed": false
@@ -588,6 +631,350 @@
     "technical_notes": "",
     "suggested_assignee": "",
     "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "470ccdbb-e70c-415f-a31d-504a0b37595a",
+    "title": "Add Support for Additional Coding Agents",
+    "description": "Integrate support for more coding agents to expand the tool's compatibility and usability.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "high",
+    "labels": [
+      "feature",
+      "enhancement"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.764044Z",
+    "updated_at": "2026-05-05T05:54:18.943516Z",
+    "business_req": "Increase user base by supporting more coding agents.",
+    "stakeholder": "Product",
+    "user_story": "As a developer, I want to use my preferred coding agent so that I can work more efficiently.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "6734f52b-fdce-427b-b27f-ca04d1c51ddd",
+    "title": "Improve Documentation for Multi-language Support",
+    "description": "Enhance the existing documentation to better support non-English speaking users by providing more detailed guides.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [
+      "docs",
+      "internationalization"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.765647Z",
+    "updated_at": "2026-05-05T05:55:30.828979Z",
+    "business_req": "Ensure accessibility and usability for international users by providing comprehensive, accurate, and culturally appropriate documentation in multiple languages.",
+    "stakeholder": "Customer",
+    "user_story": "As a non-English speaking user, I want comprehensive and accurate documentation in my language so that I can effectively set up and use the tool without language barriers.",
+    "acceptance_criteria": [
+      "Documentation is available in at least five major languages: English, German, Japanese, Korean, and Chinese (Simplified and Traditional).",
+      "Each language version of the documentation includes detailed guides on setting up and using the tool.",
+      "The documentation includes examples and screenshots where applicable, translated into the respective languages.",
+      "All translated documents are reviewed for accuracy and clarity by native speakers or professional translators.",
+      "The documentation repository includes a clear structure for adding future translations."
+    ],
+    "related_files": [
+      "README.md",
+      "README.de.md",
+      "README.ja-JP.md",
+      "README.ko.md",
+      "README.zh-CN.md",
+      "README.zh-TW.md",
+      "TRANSLATIONS.md",
+      "QUICKSTART.de.md",
+      "CONTRIBUTING.de.md",
+      "CONTRIBUTING.ja-JP.md",
+      "CONTRIBUTING.zh-CN.md"
+    ],
+    "technical_notes": "Ensure that the translation process maintains the technical accuracy of the documentation. Consider using a translation management tool to streamline updates. Be aware of cultural differences that may affect the interpretation of certain terms or examples.",
+    "suggested_assignee": "documentation",
+    "suggested_change_refs": [
+      {
+        "file": "README.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.md",
+        "title": "README.md"
+      },
+      {
+        "file": "README.de.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.de.md",
+        "title": "README.de.md"
+      },
+      {
+        "file": "README.ja-JP.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ja-JP.md",
+        "title": "README.ja-JP.md"
+      },
+      {
+        "file": "README.ko.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ko.md",
+        "title": "README.ko.md"
+      },
+      {
+        "file": "README.zh-CN.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-CN.md",
+        "title": "README.zh-CN.md"
+      },
+      {
+        "file": "README.zh-TW.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-TW.md",
+        "title": "README.zh-TW.md"
+      },
+      {
+        "file": "TRANSLATIONS.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/TRANSLATIONS.md",
+        "title": "TRANSLATIONS.md"
+      },
+      {
+        "file": "QUICKSTART.de.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/QUICKSTART.de.md",
+        "title": "QUICKSTART.de.md"
+      },
+      {
+        "file": "CONTRIBUTING.de.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/CONTRIBUTING.de.md",
+        "title": "CONTRIBUTING.de.md"
+      },
+      {
+        "file": "CONTRIBUTING.ja-JP.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/CONTRIBUTING.ja-JP.md",
+        "title": "CONTRIBUTING.ja-JP.md"
+      },
+      {
+        "file": "CONTRIBUTING.zh-CN.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/CONTRIBUTING.zh-CN.md",
+        "title": "CONTRIBUTING.zh-CN.md"
+      }
+    ],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "37c6f311-ca6a-4acb-916c-f6ec8419be80",
+    "title": "Implement Automated Testing for Design Systems",
+    "description": "Develop automated tests to ensure the reliability and performance of the 72 design systems.",
+    "status": "open",
+    "priority": "high",
+    "importance": "critical",
+    "labels": [
+      "testing",
+      "ci"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.767018Z",
+    "updated_at": "2026-05-05T05:54:21.091653Z",
+    "business_req": "Maintain high quality and reliability of design systems.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want automated tests for design systems so that I can ensure their reliability and performance.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "5840bd97-04cd-409a-b8d1-b59bc52ba021",
+    "title": "Create a User Feedback Collection System",
+    "description": "Develop a system to collect and analyze user feedback to guide future improvements.",
+    "status": "open",
+    "priority": "low",
+    "importance": "medium",
+    "labels": [
+      "feature",
+      "user-experience"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.768004Z",
+    "updated_at": "2026-05-05T05:54:22.732609Z",
+    "business_req": "Gather insights to improve product features and user satisfaction.",
+    "stakeholder": "Product",
+    "user_story": "As a product manager, I want to collect user feedback so that I can make informed decisions about future improvements.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "94dab4f6-4ef1-4373-b9f8-e2067bbc2e05",
+    "title": "Optimize Performance for Web Deployment",
+    "description": "Enhance the performance of the web-deployable version to ensure smooth and fast user experience.",
+    "status": "open",
+    "priority": "high",
+    "importance": "high",
+    "labels": [
+      "performance",
+      "optimization"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.768950Z",
+    "updated_at": "2026-05-05T05:54:23.653365Z",
+    "business_req": "Ensure a seamless user experience for web-deployed applications.",
+    "stakeholder": "Customer",
+    "user_story": "As a user, I want the web application to perform efficiently so that I can work without interruptions.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "caa2fa79-13f2-4e1c-8d1e-db5996483fe1",
+    "title": "Enhance BYOK Proxy Compatibility",
+    "description": "Improve the compatibility of the BYOK proxy with various OpenAI-compatible tools.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "high",
+    "labels": [
+      "feature",
+      "compatibility"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.770078Z",
+    "updated_at": "2026-05-05T05:54:26.190897Z",
+    "business_req": "Expand the tool's usability by ensuring compatibility with more OpenAI tools.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want the BYOK proxy to be compatible with more tools so that I can integrate it into my workflow.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "4b8e97e4-8d90-471c-9bcc-4d796700e701",
+    "title": "Update README with Latest Features",
+    "description": "Revise the README file to include the latest features and improvements for better user onboarding.",
+    "status": "open",
+    "priority": "low",
+    "importance": "medium",
+    "labels": [
+      "docs",
+      "update"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.771262Z",
+    "updated_at": "2026-05-05T05:54:27.133878Z",
+    "business_req": "Provide users with up-to-date information about the tool's capabilities.",
+    "stakeholder": "Customer",
+    "user_story": "As a new user, I want an updated README so that I can quickly understand the tool's features and benefits.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "f52b23f6-cb8a-4578-aec9-f0afc4fa0efd",
+    "title": "Develop Quickstart Guide for New Users",
+    "description": "Create a comprehensive quickstart guide to help new users get started with the tool efficiently.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [
+      "docs",
+      "user-experience"
+    ],
+    "source_repo": "https://github.com/yennanliu/open-design",
+    "created_at": "2026-05-05T05:54:17.772237Z",
+    "updated_at": "2026-05-05T05:55:41.685434Z",
+    "business_req": "Facilitate user onboarding and reduce the learning curve by providing a clear, multilingual quickstart guide.",
+    "stakeholder": "Customer",
+    "user_story": "As a new user, I want a quickstart guide so that I can begin using the tool with minimal setup time and understand the key features and configurations.",
+    "acceptance_criteria": [
+      "The quickstart guide is available in the root directory as QUICKSTART.md.",
+      "The guide includes step-by-step instructions to set up and use the tool with at least one coding-agent CLI.",
+      "The guide explains how to configure the BYOK (Bring Your Own Key) proxy.",
+      "The guide is clear and concise, with screenshots or diagrams where necessary.",
+      "The guide is reviewed and approved by at least two team members.",
+      "The guide is translated into at least two other languages available in the repository."
+    ],
+    "related_files": [
+      "QUICKSTART.md",
+      "README.md",
+      "README.de.md",
+      "README.ja-JP.md",
+      "README.zh-CN.md",
+      "README.zh-TW.md"
+    ],
+    "technical_notes": "Ensure that the quickstart guide covers the setup of the 12 coding-agent CLIs and the 31 composable Skills. Pay special attention to the BYOK proxy setup, as it is crucial for users without a CLI. Consider using existing README translations as a reference for multilingual support.",
+    "suggested_assignee": "documentation",
+    "suggested_change_refs": [
+      {
+        "file": "QUICKSTART.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/QUICKSTART.md",
+        "title": "QUICKSTART.md"
+      },
+      {
+        "file": "README.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.md",
+        "title": "README.md"
+      },
+      {
+        "file": "README.de.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.de.md",
+        "title": "README.de.md"
+      },
+      {
+        "file": "README.ja-JP.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ja-JP.md",
+        "title": "README.ja-JP.md"
+      },
+      {
+        "file": "README.zh-CN.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-CN.md",
+        "title": "README.zh-CN.md"
+      },
+      {
+        "file": "README.zh-TW.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-TW.md",
+        "title": "README.zh-TW.md"
+      }
+    ],
     "validation_score": 0.0,
     "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
     "validation_passed": false
