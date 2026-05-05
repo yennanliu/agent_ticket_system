@@ -236,6 +236,27 @@ async def test_validate_ticket_not_found(client):
 
 # ── Heal ─────────────────────────────────────────────────────────────────────
 
+async def test_kickstart_ticket(client, store, sample_ticket):
+    store.create(sample_ticket)
+    processed = sample_ticket.model_copy(update={
+        "acceptance_criteria": ["AC1"],
+        "validation_score": 0.8, "validation_passed": True,
+    })
+    with patch("app.api.agents.run_kickstart", return_value=processed):
+        r = await client.post(f"/api/agents/kickstart/{sample_ticket.id}")
+    assert r.status_code == 200
+    assert r.json()["validation_score"] == 0.8
+    assert r.json()["acceptance_criteria"] == ["AC1"]
+
+
+async def test_kickstart_ticket_not_found(client):
+    with patch("app.api.agents.run_kickstart", side_effect=ValueError("not found")):
+        r = await client.post("/api/agents/kickstart/bad-id")
+    assert r.status_code == 404
+
+
+# ── Heal ─────────────────────────────────────────────────────────────────────
+
 async def test_heal_ticket(client, store, sample_ticket):
     store.create(sample_ticket)
     healed = sample_ticket.model_copy(update={"validation_score": 0.9, "validation_passed": True, "validation_iterations": 1})

@@ -8,6 +8,7 @@ from app.agents.creator import run_creator
 from app.agents.enricher import run_enricher
 from app.agents.validator import run_validator
 from app.agents.healer import run_healer
+from app.agents.kickstart import run_kickstart
 
 
 class RepoSource(BaseModel):
@@ -111,6 +112,13 @@ def make_router(store: TicketStore, logger=None) -> APIRouter:
     def heal_ticket(ticket_id: str):
         try:
             return run_healer(ticket_id, store, logger=logger)
+        except ValueError as e:
+            raise HTTPException(status_code=404, detail=str(e))
+
+    @r.post("/kickstart/{ticket_id}", response_model=Ticket)
+    def kickstart_ticket(ticket_id: str):
+        try:
+            return run_kickstart(ticket_id, store, logger=logger)
         except ValueError as e:
             raise HTTPException(status_code=404, detail=str(e))
 

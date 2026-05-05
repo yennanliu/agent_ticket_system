@@ -732,14 +732,18 @@ async function submitTicket() {
   if (res.ok) {
     const ticket = await res.json();
     closeModal();
-    toast(id ? 'Updated' : 'Created — validating…');
-    loadTickets();
-    if (!id) {
+    if (id) {
+      toast('Updated');
+      loadTickets();
+    } else {
+      const hasSource = !!payload.source_repo;
+      toast(hasSource ? 'Created — enriching & validating…' : 'Created — validating…');
+      loadTickets();
       try {
-        await fetch(`${API}/agents/validate/${ticket.id}`, { method: 'POST' });
-        toast('Created & validated');
+        await fetch(`${API}/agents/kickstart/${ticket.id}`, { method: 'POST' });
+        toast('Ready ✓');
         loadTickets();
-      } catch(e) { /* ignore validation errors */ }
+      } catch(e) { /* ignore pipeline errors */ }
     }
   } else toast('Save failed', true);
 }
@@ -764,12 +768,13 @@ async function submitBatch() {
   if (res.ok) {
     const created = await res.json();
     closeBatchModal();
-    toast(`Created ${created.length} ticket(s) — validating…`);
+    const hasSource = !!repo_path;
+    toast(`Created ${created.length} ticket(s) — ${hasSource ? 'enriching & ' : ''}validating…`);
     loadTickets();
     for (const t of created) {
-      try { await fetch(`${API}/agents/validate/${t.id}`, { method: 'POST' }); } catch(e) { /* ignore */ }
+      try { await fetch(`${API}/agents/kickstart/${t.id}`, { method: 'POST' }); } catch(e) { /* ignore */ }
     }
-    toast(`Created & validated ${created.length} ticket(s)`);
+    toast(`${created.length} ticket(s) ready ✓`);
     loadTickets();
   } else toast('Batch create failed', true);
 }
