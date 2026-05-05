@@ -1,0 +1,27 @@
+[MASTER]
+py-version = 3.11
+
+[MESSAGES CONTROL]
+disable=
+    C0103,  # invalid-name
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+    C0301,  # line-too-long
+    C0411,  # wrong-import-order
+    C0413,  # wrong-import-position
+    C0415,  # import-outside-toplevel
+    C1803,  # use-implicit-booleaness-not-comparison
+    R0801,  # duplicate-code
+    R0913,  # too-many-arguments
+    R0914,  # too-many-locals
+    R0917,  # too-many-positional-arguments
+    R1732,  # consider-using-with
+    W0603,  # global-statement
+    W0611,  # unused-import
+    W0612,  # unused-variable
+    W0613,  # unused-argument
+    W0621,  # redefined-outer-name
+    W0707,  # raise-missing-from
+    W0718,  # broad-exception-caught
+    W1514,  # unspecified-encoding
