@@ -25,20 +25,23 @@
   --h-header:    52px;
 }
 [data-theme="light"] {
-  --bg:          #fafafa;
-  --bg-alt:      #f2f2f2;
-  --surface:     #e8e8e8;
-  --surface2:    #dedede;
-  --text:        #111;
-  --text-muted:  #444;
-  --text-dim:    #999;
-  --border:      #ddd;
-  --accent:      #4f46e5;
-  --accent-fg:   #fff;
-  --accent-alt:  #9333ea;
-  --purple:      #6d28d9;
-  --blue:        #1d4ed8;
-  --success:     #16a34a;
+  --bg:          #efefef;
+  --bg-alt:      #e4e4e4;
+  --surface:     #d5d5d5;
+  --surface2:    #c5c5c5;
+  --text:        #141414;
+  --text-muted:  #3a3a3a;
+  --text-dim:    #6e6e6e;
+  --border:      #b8b8b8;
+  --accent:      #faff69;
+  --accent-fg:   #000;
+  --accent-alt:  #ff6ec7;
+  --accent-alt-fg: #000;
+  --success:     #b5e48c;
+  --warning:     #ffa07a;
+  --danger:      #ff6b6b;
+  --blue:        #7bdff2;
+  --purple:      #c7a9ff;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,7 +73,7 @@ header {
   right: 0;
   z-index: 100;
 }
-[data-theme="light"] header { background: rgba(250,250,250,0.85); }
+[data-theme="light"] header { background: rgba(239,239,239,0.85); }
 .logo {
   font-size: 13px;
   font-weight: 600;
@@ -133,11 +136,6 @@ header {
   z-index: 0;
   animation: gridShift 20s linear infinite;
 }
-[data-theme="light"] .hero-grid {
-  background-image:
-    linear-gradient(rgba(79,70,229,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(79,70,229,0.05) 1px, transparent 1px);
-}
 @keyframes gridShift {
   0% { transform: translateY(0); }
   100% { transform: translateY(72px); }
@@ -157,12 +155,6 @@ header {
     transparent 70%);
   z-index: 0;
   animation: glowPulse 5s ease-in-out infinite;
-}
-[data-theme="light"] .hero-glow {
-  background: radial-gradient(ellipse at center,
-    rgba(79,70,229,0.08) 0%,
-    rgba(147,51,234,0.04) 40%,
-    transparent 70%);
 }
 @keyframes glowPulse {
   0%, 100% { opacity: 0.8; transform: translate(-50%,-55%) scale(1); }
@@ -194,10 +186,6 @@ header {
   border-radius: 20px;
   display: inline-block;
   margin-bottom: 28px;
-}
-[data-theme="light"] .hero-tag {
-  background: rgba(79,70,229,0.08);
-  border-color: rgba(79,70,229,0.2);
 }
 
 .hero-title {
@@ -488,9 +476,6 @@ header {
   inset: 0;
   background: radial-gradient(ellipse at center, rgba(250,255,105,0.05) 0%, transparent 60%);
   z-index: 0;
-}
-[data-theme="light"] .cta-section .cta-glow {
-  background: radial-gradient(ellipse at center, rgba(79,70,229,0.06) 0%, transparent 60%);
 }
 .cta-section-inner {
   position: relative;

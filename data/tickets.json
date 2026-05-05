@@ -3,7 +3,7 @@
     "id": "7c251d5d-27a4-48e4-88bc-28bcc0459b61",
     "title": "Implement BYOK Proxy for OpenAI Compatibility",
     "description": "Develop a Bring Your Own Key (BYOK) proxy to ensure compatibility with OpenAI, allowing users to integrate their own keys seamlessly.",
-    "status": "draft",
+    "status": "open",
     "priority": "high",
     "importance": "critical",
     "labels": [
@@ -12,7 +12,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.193828Z",
-    "updated_at": "2026-05-05T06:36:25.624372Z",
+    "updated_at": "2026-05-05T06:37:52.824615Z",
     "business_req": "Enhance compatibility with major AI platforms to increase user adoption.",
     "stakeholder": "Product",
     "user_story": "As a developer, I want to use my own OpenAI keys so that I can maintain control over my API usage and costs.",
@@ -30,7 +30,7 @@
     "id": "ada6735c-bc3f-4075-bda3-776a8814c1ee",
     "title": "Update Documentation for Multi-language Support",
     "description": "Ensure all documentation files, including README and CONTRIBUTING, are up-to-date and accurately translated across supported languages.",
-    "status": "draft",
+    "status": "open",
     "priority": "medium",
     "importance": "high",
     "labels": [
@@ -39,7 +39,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.194755Z",
-    "updated_at": "2026-05-05T06:36:26.664470Z",
+    "updated_at": "2026-05-05T06:37:52.829656Z",
     "business_req": "Provide comprehensive and accessible documentation for international users.",
     "stakeholder": "Customer",
     "user_story": "As a non-English speaking user, I want documentation in my language so that I can understand and use the software effectively.",
@@ -57,7 +57,7 @@
     "id": "4dff1f5b-76b7-41c3-a55f-22b3e5e5daaf",
     "title": "Add New Design Systems to Repository",
     "description": "Integrate 5 new brand-grade design systems into the existing repository to expand design capabilities.",
-    "status": "draft",
+    "status": "open",
     "priority": "medium",
     "importance": "medium",
     "labels": [
@@ -66,7 +66,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.195348Z",
-    "updated_at": "2026-05-05T06:36:27.877468Z",
+    "updated_at": "2026-05-05T06:37:52.834150Z",
     "business_req": "Expand design options to attract a broader range of designers and developers.",
     "stakeholder": "Product",
     "user_story": "As a designer, I want more design systems so that I have greater flexibility and creativity in my projects.",
@@ -84,7 +84,7 @@
     "id": "67558e8c-2967-4d86-91c7-9c0bff7c0a93",
     "title": "Improve CLI Auto-Detection Mechanism",
     "description": "Enhance the auto-detection mechanism for coding-agent CLIs to improve reliability and performance.",
-    "status": "draft",
+    "status": "open",
     "priority": "high",
     "importance": "high",
     "labels": [
@@ -93,7 +93,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.195724Z",
-    "updated_at": "2026-05-05T06:36:29.107275Z",
+    "updated_at": "2026-05-05T06:37:52.841505Z",
     "business_req": "Ensure seamless integration and operation of coding-agent CLIs to improve user experience.",
     "stakeholder": "Engineering",
     "user_story": "As a developer, I want reliable CLI detection so that I can focus on my work without interruptions.",
@@ -111,7 +111,7 @@
     "id": "4ae807f6-31dc-465b-94c1-2e5109c60c29",
     "title": "Create Quickstart Guide for New Users",
     "description": "Develop a comprehensive quickstart guide to help new users set up and start using Open Design quickly and efficiently.",
-    "status": "draft",
+    "status": "open",
     "priority": "medium",
     "importance": "medium",
     "labels": [
@@ -120,26 +120,28 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.196432Z",
-    "updated_at": "2026-05-05T06:36:46.413767Z",
-    "business_req": "Facilitate user onboarding to reduce churn and increase user satisfaction by providing clear and concise setup instructions.",
+    "updated_at": "2026-05-05T06:37:52.847370Z",
+    "business_req": "Facilitate user onboarding to reduce churn and increase user satisfaction by providing clear and concise setup instructions. Ensure that users can quickly and effectively utilize Open Design's features, minimizing the time to first value.",
     "stakeholder": "Customer",
-    "user_story": "As a new user, I want a quickstart guide so that I can begin using Open Design without confusion, ensuring a smooth onboarding experience.",
+    "user_story": "As a new user, I want a quickstart guide so that I can begin using Open Design without confusion, ensuring a smooth onboarding experience and allowing me to leverage its full capabilities quickly.",
     "acceptance_criteria": [
-      "The quickstart guide must be available in the root directory as QUICKSTART.md.",
-      "The guide should include step-by-step instructions for setting up Open Design with at least one coding-agent CLI.",
-      "Instructions must cover both local and web deployment options.",
-      "The guide should include troubleshooting tips for common setup issues.",
-      "The guide must be translated into at least two other languages available in the repository (e.g., German and Japanese).",
-      "The guide should be reviewed and approved by at least one other team member."
+      "The quickstart guide must include step-by-step instructions for setting up Open Design on a local machine.",
+      "The guide should cover the installation and configuration of at least one coding-agent CLI.",
+      "Instructions must be provided for both CLI and non-CLI users, including the OpenAI-compatible BYOK proxy setup.",
+      "The guide should be available in English and at least one other language from the existing translations.",
+      "The quickstart guide should be easily accessible from the main README.md file."
     ],
     "related_files": [
       "QUICKSTART.md",
       "README.md",
-      "AGENTS.md",
-      "CLAUDE.md"
+      "README.de.md",
+      "README.ja-JP.md",
+      "README.ko.md",
+      "README.zh-CN.md",
+      "README.zh-TW.md"
     ],
-    "technical_notes": "Ensure that the quickstart guide is consistent with the existing README and AGENTS documentation. Pay special attention to the setup of the 12 coding-agent CLIs and the integration with the 31 composable Skills and 72 Design Systems. Consider edge cases where users might not have a CLI installed and provide alternative instructions using the OpenAI-compatible BYOK proxy.",
-    "suggested_assignee": "frontend",
+    "technical_notes": "Ensure that the quickstart guide is aligned with the existing README and other documentation files. Consider using the existing QUICKSTART.md as a base and update it with the latest setup instructions. Pay attention to the integration of the 12 coding-agent CLIs and the OpenAI-compatible BYOK proxy setup. Verify that all instructions are compatible with the latest version of Open Design.",
+    "suggested_assignee": "documentation",
     "suggested_change_refs": [
       {
         "file": "QUICKSTART.md",
@@ -154,16 +156,34 @@
         "title": "README.md"
       },
       {
-        "file": "AGENTS.md",
+        "file": "README.de.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/AGENTS.md",
-        "title": "AGENTS.md"
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.de.md",
+        "title": "README.de.md"
       },
       {
-        "file": "CLAUDE.md",
+        "file": "README.ja-JP.md",
         "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/CLAUDE.md",
-        "title": "CLAUDE.md"
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ja-JP.md",
+        "title": "README.ja-JP.md"
+      },
+      {
+        "file": "README.ko.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ko.md",
+        "title": "README.ko.md"
+      },
+      {
+        "file": "README.zh-CN.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-CN.md",
+        "title": "README.zh-CN.md"
+      },
+      {
+        "file": "README.zh-TW.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-TW.md",
+        "title": "README.zh-TW.md"
       }
     ],
     "validation_score": 0.0,
@@ -175,7 +195,7 @@
     "id": "f764ef1d-a517-4da2-b1e9-9c401f83267b",
     "title": "Implement CI/CD Pipeline for Automated Testing",
     "description": "Set up a continuous integration and continuous deployment (CI/CD) pipeline to automate testing and deployment processes.",
-    "status": "draft",
+    "status": "open",
     "priority": "high",
     "importance": "critical",
     "labels": [
@@ -184,7 +204,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.197183Z",
-    "updated_at": "2026-05-05T06:36:33.511639Z",
+    "updated_at": "2026-05-05T06:37:52.853284Z",
     "business_req": "Improve software reliability and reduce time-to-market by automating testing and deployment.",
     "stakeholder": "Engineering",
     "user_story": "As a developer, I want automated testing so that I can ensure code quality and deploy updates faster.",
@@ -202,7 +222,7 @@
     "id": "a9f4d40f-2eea-409c-9e9a-9b7487c13e86",
     "title": "Enhance Security for BYOK Implementation",
     "description": "Review and enhance security measures for the BYOK implementation to protect user data and API keys.",
-    "status": "draft",
+    "status": "open",
     "priority": "high",
     "importance": "critical",
     "labels": [
@@ -211,7 +231,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.197842Z",
-    "updated_at": "2026-05-05T06:36:34.534695Z",
+    "updated_at": "2026-05-05T06:37:52.859015Z",
     "business_req": "Protect user data and maintain trust by ensuring robust security measures.",
     "stakeholder": "Customer",
     "user_story": "As a user, I want my API keys to be secure so that I can trust the platform with my data.",
@@ -229,7 +249,7 @@
     "id": "b4ab6986-8b75-4215-827c-5c06341a7e33",
     "title": "Optimize Performance for Web Deployment",
     "description": "Analyze and optimize the performance of the web-deployable version of Open Design to ensure fast and efficient operation.",
-    "status": "draft",
+    "status": "open",
     "priority": "medium",
     "importance": "high",
     "labels": [
@@ -238,7 +258,7 @@
     ],
     "source_repo": "https://github.com/yennanliu/open-design",
     "created_at": "2026-05-05T06:36:24.198516Z",
-    "updated_at": "2026-05-05T06:36:35.966677Z",
+    "updated_at": "2026-05-05T06:37:52.862627Z",
     "business_req": "Enhance user satisfaction by ensuring the software runs smoothly and efficiently on the web.",
     "stakeholder": "Engineering",
     "user_story": "As a web user, I want a fast and responsive application so that I can work efficiently without delays.",
