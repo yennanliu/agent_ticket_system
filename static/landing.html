@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Ticket System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:          #0e0e0e;
+  --bg-alt:      #161616;
+  --surface:     #1f1f1f;
+  --surface2:    #2a2a2a;
+  --text:        #f0f0f0;
+  --text-muted:  #a0a0a0;
+  --text-dim:    #555;
+  --border:      #282828;
+  --accent:      #faff69;
+  --accent-fg:   #000;
+  --accent-alt:  #ff6ec7;
+  --purple:      #c7a9ff;
+  --blue:        #7bdff2;
+  --success:     #b5e48c;
+  --h-header:    52px;
+}
+[data-theme="light"] {
+  --bg:          #fafafa;
+  --bg-alt:      #f2f2f2;
+  --surface:     #e8e8e8;
+  --surface2:    #dedede;
+  --text:        #111;
+  --text-muted:  #444;
+  --text-dim:    #999;
+  --border:      #ddd;
+  --accent:      #4f46e5;
+  --accent-fg:   #fff;
+  --accent-alt:  #9333ea;
+  --purple:      #6d28d9;
+  --blue:        #1d4ed8;
+  --success:     #16a34a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  transition: background .2s, color .2s;
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+header {
+  background: rgba(14,14,14,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: var(--h-header);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+[data-theme="light"] header { background: rgba(250,250,250,0.85); }
+.logo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.logo-hex { font-size: 18px; }
+.header-sep { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
+.nav-link {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: color .15s, background .15s;
+}
+.nav-link:hover { color: var(--text); background: var(--surface); }
+.spacer { flex: 1; }
+.btn-theme {
+  font-size: 12px;
+  padding: 5px 11px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: color .15s, background .15s;
+}
+.btn-theme:hover { color: var(--text); background: var(--surface2); }
+
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: calc(var(--h-header) + 60px) 24px 80px;
+}
+
+/* Animated grid */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(250,255,105,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(250,255,105,0.04) 1px, transparent 1px);
+  background-size: 72px 72px;
+  z-index: 0;
+  animation: gridShift 20s linear infinite;
+}
+[data-theme="light"] .hero-grid {
+  background-image:
+    linear-gradient(rgba(79,70,229,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,70,229,0.05) 1px, transparent 1px);
+}
+@keyframes gridShift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(72px); }
+}
+
+/* Radial glow */
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  width: 900px;
+  height: 700px;
+  background: radial-gradient(ellipse at center,
+    rgba(250,255,105,0.09) 0%,
+    rgba(199,169,255,0.04) 40%,
+    transparent 70%);
+  z-index: 0;
+  animation: glowPulse 5s ease-in-out infinite;
+}
+[data-theme="light"] .hero-glow {
+  background: radial-gradient(ellipse at center,
+    rgba(79,70,229,0.08) 0%,
+    rgba(147,51,234,0.04) 40%,
+    transparent 70%);
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.8; transform: translate(-50%,-55%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%,-55%) scale(1.08); }
+}
+
+/* Content */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  animation: fadeUp 0.7s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(250,255,105,0.08);
+  border: 1px solid rgba(250,255,105,0.18);
+  padding: 5px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 28px;
+}
+[data-theme="light"] .hero-tag {
+  background: rgba(79,70,229,0.08);
+  border-color: rgba(79,70,229,0.2);
+}
+
+.hero-title {
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.hero-title .word-agent { color: var(--accent); }
+.hero-title .word-ticket { color: var(--text); }
+
+.hero-subtitle {
+  font-size: clamp(15px, 2.5vw, 19px);
+  color: var(--text-dim);
+  max-width: 520px;
+  margin: 0 auto 44px;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 13px 30px;
+  border-radius: 7px;
+  text-decoration: none;
+  transition: filter .15s, transform .15s;
+  border: none;
+  cursor: pointer;
+}
+.cta-primary:hover { filter: brightness(0.9); transform: translateY(-1px); }
+
+.cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 13px 30px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: background .15s, color .15s, transform .15s;
+}
+.cta-ghost:hover { background: var(--surface); color: var(--text); transform: translateY(-1px); }
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+.scroll-arrow { font-size: 16px; }
+
+/* ── Features ── */
+.features-section {
+  padding: 100px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.15;
+}
+.section-subtitle {
+  font-size: 16px;
+  color: var(--text-dim);
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 56px;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 720px) {
+  .features-grid { grid-template-columns: 1fr; }
+}
+.feature-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 30px 26px;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--feature-color, var(--accent)), transparent);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.feature-card:hover {
+  border-color: var(--surface2);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+.feature-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.feature-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+.feature-tag {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--feature-color, var(--accent));
+  background: rgba(250,255,105,0.07);
+  border: 1px solid rgba(250,255,105,0.15);
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Stats ── */
+.stats-section {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+  padding: 60px 24px;
+}
+.stats-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+@media (max-width: 600px) {
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+}
+.stat-item {
+  text-align: center;
+}
+.stat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--accent);
+  display: block;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+/* ── How it works ── */
+.workflow-section {
+  padding: 100px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.workflow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 56px;
+}
+.workflow-step {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 24px;
+  align-items: start;
+  padding-bottom: 40px;
+  position: relative;
+}
+.workflow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 48px;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.step-num {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.step-content { padding-top: 10px; }
+.step-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.step-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+/* ── CTA Section ── */
+.cta-section {
+  padding: 100px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section .cta-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(250,255,105,0.05) 0%, transparent 60%);
+  z-index: 0;
+}
+[data-theme="light"] .cta-section .cta-glow {
+  background: radial-gradient(ellipse at center, rgba(79,70,229,0.06) 0%, transparent 60%);
+}
+.cta-section-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.cta-section-title {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+.cta-section-sub {
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+}
+.footer-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+.footer-link {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color .15s;
+}
+.footer-link:hover { color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo"><span class="logo-hex">⬡</span> ATS</a>
+  <div class="header-sep"></div>
+  <a href="/tickets" class="nav-link">Tickets</a>
+  <a href="/logs" class="nav-link">Logs</a>
+  <div class="spacer"></div>
+  <button class="btn-theme" id="theme-btn" onclick="toggleTheme()">☀ Bright</button>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">⬡ AI-Powered Ticket Management</div>
+    <h1 class="hero-title">
+      <span class="word-agent">Agent</span><br>
+      <span class="word-ticket">Ticket System</span>
+    </h1>
+    <p class="hero-subtitle">
+      Generate engineering tickets from any codebase, enrich them with AI context,
+      and validate quality automatically.
+    </p>
+    <div class="hero-actions">
+      <a href="/tickets" class="cta-primary">Open Tickets &rarr;</a>
+      <a href="/logs" class="cta-ghost">View Logs</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span class="scroll-arrow">↓</span>
+    <span>Explore</span>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features-section">
+  <div class="section-label">What it does</div>
+  <h2 class="section-title">Three steps to better tickets</h2>
+  <p class="section-subtitle">From repo to ready-to-develop in minutes, not hours.</p>
+  <div class="features-grid">
+    <div class="feature-card" style="--feature-color: var(--accent)">
+      <div class="feature-icon-wrap">⬡</div>
+      <div class="feature-name">Generate</div>
+      <div class="feature-desc">
+        Point at a GitHub repo or local codebase. The AI reads the code, issues, and README
+        to automatically create relevant, actionable engineering tickets.
+      </div>
+      <span class="feature-tag">CREATE-FROM-REPO</span>
+    </div>
+    <div class="feature-card" style="--feature-color: var(--purple); --feature-bg: rgba(199,169,255,0.07); --feature-border: rgba(199,169,255,0.15)">
+      <div class="feature-icon-wrap">✦</div>
+      <div class="feature-name">Enrich</div>
+      <div class="feature-desc">
+        AI fills in descriptions, acceptance criteria, related files, technical notes,
+        and suggested assignees — saving hours of specification work.
+      </div>
+      <span class="feature-tag" style="color:var(--purple);background:rgba(199,169,255,0.07);border-color:rgba(199,169,255,0.15)">ENRICH</span>
+    </div>
+    <div class="feature-card" style="--feature-color: var(--success)">
+      <div class="feature-icon-wrap">✓</div>
+      <div class="feature-name">Validate</div>
+      <div class="feature-desc">
+        Confidence scoring evaluates each ticket's completeness and clarity.
+        Know before development starts whether a ticket is well-defined enough.
+      </div>
+      <span class="feature-tag" style="color:var(--success);background:rgba(181,228,140,0.07);border-color:rgba(181,228,140,0.15)">VALIDATE</span>
+    </div>
+  </div>
+</section>
+
+<!-- Live Stats -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <span class="stat-num" id="s-total">—</span>
+      <span class="stat-label">Total Tickets</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="s-open">—</span>
+      <span class="stat-label">Open</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="s-validated">—</span>
+      <span class="stat-label">Validated</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="s-passrate">—</span>
+      <span class="stat-label">Pass Rate</span>
+    </div>
+  </div>
+</div>
+
+<!-- How it works -->
+<section class="workflow-section">
+  <div class="section-label">Workflow</div>
+  <h2 class="section-title">From repo to sprint-ready</h2>
+  <div class="workflow-steps">
+    <div class="workflow-step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title">Point at a repository</div>
+        <div class="step-desc">Paste a GitHub URL or local path. The system reads the codebase structure, open issues, and documentation to build context.</div>
+      </div>
+    </div>
+    <div class="workflow-step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title">AI generates tickets</div>
+        <div class="step-desc">A LangGraph agent analyzes the code and produces a set of relevant engineering tickets tailored to the project's needs.</div>
+      </div>
+    </div>
+    <div class="workflow-step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title">Enrich with context</div>
+        <div class="step-desc">Run the Enrich agent to fill in descriptions, acceptance criteria, related files, and technical notes for each ticket.</div>
+      </div>
+    </div>
+    <div class="workflow-step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title">Validate and ship</div>
+        <div class="step-desc">Validation scores each ticket's quality. High-confidence tickets go straight to the sprint board — low-confidence ones get flagged for review.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-section-inner">
+    <h2 class="cta-section-title">Ready to build better tickets?</h2>
+    <p class="cta-section-sub">Open the ticket board and connect your first repository.</p>
+    <a href="/tickets" class="cta-primary">Open Tickets &rarr;</a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">⬡ ATS · Agent Ticket System</span>
+  <div class="footer-links">
+    <a href="/tickets" class="footer-link">Tickets</a>
+    <a href="/logs" class="footer-link">Logs</a>
+  </div>
+</footer>
+
+<script>
+function initTheme() {
+  const saved = localStorage.getItem('ats-theme') || 'dark';
+  applyTheme(saved);
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ats-theme', theme);
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀ Bright' : '◗ Dark';
+}
+
+async function loadStats() {
+  try {
+    const res = await fetch('/api/tickets');
+    const tickets = await res.json();
+    document.getElementById('s-total').textContent = tickets.length;
+    document.getElementById('s-open').textContent = tickets.filter(t => t.status === 'open').length;
+    const validated = tickets.filter(t => t.validation_passed !== null && t.validation_passed !== undefined);
+    const passed = tickets.filter(t => t.validation_passed === true);
+    document.getElementById('s-validated').textContent = validated.length;
+    document.getElementById('s-passrate').textContent = validated.length
+      ? Math.round(passed.length / validated.length * 100) + '%' : '—';
+  } catch(e) { /* ignore */ }
+}
+
+initTheme();
+loadStats();
+</script>
+</body>
+</html>

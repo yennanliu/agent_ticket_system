@@ -173,6 +173,21 @@ header {
 }
 #toolbar input[type="text"]::placeholder { color: var(--text-dim); }
 #toolbar input[type="text"]:focus { border-color: var(--accent); }
+#repo-filter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#repo-filter:focus { border-color: var(--accent); }
+#repo-filter option { background: var(--bg-alt); }
 
 /* ── Stat bar ── */
 #stat-bar {
@@ -382,7 +397,7 @@ input[type="checkbox"] {
 <body>
 
 <header>
-  <span class="logo">⬡ Tickets</span>
+  <a href="/" style="text-decoration:none"><span class="logo">⬡ Tickets</span></a>
   <div class="header-sep"></div>
   <a href="/logs" class="nav-link">Logs</a>
   <div class="spacer"></div>
@@ -397,6 +412,10 @@ input[type="checkbox"] {
   <button class="btn btn-primary" id="generate-btn" onclick="generateTickets()">Generate from Repo</button>
   <div class="header-sep"></div>
   <button class="btn btn-violet" id="enrich-all-btn" onclick="enrichAll()">✦ Enrich Selected</button>
+  <div class="header-sep"></div>
+  <select id="repo-filter" onchange="applyRepoFilter()" title="Filter by repo">
+    <option value="">All repos</option>
+  </select>
 </div>
 
 <div id="stat-bar">
@@ -502,8 +521,23 @@ function applyTheme(theme) {
 async function loadTickets() {
   const res = await fetch(`${API}/tickets`);
   currentTickets = await res.json();
-  renderTable(currentTickets);
+  populateRepoFilter(currentTickets);
+  applyRepoFilter();
   updateStats(currentTickets);
+}
+
+function populateRepoFilter(tickets) {
+  const sel = document.getElementById('repo-filter');
+  const current = sel.value;
+  const repos = [...new Set(tickets.map(t => t.source_repo).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">All repos</option>' +
+    repos.map(r => `<option value="${esc(r)}" ${r === current ? 'selected' : ''}>${esc(repoShort(r))}</option>`).join('');
+}
+
+function applyRepoFilter() {
+  const filter = document.getElementById('repo-filter').value;
+  const filtered = filter ? currentTickets.filter(t => t.source_repo === filter) : currentTickets;
+  renderTable(filtered);
 }
 
 function updateStats(tickets) {
@@ -628,8 +662,19 @@ async function submitTicket() {
   const url = id ? `${API}/tickets/${id}` : `${API}/tickets`;
   const method = id ? 'PUT' : 'POST';
   const res = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-  if (res.ok) { closeModal(); toast(id ? 'Updated' : 'Created'); loadTickets(); }
-  else toast('Save failed', true);
+  if (res.ok) {
+    const ticket = await res.json();
+    closeModal();
+    toast(id ? 'Updated' : 'Created — validating…');
+    loadTickets();
+    if (!id) {
+      try {
+        await fetch(`${API}/agents/validate/${ticket.id}`, { method: 'POST' });
+        toast('Created & validated');
+        loadTickets();
+      } catch(e) { /* ignore validation errors */ }
+    }
+  } else toast('Save failed', true);
 }
 
 function openBatchCreate() {
@@ -650,8 +695,14 @@ async function submitBatch() {
     method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
   });
   if (res.ok) {
+    const created = await res.json();
     closeBatchModal();
-    toast(`Created ${(await res.json()).length} ticket(s)`);
+    toast(`Created ${created.length} ticket(s) — validating…`);
+    loadTickets();
+    for (const t of created) {
+      try { await fetch(`${API}/agents/validate/${t.id}`, { method: 'POST' }); } catch(e) { /* ignore */ }
+    }
+    toast(`Created & validated ${created.length} ticket(s)`);
     loadTickets();
   } else toast('Batch create failed', true);
 }

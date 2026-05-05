@@ -244,5 +244,352 @@
     "validation_score": null,
     "validation_notes": "",
     "validation_passed": null
+  },
+  {
+    "id": "9a873472-5f63-4557-8302-90d387beecb0",
+    "title": "add csv output",
+    "description": "",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:41:32.857845Z",
+    "updated_at": "2026-05-05T05:41:49.596536Z",
+    "business_req": "Enable users to export ticket data in CSV format for easier data analysis and reporting.",
+    "stakeholder": "Product Management",
+    "user_story": "As a project manager, I want to export ticket data as a CSV file so that I can analyze and share project progress with stakeholders.",
+    "acceptance_criteria": [
+      "The system should generate a CSV file containing ticket data when requested.",
+      "The CSV output should include all ticket fields: ID, title, description, priority, business requirements, stakeholder, and user story.",
+      "The CSV file should be downloadable from the UI.",
+      "Ensure the CSV export functionality is covered by unit tests."
+    ],
+    "related_files": [
+      "main.py",
+      "app/api/tickets.py",
+      "app/storage.py",
+      "static/index.html"
+    ],
+    "technical_notes": "Consider using Python's built-in csv module to handle CSV generation. Ensure that the CSV export functionality does not block the main application thread. You may need to modify the UI to add a button for downloading the CSV file. Ensure that the CSV generation handles special characters and large datasets efficiently.",
+    "suggested_assignee": "backend",
+    "suggested_change_refs": [
+      {
+        "file": "main.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/main.py",
+        "title": "main.py"
+      },
+      {
+        "file": "app/api/tickets.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/api/tickets.py",
+        "title": "app/api/tickets.py"
+      },
+      {
+        "file": "app/storage.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/storage.py",
+        "title": "app/storage.py"
+      },
+      {
+        "file": "static/index.html",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/static/index.html",
+        "title": "static/index.html"
+      }
+    ],
+    "validation_score": null,
+    "validation_notes": "",
+    "validation_passed": null
+  },
+  {
+    "id": "4c7d9c79-3b97-4dd5-b5b8-6345a5b07a7a",
+    "title": "Implement Ticket Auto-Creation Feature",
+    "description": "Develop the auto-creation feature using the creator agent to generate structured ticket drafts from a given repository.",
+    "status": "open",
+    "priority": "high",
+    "importance": "critical",
+    "labels": [
+      "feature",
+      "AI",
+      "automation"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.681586Z",
+    "updated_at": "2026-05-05T05:42:33.695681Z",
+    "business_req": "Automate the ticket creation process to improve efficiency and reduce manual workload.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want the system to automatically create tickets from a repository so that I can focus on resolving issues rather than documenting them.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "3806a5a4-2dc1-4575-b620-5efce2ac49e8",
+    "title": "Enhance Ticket Enrichment Process",
+    "description": "Improve the ticket enrichment process by refining the enricher agent to provide more detailed and useful ticket information.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "high",
+    "labels": [
+      "feature",
+      "AI",
+      "enhancement"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.682408Z",
+    "updated_at": "2026-05-05T05:42:35.242626Z",
+    "business_req": "Provide enriched ticket details to assist developers in understanding and resolving issues more effectively.",
+    "stakeholder": "Product",
+    "user_story": "As a product manager, I want enriched ticket details so that I can prioritize and assign tasks more effectively.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "ec3a2dd1-55b0-4ff6-bd01-582b97d228c4",
+    "title": "Optimize Repo Context Fetching",
+    "description": "Optimize the fetch_context function to handle larger repositories efficiently without exceeding the 50 KB limit.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [
+      "optimization",
+      "performance"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.683011Z",
+    "updated_at": "2026-05-05T05:42:36.882068Z",
+    "business_req": "Ensure the system can handle larger repositories without performance degradation.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want the system to efficiently fetch context from large repositories so that I can work with comprehensive data.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "ba255cd9-c310-4961-9ca4-e9c263546559",
+    "title": "Integrate OpenAI API Key Configuration",
+    "description": "Allow users to configure their OpenAI API key securely through the environment settings.",
+    "status": "open",
+    "priority": "low",
+    "importance": "medium",
+    "labels": [
+      "configuration",
+      "security"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.683577Z",
+    "updated_at": "2026-05-05T05:42:52.536137Z",
+    "business_req": "Provide a secure method for users to configure their OpenAI API key, ensuring that sensitive information is not exposed.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want to securely configure my OpenAI API key so that I can use the AI features without exposing sensitive information.",
+    "acceptance_criteria": [
+      "Users can set their OpenAI API key in the .env file without exposing it in the codebase.",
+      "The application reads the OpenAI API key from the environment variables at runtime.",
+      "If the OpenAI API key is missing or invalid, the application should log an appropriate error message and disable AI features.",
+      "Ensure that the OpenAI API key is not logged or exposed in any application logs."
+    ],
+    "related_files": [
+      ".env.example",
+      "main.py",
+      "app/repo_tools.py"
+    ],
+    "technical_notes": "Ensure that the OpenAI API key is accessed using os.environ to maintain security. Consider using a library like python-dotenv to load environment variables from a .env file. Validate the presence of the API key at application startup and handle errors gracefully if the key is missing or invalid.",
+    "suggested_assignee": "devops",
+    "suggested_change_refs": [
+      {
+        "file": ".env.example",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/.env.example",
+        "title": ".env.example"
+      },
+      {
+        "file": "main.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/main.py",
+        "title": "main.py"
+      },
+      {
+        "file": "app/repo_tools.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/repo_tools.py",
+        "title": "app/repo_tools.py"
+      }
+    ],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references, making it incomplete and untestable.",
+    "validation_passed": false
+  },
+  {
+    "id": "2dbc99bd-7b3b-44e5-bc28-5acf0d2c3a05",
+    "title": "Implement Unit Tests for TicketStore",
+    "description": "Develop comprehensive unit tests for the TicketStore to ensure reliable ticket storage and retrieval operations.",
+    "status": "open",
+    "priority": "high",
+    "importance": "high",
+    "labels": [
+      "testing",
+      "quality"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.684039Z",
+    "updated_at": "2026-05-05T05:44:40.587643Z",
+    "business_req": "Ensure the reliability and correctness of ticket storage operations, as these are critical for maintaining accurate and accessible ticket data.",
+    "stakeholder": "Quality Assurance",
+    "user_story": "As a QA engineer, I want comprehensive unit tests for the TicketStore so that I can ensure its reliability and correctness, preventing data loss or corruption.",
+    "acceptance_criteria": [
+      "Unit tests cover all public methods of the TicketStore class.",
+      "Tests verify both successful and failure scenarios for ticket storage and retrieval.",
+      "Tests ensure that the in-memory dictionary and the JSON file are consistent after operations.",
+      "Tests are written using pytest and achieve at least 90% code coverage for TicketStore.",
+      "All tests pass without errors when running the full test suite."
+    ],
+    "related_files": [
+      "app/storage.py",
+      "tests/test_storage.py"
+    ],
+    "technical_notes": "The TicketStore uses an in-memory dictionary and writes to 'data/tickets.json'. Ensure tests mock file I/O operations to avoid actual file writes during testing. Consider edge cases such as empty storage, duplicate ticket IDs, and concurrent modifications.",
+    "suggested_assignee": "backend",
+    "suggested_change_refs": [
+      {
+        "file": "app/storage.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/storage.py",
+        "title": "app/storage.py"
+      },
+      {
+        "file": "tests/test_storage.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/tests/test_storage.py",
+        "title": "tests/test_storage.py"
+      }
+    ],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references, making it incomplete.",
+    "validation_passed": false
+  },
+  {
+    "id": "fbfaa4e9-94af-425f-9dd8-62b189cb5e96",
+    "title": "Improve UI for Ticket Management",
+    "description": "Enhance the user interface to provide a more intuitive and user-friendly experience for managing tickets.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [
+      "UI",
+      "enhancement"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.684540Z",
+    "updated_at": "2026-05-05T05:46:20.524063Z",
+    "business_req": "Enhance the user interface to provide a more intuitive and user-friendly experience for managing tickets, thereby improving user satisfaction and efficiency.",
+    "stakeholder": "Product",
+    "user_story": "As a user, I want an intuitive UI for managing tickets so that I can efficiently handle my tasks without confusion or unnecessary steps.",
+    "acceptance_criteria": [
+      "The UI should display a list of tickets with clear visual hierarchy and intuitive navigation.",
+      "Users should be able to filter and sort tickets based on status, priority, and date.",
+      "The ticket detail view should be accessible with a single click and display all relevant information.",
+      "The UI should be responsive and function correctly on both desktop and mobile devices.",
+      "All UI changes should pass existing frontend tests and any new tests created for additional functionality."
+    ],
+    "related_files": [
+      "static/index.html",
+      "app/api/tickets.py",
+      "app/storage.py"
+    ],
+    "technical_notes": "Consider using a modern frontend framework like React or Vue.js to enhance the UI components. Ensure that the UI changes do not affect the existing API endpoints. Pay attention to the in-memory data structure in `app/storage.py` to ensure UI updates reflect real-time data changes.",
+    "suggested_assignee": "frontend",
+    "suggested_change_refs": [
+      {
+        "file": "static/index.html",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/static/index.html",
+        "title": "static/index.html"
+      },
+      {
+        "file": "app/api/tickets.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/api/tickets.py",
+        "title": "app/api/tickets.py"
+      },
+      {
+        "file": "app/storage.py",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/storage.py",
+        "title": "app/storage.py"
+      }
+    ],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "b22f275b-fdb3-48dd-b791-7b42f6e9b85c",
+    "title": "Document API Endpoints",
+    "description": "Create comprehensive documentation for all API endpoints to assist developers in integrating and using the system effectively.",
+    "status": "open",
+    "priority": "low",
+    "importance": "medium",
+    "labels": [
+      "docs",
+      "API"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.685198Z",
+    "updated_at": "2026-05-05T05:42:40.259408Z",
+    "business_req": "Provide clear API documentation to facilitate integration and usage by developers.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want detailed API documentation so that I can integrate and use the system effectively.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
+  },
+  {
+    "id": "705934bf-dac4-4f7d-993c-b63a7b6c954d",
+    "title": "Implement Error Handling for API Calls",
+    "description": "Develop robust error handling mechanisms for API calls to ensure graceful failure and informative error messages.",
+    "status": "open",
+    "priority": "high",
+    "importance": "high",
+    "labels": [
+      "error handling",
+      "API"
+    ],
+    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
+    "created_at": "2026-05-05T05:42:32.685752Z",
+    "updated_at": "2026-05-05T05:42:41.081010Z",
+    "business_req": "Ensure the system handles API errors gracefully to improve reliability and user experience.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want robust error handling for API calls so that I can quickly diagnose and resolve issues.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false
   }
 ]

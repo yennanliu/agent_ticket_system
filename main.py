@@ -29,6 +29,10 @@ def create_app(store: TicketStore | None = None, logger: AgentLogger | None = No
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
     @app.get("/")
+    def landing():
+        return FileResponse(os.path.join(static_dir, "landing.html"))
+
+    @app.get("/tickets")
     def index():
         return FileResponse(os.path.join(static_dir, "index.html"))
 
