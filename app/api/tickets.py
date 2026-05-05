@@ -44,4 +44,22 @@ def make_router(store: TicketStore) -> APIRouter:
         if not store.delete(ticket_id):
             raise HTTPException(status_code=404, detail="Ticket not found")
 
+    @r.post("/{ticket_id}/approve", response_model=Ticket)
+    def approve_ticket(ticket_id: str):
+        ticket = store.get(ticket_id)
+        if not ticket:
+            raise HTTPException(status_code=404, detail="Ticket not found")
+        if ticket.status != "draft":
+            raise HTTPException(status_code=400, detail="Only draft tickets can be approved")
+        return store.update(ticket_id, {"status": "open"})
+
+    @r.post("/{ticket_id}/reject", response_model=Ticket)
+    def reject_ticket(ticket_id: str):
+        ticket = store.get(ticket_id)
+        if not ticket:
+            raise HTTPException(status_code=404, detail="Ticket not found")
+        if ticket.status != "draft":
+            raise HTTPException(status_code=400, detail="Only draft tickets can be rejected")
+        return store.update(ticket_id, {"status": "rejected"})
+
     return r

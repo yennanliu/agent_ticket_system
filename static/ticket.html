@@ -386,10 +386,20 @@ code.file {
         <input id="source-input" type="text" placeholder="Local path or GitHub URL for Enrich / Validate" />
       </div>
 
+      <!-- Draft banner -->
+      <div id="draft-banner" style="display:none;background:var(--b-draft-bg,#1a1a2e);border:1px solid rgba(199,169,255,0.2);border-radius:6px;padding:12px 16px;margin-bottom:14px;display:none;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="font-size:13px;color:var(--purple)">⬡ This ticket is a <strong>draft</strong> — review and approve before starting work.</span>
+        <div style="display:flex;gap:8px;margin-left:auto">
+          <button class="btn" style="background:var(--b-done-bg);color:var(--b-done-fg);border:1px solid rgba(181,228,140,0.2);font-size:13px" onclick="approveTicket()">✓ Approve</button>
+          <button class="btn" style="background:var(--b-hi-bg);color:var(--b-hi-fg);border:1px solid rgba(255,107,107,0.2);font-size:13px" onclick="rejectTicket()">✗ Reject</button>
+        </div>
+      </div>
+
       <div class="action-bar">
         <button class="btn btn-primary" onclick="openEdit()">Edit</button>
         <button class="btn btn-teal" id="enrich-btn" onclick="enrichTicket()">✦ Enrich</button>
         <button class="btn btn-secondary" id="validate-btn" onclick="validateTicket()">⬡ Validate</button>
+        <button class="btn btn-secondary" id="heal-btn" onclick="healTicket()">⟳ Heal</button>
         <button class="btn btn-danger" onclick="deleteTicket()">Delete</button>
       </div>
 
@@ -552,6 +562,10 @@ function renderTicket(t) {
   const srcInput = document.getElementById('source-input');
   if (!srcInput.value && t.source_repo) srcInput.value = t.source_repo;
 
+  // Draft banner
+  const banner = document.getElementById('draft-banner');
+  banner.style.display = t.status === 'draft' ? 'flex' : 'none';
+
   const imp = t.importance || 'medium';
   const labels = (t.labels||[]).map(l=>`<span class="label-chip">${esc(l)}</span>`).join(' ');
   document.getElementById('t-meta').innerHTML =
@@ -561,10 +575,12 @@ function renderTicket(t) {
      ${labels}`;
 
   const vb = document.getElementById('t-val-badge');
+  const iters = t.validation_iterations || 0;
+  const iterHint = iters > 0 ? ` <span style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">(healed ${iters}×)</span>` : '';
   if (t.validation_passed === true)
-    vb.innerHTML = `<span class="val-badge-pass">✓ VALIDATED ${pct(t.validation_score)}</span>`;
+    vb.innerHTML = `<span class="val-badge-pass">✓ VALIDATED ${pct(t.validation_score)}</span>${iterHint}`;
   else if (t.validation_passed === false)
-    vb.innerHTML = `<span class="val-badge-fail">✗ FAILED ${pct(t.validation_score)}</span>`;
+    vb.innerHTML = `<span class="val-badge-fail">✗ FAILED ${pct(t.validation_score)}</span>${iterHint}`;
   else
     vb.innerHTML = `<span class="val-badge-pending">NOT VALIDATED</span>`;
 
@@ -675,6 +691,37 @@ async function validateTicket() {
     toast('Validation complete');
   } catch(e) { toast('Validate failed: ' + e.message, true); }
   finally { btn.disabled = false; btn.innerHTML = '⬡ Validate'; }
+}
+
+async function healTicket() {
+  const btn = document.getElementById('heal-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Healing…';
+  try {
+    const res = await fetch(`${API}/agents/heal/${ticketId}`, { method: 'POST' });
+    if (!res.ok) throw new Error(await res.text());
+    currentTicket = await res.json();
+    renderTicket(currentTicket);
+    const iters = currentTicket.validation_iterations || 0;
+    toast(`Healed — score ${pct(currentTicket.validation_score)}${iters ? ` (${iters} iteration${iters > 1 ? 's' : ''})` : ''}`);
+  } catch(e) { toast('Heal failed: ' + e.message, true); }
+  finally { btn.disabled = false; btn.innerHTML = '⟳ Heal'; }
+}
+
+async function approveTicket() {
+  const res = await fetch(`${API}/tickets/${ticketId}/approve`, { method: 'POST' });
+  if (res.ok) {
+    currentTicket = await res.json();
+    renderTicket(currentTicket);
+    toast('Approved — ticket is now open');
+  } else toast('Approve failed', true);
+}
+
+async function rejectTicket() {
+  if (!confirm('Reject this draft ticket?')) return;
+  const res = await fetch(`${API}/tickets/${ticketId}/reject`, { method: 'POST' });
+  if (res.ok) window.location.href = '/review';
+  else toast('Reject failed', true);
 }
 
 async function deleteTicket() {

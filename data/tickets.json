@@ -1,124 +1,225 @@
 [
   {
-    "id": "65c327f7-c62d-4a44-9770-109cae198ab4",
-    "title": "add UI support",
-    "description": "",
+    "id": "73ad9b95-c55a-4f46-8a50-145d321bfb69",
+    "title": "Implement Comprehensive Error Handling for Job Auto-Apply",
+    "description": "Enhance error handling in the Job Auto-Apply skill to ensure it continues operation even when some jobs fail.",
     "status": "open",
-    "priority": "medium",
-    "importance": "medium",
+    "priority": "high",
+    "importance": "critical",
     "labels": [
-      "feature"
+      "feature",
+      "enhancement"
     ],
-    "source_repo": "",
-    "created_at": "2026-05-03T07:24:16.473316Z",
-    "updated_at": "2026-05-03T07:24:16.473322Z",
-    "business_req": "",
-    "stakeholder": "",
-    "user_story": "",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "4b994507-3f33-4552-bf62-a6b352672c34",
-    "title": "add claude support",
-    "description": "",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [],
     "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-03T07:24:32.607072Z",
-    "updated_at": "2026-05-05T05:55:20.792550Z",
-    "business_req": "Integrate Claude to enhance automation and efficiency of LinkedIn skills, providing users with more powerful tools for job applications and networking.",
-    "stakeholder": "Product Manager",
-    "user_story": "As a user, I want to leverage Claude's advanced capabilities to improve the efficiency and effectiveness of LinkedIn automation tasks, such as applying for jobs and reaching out to contacts, so that I can maximize my professional networking opportunities.",
+    "created_at": "2026-05-05T06:15:33.966384Z",
+    "updated_at": "2026-05-05T06:17:11.134869Z",
+    "business_req": "Ensure reliable job application automation to improve user satisfaction by minimizing disruptions due to errors.",
+    "stakeholder": "Engineering",
+    "user_story": "As a job seeker, I want the automation to continue applying for jobs even if some applications fail so that I maximize my job application reach and increase my chances of securing employment.",
     "acceptance_criteria": [
-      "Claude integration is implemented and functional within the existing LinkedIn skills.",
-      "All three skills (Job Auto-Apply, Profile Scraper, Contact Reacher) are enhanced with Claude's capabilities.",
-      "The integration does not break existing functionalities and passes all pre-existing tests.",
-      "New tests are added to cover Claude's integration, ensuring reliability and performance.",
-      "Documentation is updated to reflect the changes and new capabilities provided by Claude."
+      "The Job Auto-Apply skill should log errors without terminating the entire application process.",
+      "Failed job applications should be retried up to a configurable number of times before being skipped.",
+      "The system should provide a summary report of successful and failed applications at the end of the process.",
+      "Error handling should cover network issues, DOM changes, and unexpected LinkedIn responses.",
+      "The implementation should not degrade the performance of the Job Auto-Apply skill."
     ],
     "related_files": [
-      "CLAUDE.md",
-      "SKILL.md",
-      "QUICKSTART.md",
+      "check_session.js",
       "package.json",
-      "check_session.js"
+      "SKILL.md"
     ],
-    "technical_notes": "Consider leveraging Claude's natural language processing capabilities to enhance the Strategy Agent for better job scoring and filtering. Ensure that the Automation Agent is updated to handle any new timing or rate limiting requirements introduced by Claude. Pay attention to the Web Structure Agent to ensure that any changes in DOM manipulation are compatible with Claude's integration. Test thoroughly for any anti-detection patterns that may be affected by Claude's operations.",
+    "technical_notes": "Consider using the 'linkedin-automation-agent' for implementing retry logic and handling rate limits. Ensure that the error handling mechanism is robust against LinkedIn's anti-bot measures. Use logging to capture detailed error information for debugging purposes. Pay attention to the Playwright MCP tool's capabilities for handling network and DOM-related errors.",
     "suggested_assignee": "backend",
     "suggested_change_refs": [
       {
-        "file": "CLAUDE.md",
+        "file": "check_session.js",
+        "ref_type": "code",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/check_session.js",
+        "title": "check_session.js"
+      },
+      {
+        "file": "package.json",
         "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/CLAUDE.md",
-        "title": "CLAUDE.md"
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
+        "title": "package.json"
       },
       {
         "file": "SKILL.md",
         "ref_type": "doc",
         "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/SKILL.md",
         "title": "SKILL.md"
-      },
-      {
-        "file": "QUICKSTART.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/QUICKSTART.md",
-        "title": "QUICKSTART.md"
-      },
-      {
-        "file": "package.json",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
-        "title": "package.json"
-      },
-      {
-        "file": "check_session.js",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/check_session.js",
-        "title": "check_session.js"
       }
     ],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
   },
   {
-    "id": "f822a9dd-4741-44a4-b807-074fcf33d4b3",
-    "title": "add UI supporrt",
-    "description": "",
-    "status": "open",
+    "id": "f5c59b65-7660-4557-84cb-54336965b1fd",
+    "title": "Add Human-Like Delays to Avoid Detection",
+    "description": "Implement random delays in the Job Auto-Apply skill to mimic human behavior and avoid detection by LinkedIn.",
+    "status": "draft",
+    "priority": "medium",
+    "importance": "high",
+    "labels": [
+      "feature",
+      "enhancement"
+    ],
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-05T06:15:33.967337Z",
+    "updated_at": "2026-05-05T06:15:36.493446Z",
+    "business_req": "Reduce the risk of account suspension by making automation less detectable.",
+    "stakeholder": "Product",
+    "user_story": "As a user, I want the automation to include human-like delays so that my LinkedIn account remains safe from detection.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
+  },
+  {
+    "id": "74588d59-3d86-43b9-bf5d-5d9391649941",
+    "title": "Develop Visual Progress Indicator for Job Auto-Apply",
+    "description": "Create an on-page visual progress indicator to show the status of job applications in real-time.",
+    "status": "draft",
     "priority": "medium",
     "importance": "medium",
-    "labels": [],
+    "labels": [
+      "feature",
+      "ui"
+    ],
     "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-03T07:24:44.373378Z",
-    "updated_at": "2026-05-03T07:25:34.646164Z",
-    "business_req": "Enhance user engagement by providing a graphical interface for LinkedIn automation tasks, making it accessible to non-technical users.",
-    "stakeholder": "Product Manager",
-    "user_story": "As a user, I want a user-friendly interface to easily access and manage LinkedIn automation tasks, so that I can efficiently utilize the automation tools without needing to interact with the command line.",
+    "created_at": "2026-05-05T06:15:33.967971Z",
+    "updated_at": "2026-05-05T06:15:37.553141Z",
+    "business_req": "Provide users with real-time feedback on the status of their job applications.",
+    "stakeholder": "Customer",
+    "user_story": "As a job seeker, I want to see a visual progress indicator so that I know how many applications have been submitted.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
+  },
+  {
+    "id": "daa1c235-befb-4b75-8ef7-928bb156bfff",
+    "title": "Enhance Smart Filtering to Skip Non-Easy Apply Jobs",
+    "description": "Improve the smart filtering feature to ensure non-Easy Apply jobs are skipped efficiently.",
+    "status": "draft",
+    "priority": "medium",
+    "importance": "high",
+    "labels": [
+      "feature",
+      "enhancement"
+    ],
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-05T06:15:33.968346Z",
+    "updated_at": "2026-05-05T06:15:38.543231Z",
+    "business_req": "Increase the efficiency of job applications by focusing only on Easy Apply jobs.",
+    "stakeholder": "Product",
+    "user_story": "As a user, I want the system to skip non-Easy Apply jobs so that I can focus on jobs that are quicker to apply for.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
+  },
+  {
+    "id": "3491e91b-9e3c-4b1f-8787-7d6c967bf3cb",
+    "title": "Implement Connection Note Templates in Outreach Agent",
+    "description": "Develop a feature to use predefined connection note templates to optimize acceptance rates in the Contact Reacher skill.",
+    "status": "draft",
+    "priority": "medium",
+    "importance": "medium",
+    "labels": [
+      "feature",
+      "enhancement"
+    ],
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-05T06:15:33.968825Z",
+    "updated_at": "2026-05-05T06:15:39.890875Z",
+    "business_req": "Improve connection request acceptance rates by using personalized templates.",
+    "stakeholder": "Product",
+    "user_story": "As a networker, I want to use connection note templates so that my connection requests are more likely to be accepted.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
+  },
+  {
+    "id": "465ee8f1-3dae-46d1-ad8f-9cbf094a207e",
+    "title": "Create Detailed Documentation for Specialized Agents",
+    "description": "Develop comprehensive documentation for each specialized agent to aid developers in understanding their roles and functionalities.",
+    "status": "draft",
+    "priority": "low",
+    "importance": "medium",
+    "labels": [
+      "docs"
+    ],
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-05T06:15:33.969743Z",
+    "updated_at": "2026-05-05T06:15:41.318380Z",
+    "business_req": "Provide clear documentation to support developers in maintaining and enhancing the system.",
+    "stakeholder": "Engineering",
+    "user_story": "As a developer, I want detailed documentation for each agent so that I can easily understand and modify their functionalities.",
+    "acceptance_criteria": [],
+    "related_files": [],
+    "technical_notes": "",
+    "suggested_assignee": "",
+    "suggested_change_refs": [],
+    "validation_score": 0.0,
+    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
+    "validation_passed": false,
+    "validation_iterations": 0
+  },
+  {
+    "id": "94d26b53-b672-4bf9-9b5e-acf26f4d6823",
+    "title": "Optimize BFS/DFS Traversal Strategy in Contact Discovery Agent",
+    "description": "Refine the BFS/DFS traversal strategy to improve the efficiency of contact discovery.",
+    "status": "open",
+    "priority": "medium",
+    "importance": "high",
+    "labels": [
+      "feature",
+      "optimization"
+    ],
+    "source_repo": "https://github.com/yennanliu/linkedin-skill",
+    "created_at": "2026-05-05T06:15:33.970647Z",
+    "updated_at": "2026-05-05T06:16:33.522251Z",
+    "business_req": "Enhance the speed and accuracy of contact discovery to improve networking opportunities and user satisfaction.",
+    "stakeholder": "Product",
+    "user_story": "As a networker, I want an optimized traversal strategy so that I can discover relevant contacts more efficiently and effectively, maximizing my networking potential.",
     "acceptance_criteria": [
-      "UI components are integrated with existing Playwright MCP tools.",
-      "UI allows users to select and invoke each of the three skills: Job Auto-Apply, Profile Scraper, and Contact Reacher.",
-      "UI displays real-time feedback and status updates for each skill execution.",
-      "UI adheres to LinkedIn's terms of service and does not trigger anti-detection mechanisms."
+      "The BFS/DFS traversal strategy in the Contact Discovery Agent is optimized to reduce execution time by at least 20%.",
+      "The optimized traversal strategy maintains or improves the accuracy of contact discovery.",
+      "Unit tests cover the new traversal logic with at least 90% code coverage.",
+      "Performance benchmarks are documented, demonstrating the efficiency gains of the new strategy."
     ],
     "related_files": [
       "check_session.js",
-      "profile_snapshot.html",
-      "scrape_results.json",
       "package.json",
-      "debug_profile.html"
+      "QUICKSTART.md",
+      "SKILL.md"
     ],
-    "technical_notes": "Ensure that the UI components are responsive and compatible with various browsers. Consider using a frontend framework like React or Vue.js for dynamic UI updates. Pay special attention to LinkedIn's DOM structure and potential changes that might affect the UI's interaction with the underlying automation scripts.",
-    "suggested_assignee": "frontend",
+    "technical_notes": "Consider using a hybrid BFS/DFS approach to balance between breadth and depth in contact discovery. Pay attention to the seed selection and depth tuning parameters, as they can significantly impact performance. Ensure that the changes do not introduce regressions in the existing functionality. Test with various network sizes to validate scalability.",
+    "suggested_assignee": "backend",
     "suggested_change_refs": [
       {
         "file": "check_session.js",
@@ -127,856 +228,27 @@
         "title": "check_session.js"
       },
       {
-        "file": "profile_snapshot.html",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/profile_snapshot.html",
-        "title": "profile_snapshot.html"
-      },
-      {
-        "file": "scrape_results.json",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/scrape_results.json",
-        "title": "scrape_results.json"
-      },
-      {
         "file": "package.json",
         "ref_type": "doc",
         "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
         "title": "package.json"
-      },
-      {
-        "file": "debug_profile.html",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/debug_profile.html",
-        "title": "debug_profile.html"
-      }
-    ],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "eab4396b-82d5-44e3-b9b5-2a4812aef373",
-    "title": "add parallel run",
-    "description": "",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-03T07:25:36.089042Z",
-    "updated_at": "2026-05-03T07:25:36.089053Z",
-    "business_req": "",
-    "stakeholder": "",
-    "user_story": "",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "ccbd81c9-28ce-4a27-be69-08094c5c6649",
-    "title": "add K8S support",
-    "description": "add aws, k8s support",
-    "status": "open",
-    "priority": "high",
-    "importance": "medium",
-    "labels": [
-      "feature"
-    ],
-    "source_repo": "https://github.com/yennanliu/linkedin-skill",
-    "created_at": "2026-05-03T07:26:12.938901Z",
-    "updated_at": "2026-05-03T07:26:28.258717Z",
-    "business_req": "Enable scalable and efficient deployment of LinkedIn Skills services using Kubernetes on AWS infrastructure.",
-    "stakeholder": "eng",
-    "user_story": "As an engineer, I want to deploy LinkedIn Skills services on Kubernetes to leverage its scalability and manageability features, ensuring high availability and efficient resource utilization.",
-    "acceptance_criteria": [
-      "Kubernetes (K8S) manifests are created for all services in the repository.",
-      "AWS EKS cluster is configured and services are deployable to it.",
-      "CI/CD pipeline is updated to support deployment to K8S.",
-      "Documentation is updated to include K8S deployment instructions."
-    ],
-    "related_files": [
-      "install.sh",
-      "package.json",
-      "README.md",
-      "INSTALLATION.md",
-      "QUICKSTART.md"
-    ],
-    "technical_notes": "Ensure that the Kubernetes manifests include necessary configurations such as resource limits, environment variables, and secrets management. Consider using Helm charts for easier management of K8S resources. Pay attention to AWS IAM roles and permissions required for EKS. Update the CI/CD pipeline to include steps for building Docker images and pushing them to a container registry before deploying to K8S.",
-    "suggested_assignee": "devops",
-    "suggested_change_refs": [
-      {
-        "file": "install.sh",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/install.sh",
-        "title": "install.sh"
-      },
-      {
-        "file": "package.json",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/package.json",
-        "title": "package.json"
-      },
-      {
-        "file": "README.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/README.md",
-        "title": "README.md"
-      },
-      {
-        "file": "INSTALLATION.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/INSTALLATION.md",
-        "title": "INSTALLATION.md"
       },
       {
         "file": "QUICKSTART.md",
         "ref_type": "doc",
         "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/QUICKSTART.md",
         "title": "QUICKSTART.md"
+      },
+      {
+        "file": "SKILL.md",
+        "ref_type": "doc",
+        "ref_url": "https://github.com/yennanliu/linkedin-skill/blob/main/SKILL.md",
+        "title": "SKILL.md"
       }
     ],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "9a873472-5f63-4557-8302-90d387beecb0",
-    "title": "add csv output",
-    "description": "",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:41:32.857845Z",
-    "updated_at": "2026-05-05T05:41:49.596536Z",
-    "business_req": "Enable users to export ticket data in CSV format for easier data analysis and reporting.",
-    "stakeholder": "Product Management",
-    "user_story": "As a project manager, I want to export ticket data as a CSV file so that I can analyze and share project progress with stakeholders.",
-    "acceptance_criteria": [
-      "The system should generate a CSV file containing ticket data when requested.",
-      "The CSV output should include all ticket fields: ID, title, description, priority, business requirements, stakeholder, and user story.",
-      "The CSV file should be downloadable from the UI.",
-      "Ensure the CSV export functionality is covered by unit tests."
-    ],
-    "related_files": [
-      "main.py",
-      "app/api/tickets.py",
-      "app/storage.py",
-      "static/index.html"
-    ],
-    "technical_notes": "Consider using Python's built-in csv module to handle CSV generation. Ensure that the CSV export functionality does not block the main application thread. You may need to modify the UI to add a button for downloading the CSV file. Ensure that the CSV generation handles special characters and large datasets efficiently.",
-    "suggested_assignee": "backend",
-    "suggested_change_refs": [
-      {
-        "file": "main.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/main.py",
-        "title": "main.py"
-      },
-      {
-        "file": "app/api/tickets.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/api/tickets.py",
-        "title": "app/api/tickets.py"
-      },
-      {
-        "file": "app/storage.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/storage.py",
-        "title": "app/storage.py"
-      },
-      {
-        "file": "static/index.html",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/static/index.html",
-        "title": "static/index.html"
-      }
-    ],
-    "validation_score": null,
-    "validation_notes": "",
-    "validation_passed": null
-  },
-  {
-    "id": "4c7d9c79-3b97-4dd5-b5b8-6345a5b07a7a",
-    "title": "Implement Ticket Auto-Creation Feature",
-    "description": "Develop the auto-creation feature using the creator agent to generate structured ticket drafts from a given repository.",
-    "status": "open",
-    "priority": "high",
-    "importance": "critical",
-    "labels": [
-      "feature",
-      "AI",
-      "automation"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.681586Z",
-    "updated_at": "2026-05-05T05:55:25.505005Z",
-    "business_req": "Automate the ticket creation process to improve efficiency and reduce manual workload.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want the system to automatically create tickets from a repository so that I can focus on resolving issues rather than documenting them.",
-    "acceptance_criteria": [
-      "The system should automatically generate a ticket draft when a new issue is detected in the repository.",
-      "The generated ticket should include a title, description, and relevant metadata extracted from the repository.",
-      "The ticket creation process should be triggered by the creator agent and should not require manual intervention.",
-      "The generated ticket should be stored in the in-memory TicketStore and written to data/tickets.json.",
-      "The feature should be tested with both unit and integration tests to ensure reliability."
-    ],
-    "related_files": [
-      "app/api/agents.py",
-      "app/agents/creator.py",
-      "app/repo_tools.py",
-      "main.py",
-      "data/tickets.json"
-    ],
-    "technical_notes": "Ensure that the creator agent leverages the LangGraph to parse and analyze the repository effectively. Consider edge cases where the repository might not have clear issue indicators. The system should handle such cases gracefully without generating incomplete tickets.",
-    "suggested_assignee": "backend",
-    "suggested_change_refs": [
-      {
-        "file": "app/api/agents.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/api/agents.py",
-        "title": "app/api/agents.py"
-      },
-      {
-        "file": "app/agents/creator.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/agents/creator.py",
-        "title": "app/agents/creator.py"
-      },
-      {
-        "file": "app/repo_tools.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/repo_tools.py",
-        "title": "app/repo_tools.py"
-      },
-      {
-        "file": "main.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/main.py",
-        "title": "main.py"
-      },
-      {
-        "file": "data/tickets.json",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/data/tickets.json",
-        "title": "data/tickets.json"
-      }
-    ],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "3806a5a4-2dc1-4575-b620-5efce2ac49e8",
-    "title": "Enhance Ticket Enrichment Process",
-    "description": "Improve the ticket enrichment process by refining the enricher agent to provide more detailed and useful ticket information.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "high",
-    "labels": [
-      "feature",
-      "AI",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.682408Z",
-    "updated_at": "2026-05-05T05:42:35.242626Z",
-    "business_req": "Provide enriched ticket details to assist developers in understanding and resolving issues more effectively.",
-    "stakeholder": "Product",
-    "user_story": "As a product manager, I want enriched ticket details so that I can prioritize and assign tasks more effectively.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "ec3a2dd1-55b0-4ff6-bd01-582b97d228c4",
-    "title": "Optimize Repo Context Fetching",
-    "description": "Optimize the fetch_context function to handle larger repositories efficiently without exceeding the 50 KB limit.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "optimization",
-      "performance"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.683011Z",
-    "updated_at": "2026-05-05T05:42:36.882068Z",
-    "business_req": "Ensure the system can handle larger repositories without performance degradation.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want the system to efficiently fetch context from large repositories so that I can work with comprehensive data.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "ba255cd9-c310-4961-9ca4-e9c263546559",
-    "title": "Integrate OpenAI API Key Configuration",
-    "description": "Allow users to configure their OpenAI API key securely through the environment settings.",
-    "status": "open",
-    "priority": "low",
-    "importance": "medium",
-    "labels": [
-      "configuration",
-      "security"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.683577Z",
-    "updated_at": "2026-05-05T05:42:52.536137Z",
-    "business_req": "Provide a secure method for users to configure their OpenAI API key, ensuring that sensitive information is not exposed.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want to securely configure my OpenAI API key so that I can use the AI features without exposing sensitive information.",
-    "acceptance_criteria": [
-      "Users can set their OpenAI API key in the .env file without exposing it in the codebase.",
-      "The application reads the OpenAI API key from the environment variables at runtime.",
-      "If the OpenAI API key is missing or invalid, the application should log an appropriate error message and disable AI features.",
-      "Ensure that the OpenAI API key is not logged or exposed in any application logs."
-    ],
-    "related_files": [
-      ".env.example",
-      "main.py",
-      "app/repo_tools.py"
-    ],
-    "technical_notes": "Ensure that the OpenAI API key is accessed using os.environ to maintain security. Consider using a library like python-dotenv to load environment variables from a .env file. Validate the presence of the API key at application startup and handle errors gracefully if the key is missing or invalid.",
-    "suggested_assignee": "devops",
-    "suggested_change_refs": [
-      {
-        "file": ".env.example",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/.env.example",
-        "title": ".env.example"
-      },
-      {
-        "file": "main.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/main.py",
-        "title": "main.py"
-      },
-      {
-        "file": "app/repo_tools.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/repo_tools.py",
-        "title": "app/repo_tools.py"
-      }
-    ],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references, making it incomplete and untestable.",
-    "validation_passed": false
-  },
-  {
-    "id": "2dbc99bd-7b3b-44e5-bc28-5acf0d2c3a05",
-    "title": "Implement Unit Tests for TicketStore",
-    "description": "Develop comprehensive unit tests for the TicketStore to ensure reliable ticket storage and retrieval operations.",
-    "status": "open",
-    "priority": "high",
-    "importance": "high",
-    "labels": [
-      "testing",
-      "quality"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.684039Z",
-    "updated_at": "2026-05-05T05:44:40.587643Z",
-    "business_req": "Ensure the reliability and correctness of ticket storage operations, as these are critical for maintaining accurate and accessible ticket data.",
-    "stakeholder": "Quality Assurance",
-    "user_story": "As a QA engineer, I want comprehensive unit tests for the TicketStore so that I can ensure its reliability and correctness, preventing data loss or corruption.",
-    "acceptance_criteria": [
-      "Unit tests cover all public methods of the TicketStore class.",
-      "Tests verify both successful and failure scenarios for ticket storage and retrieval.",
-      "Tests ensure that the in-memory dictionary and the JSON file are consistent after operations.",
-      "Tests are written using pytest and achieve at least 90% code coverage for TicketStore.",
-      "All tests pass without errors when running the full test suite."
-    ],
-    "related_files": [
-      "app/storage.py",
-      "tests/test_storage.py"
-    ],
-    "technical_notes": "The TicketStore uses an in-memory dictionary and writes to 'data/tickets.json'. Ensure tests mock file I/O operations to avoid actual file writes during testing. Consider edge cases such as empty storage, duplicate ticket IDs, and concurrent modifications.",
-    "suggested_assignee": "backend",
-    "suggested_change_refs": [
-      {
-        "file": "app/storage.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/storage.py",
-        "title": "app/storage.py"
-      },
-      {
-        "file": "tests/test_storage.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/tests/test_storage.py",
-        "title": "tests/test_storage.py"
-      }
-    ],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references, making it incomplete.",
-    "validation_passed": false
-  },
-  {
-    "id": "fbfaa4e9-94af-425f-9dd8-62b189cb5e96",
-    "title": "Improve UI for Ticket Management",
-    "description": "Enhance the user interface to provide a more intuitive and user-friendly experience for managing tickets.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "UI",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.684540Z",
-    "updated_at": "2026-05-05T05:46:20.524063Z",
-    "business_req": "Enhance the user interface to provide a more intuitive and user-friendly experience for managing tickets, thereby improving user satisfaction and efficiency.",
-    "stakeholder": "Product",
-    "user_story": "As a user, I want an intuitive UI for managing tickets so that I can efficiently handle my tasks without confusion or unnecessary steps.",
-    "acceptance_criteria": [
-      "The UI should display a list of tickets with clear visual hierarchy and intuitive navigation.",
-      "Users should be able to filter and sort tickets based on status, priority, and date.",
-      "The ticket detail view should be accessible with a single click and display all relevant information.",
-      "The UI should be responsive and function correctly on both desktop and mobile devices.",
-      "All UI changes should pass existing frontend tests and any new tests created for additional functionality."
-    ],
-    "related_files": [
-      "static/index.html",
-      "app/api/tickets.py",
-      "app/storage.py"
-    ],
-    "technical_notes": "Consider using a modern frontend framework like React or Vue.js to enhance the UI components. Ensure that the UI changes do not affect the existing API endpoints. Pay attention to the in-memory data structure in `app/storage.py` to ensure UI updates reflect real-time data changes.",
-    "suggested_assignee": "frontend",
-    "suggested_change_refs": [
-      {
-        "file": "static/index.html",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/static/index.html",
-        "title": "static/index.html"
-      },
-      {
-        "file": "app/api/tickets.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/api/tickets.py",
-        "title": "app/api/tickets.py"
-      },
-      {
-        "file": "app/storage.py",
-        "ref_type": "code",
-        "ref_url": "https://github.com/yennanliu/agent_ticket_system/blob/main/app/storage.py",
-        "title": "app/storage.py"
-      }
-    ],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "b22f275b-fdb3-48dd-b791-7b42f6e9b85c",
-    "title": "Document API Endpoints",
-    "description": "Create comprehensive documentation for all API endpoints to assist developers in integrating and using the system effectively.",
-    "status": "open",
-    "priority": "low",
-    "importance": "medium",
-    "labels": [
-      "docs",
-      "API"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.685198Z",
-    "updated_at": "2026-05-05T05:42:40.259408Z",
-    "business_req": "Provide clear API documentation to facilitate integration and usage by developers.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want detailed API documentation so that I can integrate and use the system effectively.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "705934bf-dac4-4f7d-993c-b63a7b6c954d",
-    "title": "Implement Error Handling for API Calls",
-    "description": "Develop robust error handling mechanisms for API calls to ensure graceful failure and informative error messages.",
-    "status": "open",
-    "priority": "high",
-    "importance": "high",
-    "labels": [
-      "error handling",
-      "API"
-    ],
-    "source_repo": "https://github.com/yennanliu/agent_ticket_system",
-    "created_at": "2026-05-05T05:42:32.685752Z",
-    "updated_at": "2026-05-05T05:42:41.081010Z",
-    "business_req": "Ensure the system handles API errors gracefully to improve reliability and user experience.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want robust error handling for API calls so that I can quickly diagnose and resolve issues.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "470ccdbb-e70c-415f-a31d-504a0b37595a",
-    "title": "Add Support for Additional Coding Agents",
-    "description": "Integrate support for more coding agents to expand the tool's compatibility and usability.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "high",
-    "labels": [
-      "feature",
-      "enhancement"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.764044Z",
-    "updated_at": "2026-05-05T05:54:18.943516Z",
-    "business_req": "Increase user base by supporting more coding agents.",
-    "stakeholder": "Product",
-    "user_story": "As a developer, I want to use my preferred coding agent so that I can work more efficiently.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "6734f52b-fdce-427b-b27f-ca04d1c51ddd",
-    "title": "Improve Documentation for Multi-language Support",
-    "description": "Enhance the existing documentation to better support non-English speaking users by providing more detailed guides.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "docs",
-      "internationalization"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.765647Z",
-    "updated_at": "2026-05-05T05:55:30.828979Z",
-    "business_req": "Ensure accessibility and usability for international users by providing comprehensive, accurate, and culturally appropriate documentation in multiple languages.",
-    "stakeholder": "Customer",
-    "user_story": "As a non-English speaking user, I want comprehensive and accurate documentation in my language so that I can effectively set up and use the tool without language barriers.",
-    "acceptance_criteria": [
-      "Documentation is available in at least five major languages: English, German, Japanese, Korean, and Chinese (Simplified and Traditional).",
-      "Each language version of the documentation includes detailed guides on setting up and using the tool.",
-      "The documentation includes examples and screenshots where applicable, translated into the respective languages.",
-      "All translated documents are reviewed for accuracy and clarity by native speakers or professional translators.",
-      "The documentation repository includes a clear structure for adding future translations."
-    ],
-    "related_files": [
-      "README.md",
-      "README.de.md",
-      "README.ja-JP.md",
-      "README.ko.md",
-      "README.zh-CN.md",
-      "README.zh-TW.md",
-      "TRANSLATIONS.md",
-      "QUICKSTART.de.md",
-      "CONTRIBUTING.de.md",
-      "CONTRIBUTING.ja-JP.md",
-      "CONTRIBUTING.zh-CN.md"
-    ],
-    "technical_notes": "Ensure that the translation process maintains the technical accuracy of the documentation. Consider using a translation management tool to streamline updates. Be aware of cultural differences that may affect the interpretation of certain terms or examples.",
-    "suggested_assignee": "documentation",
-    "suggested_change_refs": [
-      {
-        "file": "README.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.md",
-        "title": "README.md"
-      },
-      {
-        "file": "README.de.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.de.md",
-        "title": "README.de.md"
-      },
-      {
-        "file": "README.ja-JP.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ja-JP.md",
-        "title": "README.ja-JP.md"
-      },
-      {
-        "file": "README.ko.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ko.md",
-        "title": "README.ko.md"
-      },
-      {
-        "file": "README.zh-CN.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-CN.md",
-        "title": "README.zh-CN.md"
-      },
-      {
-        "file": "README.zh-TW.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-TW.md",
-        "title": "README.zh-TW.md"
-      },
-      {
-        "file": "TRANSLATIONS.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/TRANSLATIONS.md",
-        "title": "TRANSLATIONS.md"
-      },
-      {
-        "file": "QUICKSTART.de.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/QUICKSTART.de.md",
-        "title": "QUICKSTART.de.md"
-      },
-      {
-        "file": "CONTRIBUTING.de.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/CONTRIBUTING.de.md",
-        "title": "CONTRIBUTING.de.md"
-      },
-      {
-        "file": "CONTRIBUTING.ja-JP.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/CONTRIBUTING.ja-JP.md",
-        "title": "CONTRIBUTING.ja-JP.md"
-      },
-      {
-        "file": "CONTRIBUTING.zh-CN.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/CONTRIBUTING.zh-CN.md",
-        "title": "CONTRIBUTING.zh-CN.md"
-      }
-    ],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "37c6f311-ca6a-4acb-916c-f6ec8419be80",
-    "title": "Implement Automated Testing for Design Systems",
-    "description": "Develop automated tests to ensure the reliability and performance of the 72 design systems.",
-    "status": "open",
-    "priority": "high",
-    "importance": "critical",
-    "labels": [
-      "testing",
-      "ci"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.767018Z",
-    "updated_at": "2026-05-05T05:54:21.091653Z",
-    "business_req": "Maintain high quality and reliability of design systems.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want automated tests for design systems so that I can ensure their reliability and performance.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "5840bd97-04cd-409a-b8d1-b59bc52ba021",
-    "title": "Create a User Feedback Collection System",
-    "description": "Develop a system to collect and analyze user feedback to guide future improvements.",
-    "status": "open",
-    "priority": "low",
-    "importance": "medium",
-    "labels": [
-      "feature",
-      "user-experience"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.768004Z",
-    "updated_at": "2026-05-05T05:54:22.732609Z",
-    "business_req": "Gather insights to improve product features and user satisfaction.",
-    "stakeholder": "Product",
-    "user_story": "As a product manager, I want to collect user feedback so that I can make informed decisions about future improvements.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "94dab4f6-4ef1-4373-b9f8-e2067bbc2e05",
-    "title": "Optimize Performance for Web Deployment",
-    "description": "Enhance the performance of the web-deployable version to ensure smooth and fast user experience.",
-    "status": "open",
-    "priority": "high",
-    "importance": "high",
-    "labels": [
-      "performance",
-      "optimization"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.768950Z",
-    "updated_at": "2026-05-05T05:54:23.653365Z",
-    "business_req": "Ensure a seamless user experience for web-deployed applications.",
-    "stakeholder": "Customer",
-    "user_story": "As a user, I want the web application to perform efficiently so that I can work without interruptions.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "caa2fa79-13f2-4e1c-8d1e-db5996483fe1",
-    "title": "Enhance BYOK Proxy Compatibility",
-    "description": "Improve the compatibility of the BYOK proxy with various OpenAI-compatible tools.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "high",
-    "labels": [
-      "feature",
-      "compatibility"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.770078Z",
-    "updated_at": "2026-05-05T05:54:26.190897Z",
-    "business_req": "Expand the tool's usability by ensuring compatibility with more OpenAI tools.",
-    "stakeholder": "Engineering",
-    "user_story": "As a developer, I want the BYOK proxy to be compatible with more tools so that I can integrate it into my workflow.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks specific acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "4b8e97e4-8d90-471c-9bcc-4d796700e701",
-    "title": "Update README with Latest Features",
-    "description": "Revise the README file to include the latest features and improvements for better user onboarding.",
-    "status": "open",
-    "priority": "low",
-    "importance": "medium",
-    "labels": [
-      "docs",
-      "update"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.771262Z",
-    "updated_at": "2026-05-05T05:54:27.133878Z",
-    "business_req": "Provide users with up-to-date information about the tool's capabilities.",
-    "stakeholder": "Customer",
-    "user_story": "As a new user, I want an updated README so that I can quickly understand the tool's features and benefits.",
-    "acceptance_criteria": [],
-    "related_files": [],
-    "technical_notes": "",
-    "suggested_assignee": "",
-    "suggested_change_refs": [],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
-  },
-  {
-    "id": "f52b23f6-cb8a-4578-aec9-f0afc4fa0efd",
-    "title": "Develop Quickstart Guide for New Users",
-    "description": "Create a comprehensive quickstart guide to help new users get started with the tool efficiently.",
-    "status": "open",
-    "priority": "medium",
-    "importance": "medium",
-    "labels": [
-      "docs",
-      "user-experience"
-    ],
-    "source_repo": "https://github.com/yennanliu/open-design",
-    "created_at": "2026-05-05T05:54:17.772237Z",
-    "updated_at": "2026-05-05T05:55:41.685434Z",
-    "business_req": "Facilitate user onboarding and reduce the learning curve by providing a clear, multilingual quickstart guide.",
-    "stakeholder": "Customer",
-    "user_story": "As a new user, I want a quickstart guide so that I can begin using the tool with minimal setup time and understand the key features and configurations.",
-    "acceptance_criteria": [
-      "The quickstart guide is available in the root directory as QUICKSTART.md.",
-      "The guide includes step-by-step instructions to set up and use the tool with at least one coding-agent CLI.",
-      "The guide explains how to configure the BYOK (Bring Your Own Key) proxy.",
-      "The guide is clear and concise, with screenshots or diagrams where necessary.",
-      "The guide is reviewed and approved by at least two team members.",
-      "The guide is translated into at least two other languages available in the repository."
-    ],
-    "related_files": [
-      "QUICKSTART.md",
-      "README.md",
-      "README.de.md",
-      "README.ja-JP.md",
-      "README.zh-CN.md",
-      "README.zh-TW.md"
-    ],
-    "technical_notes": "Ensure that the quickstart guide covers the setup of the 12 coding-agent CLIs and the 31 composable Skills. Pay special attention to the BYOK proxy setup, as it is crucial for users without a CLI. Consider using existing README translations as a reference for multilingual support.",
-    "suggested_assignee": "documentation",
-    "suggested_change_refs": [
-      {
-        "file": "QUICKSTART.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/QUICKSTART.md",
-        "title": "QUICKSTART.md"
-      },
-      {
-        "file": "README.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.md",
-        "title": "README.md"
-      },
-      {
-        "file": "README.de.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.de.md",
-        "title": "README.de.md"
-      },
-      {
-        "file": "README.ja-JP.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.ja-JP.md",
-        "title": "README.ja-JP.md"
-      },
-      {
-        "file": "README.zh-CN.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-CN.md",
-        "title": "README.zh-CN.md"
-      },
-      {
-        "file": "README.zh-TW.md",
-        "ref_type": "doc",
-        "ref_url": "https://github.com/yennanliu/open-design/blob/main/README.zh-TW.md",
-        "title": "README.zh-TW.md"
-      }
-    ],
-    "validation_score": 0.0,
-    "validation_notes": "The ticket lacks acceptance criteria, related files, technical notes, and change references.",
-    "validation_passed": false
+    "validation_score": 1.0,
+    "validation_notes": "The ticket is well-structured with specific acceptance criteria, plausible related files, actionable technical notes, and includes change references.",
+    "validation_passed": true,
+    "validation_iterations": 1
   }
 ]

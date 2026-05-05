@@ -72,6 +72,7 @@ def _node_save(state: CreatorState, store: TicketStore) -> CreatorState:
         ticket = Ticket(
             title=draft.get("title", "Untitled"),
             description=draft.get("description", ""),
+            status="draft",
             priority=draft.get("priority", "medium"),
             importance=draft.get("importance", "medium"),
             labels=draft.get("labels", []),

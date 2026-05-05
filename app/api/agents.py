@@ -7,6 +7,7 @@ from app.storage import TicketStore
 from app.agents.creator import run_creator
 from app.agents.enricher import run_enricher
 from app.agents.validator import run_validator
+from app.agents.healer import run_healer
 
 
 class RepoSource(BaseModel):
@@ -59,7 +60,7 @@ def make_router(store: TicketStore, logger=None) -> APIRouter:
     def create_batch(body: CreateBatchRequest):
         tickets = []
         for title in body.titles:
-            t = Ticket(title=title.strip(), description="",
+            t = Ticket(title=title.strip(), description="", status="draft",
                        source_repo=body.repo_path or "")
             store.create(t)
             tickets.append(t)
@@ -103,6 +104,13 @@ def make_router(store: TicketStore, logger=None) -> APIRouter:
     def validate_ticket(ticket_id: str):
         try:
             return run_validator(ticket_id, store, logger=logger)
+        except ValueError as e:
+            raise HTTPException(status_code=404, detail=str(e))
+
+    @r.post("/heal/{ticket_id}", response_model=Ticket)
+    def heal_ticket(ticket_id: str):
+        try:
+            return run_healer(ticket_id, store, logger=logger)
         except ValueError as e:
             raise HTTPException(status_code=404, detail=str(e))
 

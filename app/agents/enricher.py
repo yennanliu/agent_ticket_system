@@ -18,9 +18,10 @@ class EnricherState(TypedDict):
     ticket: Optional[dict]
     repo_context: dict
     enriched_fields: dict
+    feedback: str   # optional heal-loop feedback from previous validation
 
 
-def _llm_enrich_ticket(ticket: dict, repo_context: dict) -> dict:
+def _llm_enrich_ticket(ticket: dict, repo_context: dict, feedback: str = "") -> dict:
     model = os.getenv("OPENAI_MODEL", "gpt-4o")
     llm = ChatOpenAI(model=model, temperature=0.2)
     prompt = f"""You are a senior software engineer. Enrich the following task ticket with deeper technical context from the repository.
@@ -42,6 +43,8 @@ File tree:
 
 File contents (excerpt):
 {repo_context['file_contents'][:4000]}
+
+{f"Previous validation feedback (must address): {feedback}" if feedback else ""}
 
 Return ONLY a JSON object with these keys:
 - acceptance_criteria (array of strings — specific, testable conditions for "done")
@@ -78,7 +81,9 @@ def _node_fetch_context(state: EnricherState) -> EnricherState:
 
 
 def _node_enrich(state: EnricherState) -> EnricherState:
-    state["enriched_fields"] = _llm_enrich_ticket(state["ticket"], state["repo_context"])
+    state["enriched_fields"] = _llm_enrich_ticket(
+        state["ticket"], state["repo_context"], feedback=state.get("feedback", "")
+    )
     return state
 
 
@@ -116,7 +121,7 @@ def _build_graph(store: TicketStore) -> StateGraph:
     return graph.compile()
 
 
-def run_enricher(ticket_id: str, source: str, store: TicketStore, logger=None) -> Ticket:
+def run_enricher(ticket_id: str, source: str, store: TicketStore, feedback: str = "", logger=None) -> Ticket:
     start = time.time()
     try:
         app = _build_graph(store)
@@ -126,6 +131,7 @@ def run_enricher(ticket_id: str, source: str, store: TicketStore, logger=None) -
             "ticket": None,
             "repo_context": {},
             "enriched_fields": {},
+            "feedback": feedback,
         })
         ticket = store.get(ticket_id)
         if logger:

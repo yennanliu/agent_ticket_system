@@ -37,6 +37,7 @@ class Ticket(BaseModel):
     validation_score: Optional[float] = None
     validation_notes: str = ""
     validation_passed: Optional[bool] = None
+    validation_iterations: int = 0   # heal loop cycle count
 
 
 class CreateTicketRequest(BaseModel):
@@ -71,6 +72,7 @@ class UpdateTicketRequest(BaseModel):
     validation_score: Optional[float] = None
     validation_notes: Optional[str] = None
     validation_passed: Optional[bool] = None
+    validation_iterations: Optional[int] = None
 
 
 class RepoRequest(BaseModel):

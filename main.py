@@ -40,6 +40,10 @@ def create_app(store: TicketStore | None = None, logger: AgentLogger | None = No
     def ticket_page(ticket_id: str):
         return FileResponse(os.path.join(static_dir, "ticket.html"))
 
+    @app.get("/review")
+    def review_page():
+        return FileResponse(os.path.join(static_dir, "review.html"))
+
     @app.get("/logs")
     def logs_page():
         return FileResponse(os.path.join(static_dir, "logs.html"))

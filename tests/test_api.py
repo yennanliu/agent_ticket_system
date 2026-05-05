@@ -234,6 +234,79 @@ async def test_validate_ticket_not_found(client):
     assert r.status_code == 404
 
 
+# ── Heal ─────────────────────────────────────────────────────────────────────
+
+async def test_heal_ticket(client, store, sample_ticket):
+    store.create(sample_ticket)
+    healed = sample_ticket.model_copy(update={"validation_score": 0.9, "validation_passed": True, "validation_iterations": 1})
+    with patch("app.api.agents.run_healer", return_value=healed):
+        r = await client.post(f"/api/agents/heal/{sample_ticket.id}")
+    assert r.status_code == 200
+    assert r.json()["validation_score"] == 0.9
+    assert r.json()["validation_iterations"] == 1
+
+
+async def test_heal_ticket_not_found(client):
+    with patch("app.api.agents.run_healer", side_effect=ValueError("not found")):
+        r = await client.post("/api/agents/heal/bad-id")
+    assert r.status_code == 404
+
+
+# ── Approve / Reject ──────────────────────────────────────────────────────────
+
+async def test_approve_draft_ticket(client, store):
+    t = Ticket(title="Draft T", description="D", status="draft")
+    store.create(t)
+    r = await client.post(f"/api/tickets/{t.id}/approve")
+    assert r.status_code == 200
+    assert r.json()["status"] == "open"
+
+
+async def test_approve_non_draft_returns_400(client, store, sample_ticket):
+    store.create(sample_ticket)  # status="open"
+    r = await client.post(f"/api/tickets/{sample_ticket.id}/approve")
+    assert r.status_code == 400
+
+
+async def test_approve_missing_ticket_returns_404(client):
+    r = await client.post("/api/tickets/bad-id/approve")
+    assert r.status_code == 404
+
+
+async def test_reject_draft_ticket(client, store):
+    t = Ticket(title="Draft T", description="D", status="draft")
+    store.create(t)
+    r = await client.post(f"/api/tickets/{t.id}/reject")
+    assert r.status_code == 200
+    assert r.json()["status"] == "rejected"
+
+
+async def test_reject_non_draft_returns_400(client, store, sample_ticket):
+    store.create(sample_ticket)
+    r = await client.post(f"/api/tickets/{sample_ticket.id}/reject")
+    assert r.status_code == 400
+
+
+async def test_reject_missing_ticket_returns_404(client):
+    r = await client.post("/api/tickets/bad-id/reject")
+    assert r.status_code == 404
+
+
+# ── Draft status on AI creation ───────────────────────────────────────────────
+
+async def test_create_batch_produces_drafts(client):
+    r = await client.post("/api/agents/create-batch", json={"titles": ["Task A", "Task B"]})
+    assert r.status_code == 201
+    for ticket in r.json():
+        assert ticket["status"] == "draft"
+
+
+async def test_review_page(client):
+    r = await client.get("/review")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+
+
 # ── Logs endpoint ─────────────────────────────────────────────────────────────
 
 async def test_get_logs_empty(client):
