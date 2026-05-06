@@ -1,5 +1,6 @@
 [MASTER]
 py-version = 3.11
+ignore-paths = ^tests/
 
 [MESSAGES CONTROL]
 disable=
