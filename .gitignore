@@ -3,3 +3,4 @@ __pycache__/
 data/agent_logs.jsonl
 data/tickets.json
 data
+node_modules/
