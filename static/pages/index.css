@@ -100,9 +100,6 @@ thead th {
   height: 36px;
   text-align: left;
   border-bottom: 2px solid var(--border);
-  position: sticky;
-  top: calc(var(--h-header) + var(--h-toolbar) + var(--h-statbar));
-  z-index: 97;
   white-space: nowrap;
   user-select: none;
 }
