@@ -1,0 +1,156 @@
+/* ── Toolbar ── */
+#toolbar {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: var(--h-toolbar);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: nowrap;
+  position: sticky;
+  top: var(--h-header);
+  z-index: 99;
+}
+#toolbar input[type="text"] {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 6px 12px;
+  flex: 1;
+  min-width: 0;
+  outline: none;
+}
+#toolbar input[type="text"]::placeholder { color: var(--text-dim); }
+#toolbar input[type="text"]:focus { border-color: var(--accent); }
+#repo-filter, #status-filter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#repo-filter:focus, #status-filter:focus { border-color: var(--accent); }
+#repo-filter option, #status-filter option { background: var(--bg-alt); }
+
+/* ── Stat bar ── */
+#stat-bar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: var(--h-statbar);
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-dim);
+  position: sticky;
+  top: calc(var(--h-header) + var(--h-toolbar));
+  z-index: 98;
+}
+.stat-val { color: var(--text-muted); font-weight: 500; }
+.stat-spacer { flex: 1; }
+.stat-action-btn {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.stat-action-btn:hover { color: var(--text); background: var(--surface); }
+.stat-action-btn.danger { color: var(--danger); border-color: var(--b-hi-bg); }
+.stat-action-btn.danger:hover { background: var(--b-hi-bg); }
+
+/* ── Selection info ── */
+#selection-info {
+  display: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--accent);
+}
+#delete-selected-btn { display: none; }
+
+/* ── Table ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+thead th {
+  background: var(--bg-alt);
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 0 14px;
+  height: 36px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: calc(var(--h-header) + var(--h-toolbar) + var(--h-statbar));
+  z-index: 97;
+  white-space: nowrap;
+  user-select: none;
+}
+thead th.num { text-align: right; }
+thead th.check-col { width: 40px; padding: 0 10px; }
+
+tbody tr { height: 36px; }
+tbody tr:nth-child(even) td { background: var(--bg-alt); }
+tbody tr:hover td { background: var(--surface) !important; }
+tbody td {
+  padding: 0 14px;
+  border-bottom: 1px solid var(--bg-alt);
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+  font-size: 14px;
+}
+[data-theme="dark"] tbody td { border-bottom-color: #1e1e1e; }
+tbody td.check-col { padding: 0 10px; }
+tbody td.title-col { max-width: 320px; }
+tbody td.num {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+}
+tbody td.date-col {
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+tbody tr:last-child td { border-bottom: none; }
+
+input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 14px; height: 14px;
+  cursor: pointer;
+}
+
+/* ── Row states ── */
+tr.is-draft td { opacity: 0.7; }
+tr.is-rejected td { opacity: 0.5; text-decoration: line-through; }
+
+/* ── Ticket link ── */
+.ticket-link { color: var(--text); text-decoration: none; font-weight: 500; font-size: 14px; }
+.ticket-link:hover { color: var(--accent); }
+
+/* ── Action buttons ── */
+.action-btns { display: flex; gap: 5px; align-items: center; }
+
+/* ── Header draft count badge ── */
+#review-nav-link { display: none; }

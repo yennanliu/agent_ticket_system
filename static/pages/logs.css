@@ -1,0 +1,137 @@
+/* ── Toolbar ── */
+.toolbar {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: var(--h-toolbar);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: nowrap;
+  position: sticky;
+  top: var(--h-header);
+  z-index: 99;
+  overflow-x: auto;
+}
+.filter-btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 4px 12px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-btn:hover { background: var(--surface); color: var(--text-muted); }
+.filter-btn.active { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.filter-btn.err { color: var(--danger); }
+.filter-btn.err.active { background: var(--danger); color: #fff; border-color: var(--danger); }
+.toolbar-meta {
+  font-size: 14px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.live-dot {
+  width: 7px; height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.btn-sm {
+  font-family: inherit;
+  font-size: 14px;
+  border-radius: 3px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-sm:hover { background: var(--surface); color: var(--text); }
+.btn-sm.del { color: var(--danger); }
+.btn-sm.del:hover { background: var(--b-hi-bg); }
+
+/* ── Stat bar ── */
+#stat-bar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: var(--h-statbar);
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-dim);
+  position: sticky;
+  top: calc(var(--h-header) + var(--h-toolbar));
+  z-index: 98;
+}
+.stat-val { color: var(--text-muted); font-weight: 500; }
+.stat-errors { color: var(--danger); }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead th {
+  background: var(--bg-alt);
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 0 14px;
+  height: 36px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: calc(var(--h-header) + var(--h-toolbar) + var(--h-statbar));
+  z-index: 97;
+  white-space: nowrap;
+}
+thead th.num { text-align: right; }
+tbody tr:nth-child(even) td { background: var(--bg-alt); }
+tbody tr:hover td { background: var(--surface) !important; }
+tbody td {
+  padding: 0 14px;
+  height: 34px;
+  border-bottom: 1px solid var(--bg-alt);
+  vertical-align: middle;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+[data-theme="dark"] tbody td { border-bottom-color: #1e1e1e; }
+tbody tr:last-child td { border-bottom: none; }
+tbody td.mono { font-family: 'JetBrains Mono', monospace; color: var(--text-dim); }
+tbody td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+tbody td.details { max-width: 260px; white-space: normal; color: var(--text-muted); }
+
+/* ── Log event badges ── */
+.ev-create       { background: #0d2a3a; color: #7bdff2; }
+.ev-enrich       { background: #1e0d2a; color: var(--purple); }
+.ev-validate     { background: #2a2500; color: #faff69; }
+.ev-heal         { background: #0d2a14; color: var(--success); }
+.ev-kickstart    { background: #2a0f1e; color: var(--accent-alt); }
+.ev-create_batch { background: #0d2a14; color: #b5e48c; }
+.ev-other        { background: var(--surface2); color: var(--text-dim); }
+
+/* ── Status cells ── */
+.st-success { color: var(--success); font-family: 'JetBrains Mono', monospace; }
+.st-error   { color: var(--danger);  font-family: 'JetBrains Mono', monospace; }
+.ticket-link { color: var(--purple); text-decoration: none; font-family: 'JetBrains Mono', monospace; }
+.ticket-link:hover { color: var(--accent); }
+.no-ticket { color: var(--text-dim); }

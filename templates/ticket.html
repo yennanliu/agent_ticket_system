@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Ticket — Agent Ticket System{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/pages/ticket.css">{% endblock %}
+
+{% block nav %}
+  <div class="breadcrumb">
+    <a href="/tickets">All Tickets</a>
+    <span>/</span>
+    <span id="header-title">Loading…</span>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div id="not-found">
+  <h2>Ticket not found</h2>
+  <p>This ticket may have been deleted.</p>
+  <a href="/tickets" class="btn btn-ghost">← Back to list</a>
+</div>
+
+<div id="content">
+  <div class="ticket-hero">
+    <div class="ticket-hero-inner">
+      <div class="ticket-hero-title" id="t-title"></div>
+      <div class="ticket-hero-meta">
+        <div id="t-meta"></div>
+        <div id="t-val-badge"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-layout">
+    <div class="main-col">
+      <div class="source-row">
+        <label>Repo source</label>
+        <input id="source-input" type="text" placeholder="Local path or GitHub URL for Enrich / Validate" />
+      </div>
+
+      <div class="draft-banner" id="draft-banner">
+        <span class="draft-banner-text">⬡ This ticket is a <strong>draft</strong> — review and approve before starting work.</span>
+        <div class="draft-banner-actions">
+          <button class="btn btn-approve" id="approve-btn">✓ Approve</button>
+          <button class="btn btn-reject" id="reject-btn">✗ Reject</button>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-primary" id="edit-btn">Edit</button>
+        <button class="btn btn-teal" id="enrich-btn">✦ Enrich</button>
+        <button class="btn btn-secondary" id="validate-btn">⬡ Validate</button>
+        <button class="btn btn-secondary" id="heal-btn">⟳ Heal</button>
+        <button class="btn btn-danger" id="delete-btn">Delete</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-label">Details</span></div>
+        <div class="card-body">
+          <div class="field"><div class="field-label">Business Requirement</div><div id="t-business-req"></div></div>
+          <div class="field"><div class="field-label">Stakeholder</div><div id="t-stakeholder"></div></div>
+          <div class="field"><div class="field-label">User Story</div><div id="t-user-story"></div></div>
+          <div class="field"><div class="field-label">Description</div><div id="t-desc"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-label">Enrichment</span></div>
+        <div class="card-body">
+          <div class="field"><div class="field-label">Acceptance Criteria</div><div id="t-ac"></div></div>
+          <div class="field"><div class="field-label">Related Files</div><div id="t-files"></div></div>
+          <div class="field"><div class="field-label">Notes</div><div id="t-notes"></div></div>
+          <div class="field"><div class="field-label">Suggested Assignee</div><div id="t-assignee"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-label">Change References</span></div>
+        <div id="t-refs"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-label">Validation</span></div>
+        <div class="card-body" id="t-validation"></div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-header"><span class="card-label">Metadata</span></div>
+        <div class="card-body sidebar-card-body">
+          <div class="meta-item"><span class="meta-key">ID</span><span class="meta-val" id="s-id"></span></div>
+          <div class="meta-item"><span class="meta-key">Status</span><span class="meta-val" id="s-status"></span></div>
+          <div class="meta-item"><span class="meta-key">Priority</span><span class="meta-val" id="s-priority"></span></div>
+          <div class="meta-item"><span class="meta-key">Importance</span><span class="meta-val" id="s-importance"></span></div>
+          <div class="meta-item"><span class="meta-key">Source</span><span class="meta-val" id="s-repo"></span></div>
+          <div class="meta-item"><span class="meta-key">Created</span><span class="meta-val" id="s-created"></span></div>
+          <div class="meta-item"><span class="meta-key">Updated</span><span class="meta-val" id="s-updated"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>Edit Ticket</h2>
+    <label>Title *</label>
+    <input id="f-title" type="text" />
+    <label>Business Requirement</label>
+    <textarea id="f-business-req" style="min-height:60px"></textarea>
+    <label>Stakeholder</label>
+    <input id="f-stakeholder" type="text" placeholder="Product, Engineering, Customer…" />
+    <label>User Story</label>
+    <textarea id="f-user-story" style="min-height:60px" placeholder="As a &lt;role&gt;, I want &lt;goal&gt; so that &lt;benefit&gt;"></textarea>
+    <label>Description</label>
+    <textarea id="f-desc"></textarea>
+    <label>Status</label>
+    <select id="f-status">
+      <option value="open">Open</option>
+      <option value="in_progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+    <label>Priority</label>
+    <select id="f-priority">
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+    <label>Importance</label>
+    <select id="f-importance">
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+      <option value="critical">Critical</option>
+    </select>
+    <label>Labels (comma-separated)</label>
+    <input id="f-labels" type="text" />
+    <label>Source Repo</label>
+    <input id="f-repo" type="text" />
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modal-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="modal-save-btn">Save</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/pages/ticket.js"></script>{% endblock %}

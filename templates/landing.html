@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Agent Ticket System{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/pages/landing.css">{% endblock %}
+
+{% block nav %}
+  <a href="/tickets" class="nav-link">Tickets</a>
+  <a href="/logs" class="nav-link">Logs</a>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">⬡ AI-Powered Ticket Management</div>
+    <h1 class="hero-title">
+      <span class="word-agent">Agent</span><br>
+      <span>Ticket System</span>
+    </h1>
+    <p class="hero-subtitle">
+      Generate engineering tickets from any codebase, enrich them with AI context,
+      and validate quality automatically.
+    </p>
+    <div class="hero-actions">
+      <a href="/tickets" class="cta-primary">Open Tickets &rarr;</a>
+      <a href="/logs" class="cta-ghost">View Logs</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span class="scroll-arrow">↓</span>
+    <span>Explore</span>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="section-label">What it does</div>
+  <h2 class="section-title">Three steps to better tickets</h2>
+  <p class="section-subtitle">From repo to ready-to-develop in minutes, not hours.</p>
+  <div class="features-grid">
+    <div class="feature-card" style="--feature-color: var(--accent)">
+      <div class="feature-icon-wrap">⬡</div>
+      <div class="feature-name">Generate</div>
+      <div class="feature-desc">Point at a GitHub repo or local codebase. The AI reads the code, issues, and README to automatically create relevant, actionable engineering tickets.</div>
+      <span class="feature-tag">CREATE-FROM-REPO</span>
+    </div>
+    <div class="feature-card" style="--feature-color: var(--purple)">
+      <div class="feature-icon-wrap">✦</div>
+      <div class="feature-name">Enrich</div>
+      <div class="feature-desc">AI fills in descriptions, acceptance criteria, related files, technical notes, and suggested assignees — saving hours of specification work.</div>
+      <span class="feature-tag" style="color:var(--purple);background:rgba(199,169,255,0.07);border-color:rgba(199,169,255,0.15)">ENRICH</span>
+    </div>
+    <div class="feature-card" style="--feature-color: var(--success)">
+      <div class="feature-icon-wrap">✓</div>
+      <div class="feature-name">Validate</div>
+      <div class="feature-desc">Confidence scoring evaluates each ticket's completeness and clarity. Know before development starts whether a ticket is well-defined enough.</div>
+      <span class="feature-tag" style="color:var(--success);background:rgba(181,228,140,0.07);border-color:rgba(181,228,140,0.15)">VALIDATE</span>
+    </div>
+  </div>
+</section>
+
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-item"><span class="stat-num" id="s-total">—</span><span class="stat-label">Total Tickets</span></div>
+    <div class="stat-item"><span class="stat-num" id="s-open">—</span><span class="stat-label">Open</span></div>
+    <div class="stat-item"><span class="stat-num" id="s-validated">—</span><span class="stat-label">Validated</span></div>
+    <div class="stat-item"><span class="stat-num" id="s-passrate">—</span><span class="stat-label">Pass Rate</span></div>
+  </div>
+</div>
+
+<section class="workflow-section">
+  <div class="section-label">Workflow</div>
+  <h2 class="section-title">From repo to sprint-ready</h2>
+  <div class="workflow-steps">
+    <div class="workflow-step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title">Point at a repository</div>
+        <div class="step-desc">Paste a GitHub URL or local path. The system reads the codebase structure, open issues, and documentation to build context.</div>
+      </div>
+    </div>
+    <div class="workflow-step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title">AI generates tickets</div>
+        <div class="step-desc">A LangGraph agent analyzes the code and produces a set of relevant engineering tickets tailored to the project's needs.</div>
+      </div>
+    </div>
+    <div class="workflow-step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title">Enrich with context</div>
+        <div class="step-desc">Run the Enrich agent to fill in descriptions, acceptance criteria, related files, and technical notes for each ticket.</div>
+      </div>
+    </div>
+    <div class="workflow-step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title">Validate and ship</div>
+        <div class="step-desc">Validation scores each ticket's quality. High-confidence tickets go straight to the sprint board — low-confidence ones get flagged for review.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-section-inner">
+    <h2 class="cta-section-title">Ready to build better tickets?</h2>
+    <p class="cta-section-sub">Open the ticket board and connect your first repository.</p>
+    <a href="/tickets" class="cta-primary">Open Tickets &rarr;</a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">⬡ ATS · Agent Ticket System</span>
+  <div class="footer-links">
+    <a href="/tickets" class="footer-link">Tickets</a>
+    <a href="/logs" class="footer-link">Logs</a>
+  </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}<script src="/static/pages/landing.js"></script>{% endblock %}

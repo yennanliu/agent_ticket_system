@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Review Queue — Agent Ticket System{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/pages/review.css">{% endblock %}
+
+{% block content %}
+<div id="toolbar">
+  <div class="toolbar-title">
+    Draft Review Queue
+    <span class="count-badge" id="draft-count">0</span>
+  </div>
+  <div class="spacer"></div>
+  <button class="btn btn-approve" id="approve-all-btn">Approve All</button>
+  <button class="btn btn-reject" id="reject-all-btn">Reject All</button>
+</div>
+
+<main>
+  <div id="cards-container"></div>
+</main>
+{% endblock %}
+
+{% block scripts %}<script src="/static/pages/review.js"></script>{% endblock %}

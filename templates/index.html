@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Tickets — Agent Ticket System{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/pages/index.css">{% endblock %}
+
+{% block header_actions %}
+  <div class="header-sep"></div>
+  <button class="btn btn-ghost" id="batch-create-btn">Batch Create</button>
+  <button class="btn btn-primary" id="new-ticket-btn">+ New Ticket</button>
+{% endblock %}
+
+{% block content %}
+<div id="toolbar">
+  <input id="repo-input" type="text" placeholder="Repo path (../my-project) or GitHub URL" />
+  <button class="btn btn-primary" id="generate-btn">Generate from Repo</button>
+  <div class="header-sep"></div>
+  <button class="btn btn-violet" id="enrich-all-btn">✦ Enrich Selected</button>
+  <div class="header-sep"></div>
+  <select id="status-filter" title="Filter by status">
+    <option value="">All statuses</option>
+    <option value="open">Open</option>
+    <option value="in_progress">In Progress</option>
+    <option value="done">Done</option>
+    <option value="draft">Draft</option>
+    <option value="rejected">Rejected</option>
+  </select>
+  <select id="repo-filter" title="Filter by repo">
+    <option value="">All repos</option>
+  </select>
+  <button class="btn-theme" id="drafts-toggle" title="Toggle draft/rejected tickets">Show Drafts</button>
+</div>
+
+<div id="stat-bar">
+  <span>Tickets: <span class="stat-val" id="stat-total">—</span></span>
+  <span>Open: <span class="stat-val" id="stat-open">—</span></span>
+  <span>Validated: <span class="stat-val" id="stat-validated">—</span></span>
+  <span>Pass rate: <span class="stat-val" id="stat-passrate">—</span></span>
+  <div class="stat-spacer"></div>
+  <button class="stat-action-btn" id="select-all-btn">Select All</button>
+  <button class="stat-action-btn" id="deselect-all-btn">Deselect All</button>
+  <span id="selection-info"></span>
+  <button class="stat-action-btn danger" id="delete-selected-btn">Delete</button>
+</div>
+
+<main>
+  <div class="table-wrap">
+    <div id="ticket-container"></div>
+  </div>
+</main>
+
+<!-- Create/Edit modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">New Ticket</h2>
+    <input type="hidden" id="modal-id" />
+    <label>Title *</label>
+    <input id="f-title" type="text" placeholder="Short, actionable title" />
+    <label>Business Requirement</label>
+    <textarea id="f-business-req" style="min-height:60px" placeholder="The business need this ticket addresses"></textarea>
+    <label>Stakeholder</label>
+    <input id="f-stakeholder" type="text" placeholder="e.g. Product, Engineering, Customer" />
+    <label>User Story</label>
+    <textarea id="f-user-story" style="min-height:60px" placeholder="As a &lt;role&gt;, I want &lt;goal&gt; so that &lt;benefit&gt;"></textarea>
+    <label>Description</label>
+    <textarea id="f-desc" placeholder="What needs to be done? Leave blank — Enrich will fill it."></textarea>
+    <p class="modal-hint">Leave blank and use ✦ Enrich to let AI fill this in.</p>
+    <label>Status</label>
+    <select id="f-status">
+      <option value="open">Open</option>
+      <option value="in_progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+    <label>Priority</label>
+    <select id="f-priority">
+      <option value="low">Low</option>
+      <option value="medium" selected>Medium</option>
+      <option value="high">High</option>
+    </select>
+    <label>Importance</label>
+    <select id="f-importance">
+      <option value="low">Low</option>
+      <option value="medium" selected>Medium</option>
+      <option value="high">High</option>
+      <option value="critical">Critical</option>
+    </select>
+    <label>Labels (comma-separated)</label>
+    <input id="f-labels" type="text" placeholder="bug, feature, docs" />
+    <label>Source Repo</label>
+    <input id="f-repo" type="text" placeholder="../my-project or https://github.com/..." />
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modal-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="modal-save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Batch Create modal -->
+<div class="modal-overlay" id="batch-modal">
+  <div class="modal">
+    <h2>Batch Create Tickets</h2>
+    <label>Ticket titles — one per line</label>
+    <textarea id="batch-titles" style="min-height:150px;font-family:'JetBrains Mono',monospace;font-size:14px" placeholder="Fix login bug&#10;Add dark mode&#10;Improve test coverage&#10;Update API docs"></textarea>
+    <label>Source Repo (optional)</label>
+    <input id="batch-repo" type="text" placeholder="../my-project or https://github.com/..." />
+    <p class="modal-hint">Descriptions will be empty — run ✦ Enrich after to let AI fill them in.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="batch-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="batch-save-btn">Create All</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/pages/index.js"></script>{% endblock %}

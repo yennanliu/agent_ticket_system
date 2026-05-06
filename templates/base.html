@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Agent Ticket System{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/shared.css">
+{% block head %}{% endblock %}
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">⬡ Tickets</a>
+  <div class="header-sep"></div>
+  {% block nav %}
+  <a href="/tickets" class="nav-link{% if active == 'tickets' %} active{% endif %}">Tickets</a>
+  <a href="/review" class="nav-link{% if active == 'review' %} active{% endif %}" id="review-nav-link">
+    Review <span id="header-draft-count" class="draft-count-badge"></span>
+  </a>
+  <a href="/logs" class="nav-link{% if active == 'logs' %} active{% endif %}">Logs</a>
+  {% endblock %}
+  <div class="spacer"></div>
+  <button class="btn-theme" id="theme-btn">☀ Bright</button>
+  {% block header_actions %}{% endblock %}
+</header>
+
+{% block content %}{% endblock %}
+
+<div id="toast"></div>
+<script src="/static/shared.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
