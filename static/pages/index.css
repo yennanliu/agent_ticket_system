@@ -141,6 +141,10 @@ input[type="checkbox"] {
 /* ── Row states ── */
 tr.is-draft td { opacity: 0.7; }
 tr.is-rejected td { opacity: 0.5; text-decoration: line-through; }
+tr.is-child td { background: var(--bg) !important; }
+tr.is-child:hover td { background: var(--surface) !important; }
+.child-indent { color: var(--text-dim); font-size: 12px; margin-right: 2px; }
+.btn-xs.split-btn { color: var(--accent); }
 
 /* ── Ticket link ── */
 .ticket-link { color: var(--text); text-decoration: none; font-weight: 500; font-size: 14px; }

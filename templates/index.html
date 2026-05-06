@@ -15,6 +15,13 @@
   <div class="header-sep"></div>
   <button class="btn btn-violet" id="enrich-all-btn">✦ Enrich Selected</button>
   <div class="header-sep"></div>
+  <select id="type-filter" title="Filter by type">
+    <option value="">All types</option>
+    <option value="epic">Epic</option>
+    <option value="story">Story</option>
+    <option value="task">Task</option>
+    <option value="subtask">Subtask</option>
+  </select>
   <select id="status-filter" title="Filter by status">
     <option value="">All statuses</option>
     <option value="open">Open</option>
@@ -52,6 +59,21 @@
   <div class="modal">
     <h2 id="modal-title">New Ticket</h2>
     <input type="hidden" id="modal-id" />
+    <div style="display:flex;gap:12px">
+      <div style="flex:1">
+        <label>Type</label>
+        <select id="f-type">
+          <option value="task" selected>Task</option>
+          <option value="epic">Epic</option>
+          <option value="story">Story</option>
+          <option value="subtask">Subtask</option>
+        </select>
+      </div>
+      <div style="flex:2">
+        <label>Parent Ticket ID <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input id="f-parent-id" type="text" placeholder="Leave blank for root ticket" />
+      </div>
+    </div>
     <label>Title *</label>
     <input id="f-title" type="text" placeholder="Short, actionable title" />
     <label>Business Requirement</label>

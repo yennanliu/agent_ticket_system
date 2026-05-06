@@ -9,6 +9,7 @@ from app.agents.enricher import run_enricher
 from app.agents.validator import run_validator
 from app.agents.healer import run_healer
 from app.agents.kickstart import run_kickstart
+from app.agents.splitter import run_splitter
 
 
 class RepoSource(BaseModel):
@@ -119,6 +120,13 @@ def make_router(store: TicketStore, logger=None) -> APIRouter:
     def kickstart_ticket(ticket_id: str):
         try:
             return run_kickstart(ticket_id, store, logger=logger)
+        except ValueError as e:
+            raise HTTPException(status_code=404, detail=str(e))
+
+    @r.post("/split/{ticket_id}", response_model=list[Ticket])
+    def split_ticket(ticket_id: str):
+        try:
+            return run_splitter(ticket_id, store, logger=logger)
         except ValueError as e:
             raise HTTPException(status_code=404, detail=str(e))
 

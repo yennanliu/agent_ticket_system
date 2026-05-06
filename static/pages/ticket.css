@@ -171,3 +171,13 @@ code.file {
 .meta-val a { color: var(--purple); text-decoration: none; }
 .meta-val a:hover { color: var(--accent-alt); }
 .sidebar-card-body { padding: 6px 18px; }
+
+/* ── Children list ── */
+.children-count { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); margin-left: 8px; }
+.children-list { display: flex; flex-direction: column; gap: 2px; }
+.child-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--surface2); font-size: 14px; }
+.child-row:last-child { border-bottom: none; }
+.child-status-icon { color: var(--text-dim); font-size: 13px; flex-shrink: 0; }
+.child-link { color: var(--text); text-decoration: none; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.child-link:hover { color: var(--accent); }
+.child-meta { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; }

@@ -43,6 +43,8 @@ function applyFilters() {
   } else if (!showDrafts) {
     filtered = filtered.filter(t => t.status !== 'draft' && t.status !== 'rejected');
   }
+  const typeFilter = document.getElementById('type-filter').value;
+  if (typeFilter) filtered = filtered.filter(t => (t.ticket_type || 'task') === typeFilter);
   const repoFilter = document.getElementById('repo-filter').value;
   if (repoFilter) filtered = filtered.filter(t => t.source_repo === repoFilter);
   renderTable(filtered);
@@ -108,6 +110,19 @@ async function deleteTicket(id, title) {
   loadTickets();
 }
 
+async function splitTicket(id) {
+  const btn = document.getElementById(`split-btn-${id}`);
+  if (btn) { btn.disabled = true; btn.textContent = '⎇ Splitting…'; }
+  try {
+    const children = await apiFetch(`/agents/split/${id}`, { method: 'POST' });
+    toast(`Split into ${children.length} sub-ticket(s) ✓`);
+    loadTickets();
+  } catch(e) {
+    toast('Split failed: ' + e.message, true);
+    if (btn) { btn.disabled = false; btn.textContent = '⎇ Split'; }
+  }
+}
+
 function setEnrichLoading(id, loading) {
   const btn = document.getElementById(`enrich-btn-${id}`);
   if (!btn) return;
@@ -117,7 +132,7 @@ function setEnrichLoading(id, loading) {
 
 // ── Modals ─────────────────────────────────────────────────────────────────
 
-function openCreate() {
+function openCreate(parentId = '', defaultType = 'task') {
   document.getElementById('modal-title').textContent = 'New Ticket';
   document.getElementById('modal-id').value = '';
   ['f-title','f-business-req','f-stakeholder','f-user-story','f-desc','f-labels','f-repo']
@@ -125,6 +140,8 @@ function openCreate() {
   document.getElementById('f-status').value = 'open';
   document.getElementById('f-priority').value = 'medium';
   document.getElementById('f-importance').value = 'medium';
+  document.getElementById('f-type').value = defaultType;
+  document.getElementById('f-parent-id').value = parentId;
   document.getElementById('modal').classList.add('open');
 }
 
@@ -141,6 +158,8 @@ function openEdit(t) {
   document.getElementById('f-importance').value = t.importance || 'medium';
   document.getElementById('f-labels').value = (t.labels || []).join(', ');
   document.getElementById('f-repo').value = t.source_repo || '';
+  document.getElementById('f-type').value = t.ticket_type || 'task';
+  document.getElementById('f-parent-id').value = t.parent_id || '';
   document.getElementById('modal').classList.add('open');
 }
 
@@ -148,6 +167,8 @@ function closeModal() { document.getElementById('modal').classList.remove('open'
 
 async function submitTicket() {
   const id = document.getElementById('modal-id').value;
+  const ttype = document.getElementById('f-type').value;
+  const parentId = document.getElementById('f-parent-id').value.trim();
   const payload = {
     title: document.getElementById('f-title').value.trim(),
     business_req: document.getElementById('f-business-req').value.trim(),
@@ -159,8 +180,11 @@ async function submitTicket() {
     importance: document.getElementById('f-importance').value,
     labels: document.getElementById('f-labels').value.split(',').map(s => s.trim()).filter(Boolean),
     source_repo: document.getElementById('f-repo').value.trim(),
+    ticket_type: ttype,
+    parent_id: parentId || null,
   };
   if (!payload.title) { toast('Title is required', true); return; }
+  const willSplit = !id && (ttype === 'epic' || ttype === 'story');
   try {
     const ticket = await apiFetch(id ? `/tickets/${id}` : '/tickets', {
       method: id ? 'PUT' : 'POST', body: payload,
@@ -170,11 +194,11 @@ async function submitTicket() {
       toast('Updated');
       loadTickets();
     } else {
-      toast(payload.source_repo ? 'Created — enriching & validating…' : 'Created — validating…');
+      toast(willSplit ? `Created ${ttype} — splitting & validating…` : (payload.source_repo ? 'Created — enriching & validating…' : 'Created — validating…'));
       loadTickets();
       try {
         await apiFetch(`/agents/kickstart/${ticket.id}`, { method: 'POST' });
-        toast('Ready ✓');
+        toast(willSplit ? `Split into sub-tickets ✓` : 'Ready ✓');
         loadTickets();
       } catch { /* ignore pipeline errors */ }
     }
@@ -226,17 +250,20 @@ function renderTable(tickets) {
         ? `<span class="val-fail">✗ ${pct(t.validation_score)}</span>`
         : '<span class="val-none">—</span>';
     const labels = (t.labels || []).map(l => `<span class="label-chip">${esc(l)}</span>`).join('');
+    const ttype = t.ticket_type || 'task';
+    const childPrefix = t.parent_id ? '<span class="child-indent">↳</span> ' : '';
     const repo = t.source_repo ? `<span class="repo-chip">${esc(repoShort(t.source_repo))}</span>` : '';
     const imp = t.importance || 'medium';
-    return `<tr class="${t.status === 'draft' ? 'is-draft' : t.status === 'rejected' ? 'is-rejected' : ''}">
+    const canSplit = (ttype === 'epic' || ttype === 'story') && !enrichingIds.has('split-' + t.id);
+    return `<tr class="${t.status === 'draft' ? 'is-draft' : t.status === 'rejected' ? 'is-rejected' : ''}${t.parent_id ? ' is-child' : ''}">
       <td class="check-col"><input type="checkbox" class="row-check" data-id="${t.id}"></td>
       <td class="title-col">
-        <a href="/tickets/${t.id}" class="ticket-link">${esc(t.title)}${dot}</a>
+        ${childPrefix}<a href="/tickets/${t.id}" class="ticket-link">${esc(t.title)}${dot}</a>
         ${repo}
       </td>
+      <td><span class="badge ty-${ttype}">${ttype}</span></td>
       <td><span class="badge s-${t.status}">${t.status.replace('_', ' ')}</span></td>
       <td><span class="badge p-${t.priority}">${t.priority}</span></td>
-      <td><span class="badge i-${imp}">${imp}</span></td>
       <td class="num">${valCell}</td>
       <td>${labels}</td>
       <td class="num date-col">${fmtDate(t.created_at)}</td>
@@ -246,6 +273,7 @@ function renderTable(tickets) {
           <button class="btn-xs enrich" id="enrich-btn-${t.id}" data-id="${t.id}" data-repo="${esc(t.source_repo || '')}" ${enrichingIds.has(t.id) ? 'disabled' : ''}>
             ${enrichingIds.has(t.id) ? '<span class="spinner dark"></span>…' : '✦ Enrich'}
           </button>
+          ${canSplit ? `<button class="btn-xs split-btn" id="split-btn-${t.id}" data-id="${t.id}">⎇ Split</button>` : ''}
           <button class="btn-xs del" data-id="${t.id}" data-title="${esc(t.title)}">Del</button>
         </div>
       </td>
@@ -255,7 +283,7 @@ function renderTable(tickets) {
   el.innerHTML = `<table>
     <thead><tr>
       <th class="check-col"><input type="checkbox" id="select-all" title="Select all"></th>
-      <th>Title</th><th>Status</th><th>Priority</th><th>Importance</th>
+      <th>Title</th><th>Type</th><th>Status</th><th>Priority</th>
       <th class="num">Validation</th><th>Labels</th><th class="num">Created</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -328,6 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('generate-btn').addEventListener('click', generateTickets);
   document.getElementById('enrich-all-btn').addEventListener('click', enrichAll);
   document.getElementById('drafts-toggle').addEventListener('click', toggleDrafts);
+  document.getElementById('type-filter').addEventListener('change', applyFilters);
   document.getElementById('status-filter').addEventListener('change', applyFilters);
   document.getElementById('repo-filter').addEventListener('change', applyFilters);
   document.getElementById('modal-save-btn').addEventListener('click', submitTicket);
@@ -358,6 +387,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const enrichBtn = e.target.closest('.enrich');
     if (enrichBtn) { enrichTicket(enrichBtn.dataset.id, enrichBtn.dataset.repo); return; }
+    const splitBtn = e.target.closest('.split-btn');
+    if (splitBtn) { splitTicket(splitBtn.dataset.id); return; }
     const delBtn = e.target.closest('.del');
     if (delBtn) { deleteTicket(delBtn.dataset.id, delBtn.dataset.title); return; }
   });

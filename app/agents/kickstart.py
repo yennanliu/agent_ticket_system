@@ -5,9 +5,11 @@ from app.models import Ticket
 from app.storage import TicketStore
 from app.agents.enricher import run_enricher
 from app.agents.validator import run_validator
+from app.agents.splitter import run_splitter
 
 KICKSTART_THRESHOLD = float(os.getenv("KICKSTART_THRESHOLD", "0.60"))
 KICKSTART_MAX_RETRIES = int(os.getenv("KICKSTART_MAX_RETRIES", "3"))
+_SPLIT_TYPES = {"epic", "story"}
 
 
 def run_kickstart(ticket_id: str, store: TicketStore, logger=None) -> Ticket:
@@ -38,12 +40,18 @@ def run_kickstart(ticket_id: str, store: TicketStore, logger=None) -> Ticket:
             store.update(ticket_id, {"validation_iterations": retries})
             ticket = ticket.model_copy(update={"validation_iterations": retries})
 
+        if ticket.ticket_type in _SPLIT_TYPES:
+            try:
+                run_splitter(ticket_id, store, logger=logger)
+            except Exception:
+                pass  # split failure must not fail kickstart
+
         if logger:
             logger.log(
                 "kickstart", "kickstart", ticket_id=ticket_id,
                 duration_ms=(time.time() - start) * 1000,
                 status="success",
-                details=f"score={ticket.validation_score}, retries={retries}, enriched={'yes' if source else 'no'}",
+                details=f"score={ticket.validation_score}, retries={retries}, type={ticket.ticket_type}",
             )
         return ticket
 

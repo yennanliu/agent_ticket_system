@@ -284,6 +284,12 @@ header {
 }
 
 /* ── Draft count badge (header) ──────────────────────────────────────────── */
+/* ── Ticket type badges ──────────────────────────────────────────────────── */
+.ty-epic    { background: rgba(250,255,105,.12); color: var(--accent);    border: 1px solid rgba(250,255,105,.25); }
+.ty-story   { background: var(--b-draft-bg);     color: var(--purple); }
+.ty-task    { background: var(--b-open-bg);      color: var(--blue); }
+.ty-subtask { background: var(--surface);        color: var(--text-dim); }
+
 /* ── Ticket breadcrumb (header_extra slot) ───────────────────────────────── */
 .nav-crumb {
   font-size: 13px;

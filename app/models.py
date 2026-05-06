@@ -33,6 +33,9 @@ class Ticket(BaseModel):
     technical_notes: str = ""
     suggested_assignee: str = ""
     suggested_change_refs: list[dict] = Field(default_factory=list)
+    # Hierarchy
+    ticket_type: str = "task"          # epic | story | task | subtask
+    parent_id: Optional[str] = None
     # Populated by validator agent
     validation_score: Optional[float] = None
     validation_notes: str = ""
@@ -51,6 +54,8 @@ class CreateTicketRequest(BaseModel):
     business_req: str = ""
     stakeholder: str = ""
     user_story: str = ""
+    ticket_type: str = "task"
+    parent_id: Optional[str] = None
 
 
 class UpdateTicketRequest(BaseModel):
@@ -69,6 +74,8 @@ class UpdateTicketRequest(BaseModel):
     technical_notes: Optional[str] = None
     suggested_assignee: Optional[str] = None
     suggested_change_refs: Optional[list[dict]] = None
+    ticket_type: Optional[str] = None
+    parent_id: Optional[str] = None
     validation_score: Optional[float] = None
     validation_notes: Optional[str] = None
     validation_passed: Optional[bool] = None

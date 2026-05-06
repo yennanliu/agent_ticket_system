@@ -45,6 +45,7 @@
         <button class="btn btn-teal" id="enrich-btn">✦ Enrich</button>
         <button class="btn btn-secondary" id="validate-btn">⬡ Validate</button>
         <button class="btn btn-secondary" id="heal-btn">⟳ Heal</button>
+        <button class="btn btn-violet" id="split-btn" style="display:none">⎇ Split</button>
         <button class="btn btn-danger" id="delete-btn">Delete</button>
       </div>
 
@@ -77,6 +78,14 @@
         <div class="card-header"><span class="card-label">Validation</span></div>
         <div class="card-body" id="t-validation"></div>
       </div>
+
+      <div class="card" id="children-card" style="display:none">
+        <div class="card-header">
+          <span class="card-label">Sub-tickets</span>
+          <span class="children-count" id="children-count"></span>
+        </div>
+        <div class="card-body" id="t-children"></div>
+      </div>
     </div>
 
     <div class="sidebar">
@@ -84,6 +93,8 @@
         <div class="card-header"><span class="card-label">Metadata</span></div>
         <div class="card-body sidebar-card-body">
           <div class="meta-item"><span class="meta-key">ID</span><span class="meta-val" id="s-id"></span></div>
+          <div class="meta-item"><span class="meta-key">Type</span><span class="meta-val" id="s-type"></span></div>
+          <div class="meta-item" id="s-parent-row" style="display:none"><span class="meta-key">Parent</span><span class="meta-val" id="s-parent"></span></div>
           <div class="meta-item"><span class="meta-key">Status</span><span class="meta-val" id="s-status"></span></div>
           <div class="meta-item"><span class="meta-key">Priority</span><span class="meta-val" id="s-priority"></span></div>
           <div class="meta-item"><span class="meta-key">Importance</span><span class="meta-val" id="s-importance"></span></div>
@@ -100,6 +111,21 @@
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <h2>Edit Ticket</h2>
+    <div style="display:flex;gap:12px">
+      <div style="flex:1">
+        <label>Type</label>
+        <select id="f-type">
+          <option value="task">Task</option>
+          <option value="epic">Epic</option>
+          <option value="story">Story</option>
+          <option value="subtask">Subtask</option>
+        </select>
+      </div>
+      <div style="flex:2">
+        <label>Parent Ticket ID</label>
+        <input id="f-parent-id" type="text" placeholder="Leave blank for root ticket" />
+      </div>
+    </div>
     <label>Title *</label>
     <input id="f-title" type="text" />
     <label>Business Requirement</label>

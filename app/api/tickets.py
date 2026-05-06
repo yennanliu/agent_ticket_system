@@ -44,6 +44,10 @@ def make_router(store: TicketStore) -> APIRouter:
         if not store.delete(ticket_id):
             raise HTTPException(status_code=404, detail="Ticket not found")
 
+    @r.get("/{ticket_id}/children", response_model=list[Ticket])
+    def get_children(ticket_id: str):
+        return [t for t in store.get_all() if t.parent_id == ticket_id]
+
     @r.post("/{ticket_id}/approve", response_model=Ticket)
     def approve_ticket(ticket_id: str):
         ticket = store.get(ticket_id)
