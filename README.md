@@ -7,6 +7,7 @@ An AI-powered task ticket manager that analyzes software projects and automatica
 <p align="center"><img src ="./doc/pic/demo_1.png" ></p>
 <p align="center"><img src ="./doc/pic/demo_2.png" ></p>
 <p align="center"><img src ="./doc/pic/demo_3.png" ></p>
+<p align="center"><img src ="./doc/pic/demo_5.png" ></p>
 
 ---
 
