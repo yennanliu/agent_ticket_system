@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Agent Performance — Agent Ticket System{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/pages/insights.css">
+<link rel="stylesheet" href="/static/pages/agent_metrics.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div class="page-hdr">
+    <div>
+      <h1>Agent Performance</h1>
+      <p>Runtime metrics derived from the agent activity log</p>
+    </div>
+    <button class="btn-theme" id="refresh-btn">↻ Refresh</button>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-card"><span class="sc-label">Total Runs</span><span class="sc-val" id="sc-total">—</span></div>
+    <div class="stat-card"><span class="sc-label">Success Rate</span><span class="sc-val sc-success" id="sc-rate">—</span></div>
+    <div class="stat-card"><span class="sc-label">Errors</span><span class="sc-val sc-danger" id="sc-errors">—</span></div>
+    <div class="stat-card"><span class="sc-label">Avg Duration</span><span class="sc-val" id="sc-avg">—</span></div>
+  </div>
+
+  <div class="two-col">
+    <section class="section">
+      <h2>Per-Agent Stats</h2>
+      <div id="agent-table-wrap"></div>
+    </section>
+    <section class="section">
+      <h2>Run Volume</h2>
+      <div id="bar-chart"></div>
+    </section>
+  </div>
+
+  <section class="section">
+    <h2>Recent Errors</h2>
+    <div id="error-list"></div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/pages/agent_metrics.js"></script>{% endblock %}

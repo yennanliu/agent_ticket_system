@@ -1,0 +1,7 @@
+.error-item {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--bg-alt);
+}
+.error-item:last-child { border-bottom: none; }
+.error-title { font-size: 13px; color: var(--danger); font-family: 'JetBrains Mono', monospace; }
+.error-meta  { font-size: 12px; color: var(--text-dim); margin-top: 3px; }

@@ -52,6 +52,18 @@ def create_app(store: TicketStore | None = None, logger: AgentLogger | None = No
     def logs_page(request: Request):
         return templates.TemplateResponse(request=request, name="logs.html", context={"active": "logs"})
 
+    @app.get("/agents")
+    def agents_page(request: Request):
+        return templates.TemplateResponse(request=request, name="agents.html", context={"active": "agents"})
+
+    @app.get("/agent-metrics")
+    def agent_metrics_page(request: Request):
+        return templates.TemplateResponse(request=request, name="agent_metrics.html", context={"active": "agent-metrics"})
+
+    @app.get("/ticket-metrics")
+    def ticket_metrics_page(request: Request):
+        return templates.TemplateResponse(request=request, name="ticket_metrics.html", context={"active": "ticket-metrics"})
+
     return app
 
 
