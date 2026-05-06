@@ -447,7 +447,7 @@ tr.is-rejected td { opacity: 0.5; text-decoration: line-through; }
   <select id="repo-filter" onchange="applyFilters()" title="Filter by repo">
     <option value="">All repos</option>
   </select>
-  <button class="btn-theme" id="drafts-toggle" onclick="toggleDrafts()" title="Toggle draft/rejected tickets">Show Drafts</button>
+  <button class="btn-theme" id="drafts-toggle" onclick="toggleDrafts()" title="Toggle draft/rejected tickets">Hide Drafts</button>
 </div>
 
 <div id="stat-bar">
@@ -536,7 +536,7 @@ tr.is-rejected td { opacity: 0.5; text-decoration: line-through; }
 const API = '/api';
 let enrichingIds = new Set();
 let currentTickets = [];
-let showDrafts = false;
+let showDrafts = true;
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 

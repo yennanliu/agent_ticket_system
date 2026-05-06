@@ -2,7 +2,7 @@
 
 let enrichingIds = new Set();
 let currentTickets = [];
-let showDrafts = false;
+let showDrafts = true;
 
 // ── Data loading ───────────────────────────────────────────────────────────
 
