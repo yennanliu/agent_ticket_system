@@ -42,7 +42,7 @@ def create_app(store: TicketStore | None = None, logger: AgentLogger | None = No
 
     @app.get("/tickets/{ticket_id}")
     def ticket_page(request: Request, ticket_id: str):
-        return templates.TemplateResponse(request=request, name="ticket.html", context={"active": ""})
+        return templates.TemplateResponse(request=request, name="ticket.html", context={"active": "tickets"})
 
     @app.get("/review")
     def review_page(request: Request):

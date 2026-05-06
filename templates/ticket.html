@@ -2,12 +2,9 @@
 {% block title %}Ticket — Agent Ticket System{% endblock %}
 {% block head %}<link rel="stylesheet" href="/static/pages/ticket.css">{% endblock %}
 
-{% block nav %}
-  <div class="breadcrumb">
-    <a href="/tickets">All Tickets</a>
-    <span>/</span>
-    <span id="header-title">Loading…</span>
-  </div>
+{% block header_extra %}
+  <div class="header-sep"></div>
+  <span class="nav-crumb"><a href="/tickets" class="nav-crumb-back">Tickets</a> / <span id="header-title">Loading…</span></span>
 {% endblock %}
 
 {% block content %}

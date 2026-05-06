@@ -284,6 +284,21 @@ header {
 }
 
 /* ── Draft count badge (header) ──────────────────────────────────────────── */
+/* ── Ticket breadcrumb (header_extra slot) ───────────────────────────────── */
+.nav-crumb {
+  font-size: 13px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+.nav-crumb-back {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+.nav-crumb-back:hover { color: var(--text); }
+
 .draft-count-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
