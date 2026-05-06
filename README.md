@@ -3,6 +3,7 @@
 An AI-powered task ticket manager that analyzes software projects and automatically generates and enriches tickets. Point it at a local repo or a GitHub URL and it produces structured, actionable tickets — no database required.
 
 
+<p align="center"><img src ="./doc/pic/demo_0.png" ></p>
 <p align="center"><img src ="./doc/pic/demo_1.png" ></p>
 <p align="center"><img src ="./doc/pic/demo_2.png" ></p>
 <p align="center"><img src ="./doc/pic/demo_3.png" ></p>
