@@ -343,6 +343,38 @@ function toggleDrafts() {
   applyFilters();
 }
 
+async function eraseAll() {
+  if (!currentTickets.length) { toast('No tickets to erase', true); return; }
+  if (!confirm(`Permanently delete all ${currentTickets.length} tickets? This cannot be undone.`)) return;
+  const btn = document.getElementById('erase-all-btn');
+  await withLoading(btn, 'Erasing…', async () => {
+    const { deleted } = await apiFetch('/tickets', { method: 'DELETE' });
+    toast(`Erased ${deleted} ticket(s)`);
+    loadTickets();
+  }).catch(e => toast('Erase failed: ' + e.message, true));
+}
+
+function downloadCSV() {
+  if (!currentTickets.length) { toast('No tickets to export', true); return; }
+  const cols = ['id','title','description','status','priority','ticket_type','labels','source_repo',
+                 'acceptance_criteria','technical_notes','suggested_assignee','validation_score','created_at'];
+  const header = cols.join(',');
+  const rows = currentTickets.map(t =>
+    cols.map(c => {
+      const v = t[c];
+      const s = Array.isArray(v) ? v.join('; ') : (v == null ? '' : String(v));
+      return `"${s.replace(/"/g, '""')}"`;
+    }).join(',')
+  );
+  const csv = [header, ...rows].join('\n');
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })),
+    download: `tickets-${new Date().toISOString().slice(0,10)}.csv`,
+  });
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
 // ── Init ───────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -353,6 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Button clicks in header / toolbar
   document.getElementById('new-ticket-btn').addEventListener('click', openCreate);
   document.getElementById('batch-create-btn').addEventListener('click', openBatchCreate);
+  document.getElementById('erase-all-btn').addEventListener('click', eraseAll);
+  document.getElementById('download-csv-btn').addEventListener('click', downloadCSV);
   document.getElementById('generate-btn').addEventListener('click', generateTickets);
   document.getElementById('enrich-all-btn').addEventListener('click', enrichAll);
   document.getElementById('drafts-toggle').addEventListener('click', toggleDrafts);

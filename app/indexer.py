@@ -113,6 +113,27 @@ class IndexService:
         query_emb = _embed([query])[0]
         return entry.retrieve(query_emb, k)
 
+    def status(self) -> dict:
+        with self._lock:
+            indexes = []
+            for src, entry in self._cache.items():
+                indexes.append({
+                    "source": src,
+                    "state": "ready",
+                    "chunk_count": len(entry.chunks),
+                    "fingerprint": self._fingerprints.get(src, ""),
+                })
+            for src in self._in_progress:
+                if not any(i["source"] == src for i in indexes):
+                    indexes.append({"source": src, "state": "indexing", "chunk_count": 0, "fingerprint": ""})
+        return {
+            "enabled": os.getenv("RAG_ENABLED", "false").lower() == "true",
+            "chunk_size": int(os.getenv("RAG_CHUNK_SIZE", "400")),
+            "top_k": int(os.getenv("RAG_TOP_K", "5")),
+            "embedding_model": os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"),
+            "indexes": indexes,
+        }
+
     def _build(self, abs_source: str, fp: str) -> None:
         try:
             chunks = _chunk_repo(abs_source)

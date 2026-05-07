@@ -39,6 +39,11 @@ def make_router(store: TicketStore) -> APIRouter:
             raise HTTPException(status_code=404, detail="Ticket not found")
         return updated
 
+    @r.delete("", status_code=status.HTTP_200_OK)
+    def delete_all_tickets():
+        count = store.delete_all()
+        return {"deleted": count}
+
     @r.delete("/{ticket_id}", status_code=status.HTTP_204_NO_CONTENT)
     def delete_ticket(ticket_id: str):
         if not store.delete(ticket_id):

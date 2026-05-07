@@ -119,6 +119,12 @@ class TicketStore:
             self._conn.commit()
         return cur.rowcount > 0
 
+    def delete_all(self) -> int:
+        with self._lock:
+            cur = self._conn.execute("DELETE FROM tickets")
+            self._conn.commit()
+        return cur.rowcount
+
 
 # Singleton used by the FastAPI app
 _store: Optional[TicketStore] = None

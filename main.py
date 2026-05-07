@@ -11,6 +11,8 @@ from app.logger import AgentLogger, get_logger
 from app.api.tickets import make_router as make_tickets_router
 from app.api.agents import make_router as make_agents_router
 from app.api.logs import make_router as make_logs_router
+from app.api.rag import make_router as make_rag_router
+from app.api.source import make_router as make_source_router
 
 _STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 _TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
@@ -27,6 +29,8 @@ def create_app(store: TicketStore | None = None, logger: AgentLogger | None = No
     app.include_router(make_tickets_router(store))
     app.include_router(make_agents_router(store, logger))
     app.include_router(make_logs_router(logger))
+    app.include_router(make_rag_router())
+    app.include_router(make_source_router())
 
     app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")
 
@@ -55,6 +59,10 @@ def create_app(store: TicketStore | None = None, logger: AgentLogger | None = No
     @app.get("/agents")
     def agents_page(request: Request):
         return templates.TemplateResponse(request=request, name="agents.html", context={"active": "agents"})
+
+    @app.get("/rag")
+    def rag_page(request: Request):
+        return templates.TemplateResponse(request=request, name="rag.html", context={"active": "rag"})
 
     @app.get("/agent-metrics")
     def agent_metrics_page(request: Request):

@@ -3,6 +3,7 @@
 {% block head %}
 <link rel="stylesheet" href="/static/pages/insights.css">
 <link rel="stylesheet" href="/static/pages/agents.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,6 +24,16 @@
     <h2>Tools</h2>
     <div id="tool-list" class="tool-list"></div>
   </section>
+</div>
+
+<!-- Code viewer drawer -->
+<div id="code-backdrop" class="code-backdrop"></div>
+<div id="code-drawer" class="code-drawer">
+  <div class="code-drawer-header">
+    <span id="code-drawer-file" class="code-drawer-file"></span>
+    <button class="code-drawer-close" id="code-drawer-close">✕</button>
+  </div>
+  <pre id="code-drawer-content" class="code-drawer-pre"></pre>
 </div>
 {% endblock %}
 

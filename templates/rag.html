@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}RAG — Agent Ticket System{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/pages/rag.css">{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div class="page-hdr">
+    <div>
+      <h1>RAG Performance</h1>
+      <p>Semantic retrieval index status for the enricher agent</p>
+    </div>
+    <button class="btn btn-ghost" id="refresh-btn">↻ Refresh</button>
+  </div>
+
+  <section class="section">
+    <h2>Configuration</h2>
+    <div id="config-grid" class="config-grid"></div>
+  </section>
+
+  <section class="section">
+    <h2>Index Status</h2>
+    <div id="index-table-wrap">
+      <p class="empty-msg" id="no-indexes">No repos indexed yet. Submit a local path below to start.</p>
+      <table class="index-table" id="index-table" style="display:none">
+        <thead><tr><th>Source</th><th>State</th><th>Chunks</th><th>Fingerprint</th></tr></thead>
+        <tbody id="index-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Trigger Indexing</h2>
+    <div class="trigger-form">
+      <input id="trigger-source" type="text" placeholder="Local repo path  (e.g. ../my-project)" />
+      <button class="btn btn-primary" id="trigger-btn">Index Repo</button>
+    </div>
+    <p class="form-hint">Indexing runs in the background. Refresh the status above after a few seconds.</p>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/pages/rag.js"></script>{% endblock %}
