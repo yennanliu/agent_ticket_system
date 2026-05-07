@@ -64,6 +64,7 @@ function buildDOM() {
     <button id="batch-create-btn">Batch</button>
     <button id="drafts-toggle">Show Drafts</button>
     <select id="status-filter"><option value="">All</option></select>
+    <select id="type-filter"><option value="">All types</option></select>
     <select id="repo-filter"><option value="">All repos</option></select>
     <span id="stat-total">—</span>
     <span id="stat-open">—</span>
@@ -92,6 +93,8 @@ function buildDOM() {
       <option value="high">High</option>
       <option value="critical">Critical</option>
     </select>
+    <select id="f-type"><option value="task">task</option><option value="story">story</option><option value="epic">epic</option></select>
+    <input id="f-parent-id" type="text" />
     <input id="f-labels" type="text" />
     <input id="f-repo" type="text" />
     <h2 id="modal-title"></h2>
