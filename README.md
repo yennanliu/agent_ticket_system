@@ -57,18 +57,21 @@ main.py  (FastAPI, create_app(store))
 ├── /api/agents     → app/api/agents.py    Agent triggers
 │                        ├── app/agents/creator.py   LangGraph (3 nodes)
 │                        └── app/agents/enricher.py  LangGraph (4 nodes)
-│                              ├── app/repo_tools.py  Repo reader
-│                              └── OpenAI (gpt-4o)
+│                              ├── app/indexer.py     RAG indexer (background)
+│                              ├── app/repo_tools.py  Repo reader (fallback)
+│                              ├── app/search_tools.py Local ref resolver
+│                              └── OpenAI (gpt-4o + text-embedding-3-small)
 ├── /               → static/index.html    Single-file UI
-└── storage         → app/storage.py       In-memory + data/tickets.json
+└── storage         → app/storage.py       In-memory + SQLite
 ```
 
 **Key design decisions:**
 
-- **No database.** `TicketStore` keeps an in-memory `dict[str, Ticket]` and writes the full ticket list to `data/tickets.json` on every mutation. The file is loaded back on startup.
+- **No ORM.** `TicketStore` keeps an in-memory `dict[str, Ticket]` backed by SQLite. Loaded on startup, written on every mutation.
 - **Router factory pattern.** Both routers are created via `make_router(store)`, so tests inject an isolated store without monkeypatching globals.
 - **LangGraph graphs are rebuilt per call.** Each `run_creator` / `run_enricher` call compiles a fresh graph. The `TicketStore` is closed over in the save node via a lambda.
 - **LLM functions are module-level.** `_llm_generate_tickets` and `_llm_enrich_ticket` are top-level functions so tests can patch them cleanly.
+- **RAG is opt-in.** Set `RAG_ENABLED=true` to activate semantic chunk retrieval in the enricher. The indexer runs in a background thread and the enricher falls back to brute-force `read_repo` until the index is warm.
 
 ---
 
@@ -91,13 +94,14 @@ fetch_context → generate_tickets → save_tickets
 Given an existing ticket ID and a repo source, the enricher runs a 4-node LangGraph:
 
 ```
-fetch_ticket → fetch_context → enrich → save_ticket
+fetch_ticket → fetch_context → enrich → find_refs → save_ticket
 ```
 
 1. **fetch_ticket** — loads the existing ticket from the store
-2. **fetch_context** — reads the repo context (same as creator)
+2. **fetch_context** — fetches repo context. With `RAG_ENABLED=true` and a local repo, retrieves the top-k semantically relevant code chunks from the background index instead of dumping a fixed 50 KB slice. Falls back to `read_repo` if the index isn't ready yet, and triggers background indexing for next time.
 3. **enrich** — sends ticket + repo context to OpenAI; returns acceptance criteria, related files, technical notes, and suggested assignee
-4. **save_ticket** — merges enriched fields into the existing ticket
+4. **find_refs** — resolves `related_files` to actual local file paths (exact match → Jaccard similarity fallback) or GitHub blob URLs, with a content snippet
+5. **save_ticket** — merges enriched fields into the existing ticket
 
 ### Repo Reader (`app/repo_tools.py`)
 
@@ -180,3 +184,7 @@ Create, edit, and delete tickets directly from the UI without involving the AI �
 | `OPENAI_API_KEY` | Yes | — | OpenAI API key |
 | `OPENAI_MODEL` | No | `gpt-4o` | Model name passed to `ChatOpenAI` |
 | `GITHUB_TOKEN` | No | — | Personal access token for private GitHub repos |
+| `RAG_ENABLED` | No | `false` | Enable semantic chunk retrieval in the enricher |
+| `RAG_CHUNK_SIZE` | No | `400` | Tokens per chunk when indexing repo files |
+| `RAG_TOP_K` | No | `5` | Number of chunks retrieved per enrichment call |
+| `EMBEDDING_MODEL` | No | `text-embedding-3-small` | OpenAI embedding model for RAG indexing |

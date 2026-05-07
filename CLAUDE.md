@@ -72,3 +72,9 @@ TDD: every implementation file has a corresponding `tests/test_*.py`. Agent and 
 | `GITHUB_TOKEN` | No | — (public repos only) |
 
 Copy `.env.example` to `.env` before running the server.
+
+## Style guidance
+
+- **Simple and elegant over clever.** When proposing ideas or implementations, prefer the approach with the fewest moving parts that still solves the problem correctly. Avoid new dependencies, services, or abstractions when existing primitives suffice.
+- **Opt-in over always-on.** New behaviour (e.g. RAG, background indexing) should be off by default and toggled via env vars so the baseline stays predictable.
+- **Graceful degradation over hard failures.** Background or optional features should fall back silently to the existing behaviour rather than blocking the main flow.
