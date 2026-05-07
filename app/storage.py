@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+import threading
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -67,29 +68,34 @@ class TicketStore:
     def __init__(self, data_dir: str = _DEFAULT_DATA_DIR):
         os.makedirs(data_dir, exist_ok=True)
         self._db_path = os.path.join(data_dir, "tickets.db")
+        self._lock = threading.Lock()
         self._conn = sqlite3.connect(self._db_path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
-        self._conn.execute(_CREATE_TABLE)
-        self._conn.commit()
+        with self._lock:
+            self._conn.execute(_CREATE_TABLE)
+            self._conn.commit()
 
     def get_all(self) -> list[Ticket]:
-        rows = self._conn.execute("SELECT * FROM tickets").fetchall()
+        with self._lock:
+            rows = self._conn.execute("SELECT * FROM tickets").fetchall()
         return [_row_to_ticket(r) for r in rows]
 
     def get(self, ticket_id: str) -> Optional[Ticket]:
-        row = self._conn.execute(
-            "SELECT * FROM tickets WHERE id = ?", (ticket_id,)
-        ).fetchone()
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT * FROM tickets WHERE id = ?", (ticket_id,)
+            ).fetchone()
         return _row_to_ticket(row) if row else None
 
     def create(self, ticket: Ticket) -> Ticket:
         d = _ticket_to_row(ticket)
         cols = ", ".join(d.keys())
         placeholders = ", ".join("?" * len(d))
-        self._conn.execute(
-            f"INSERT INTO tickets ({cols}) VALUES ({placeholders})", list(d.values())
-        )
-        self._conn.commit()
+        with self._lock:
+            self._conn.execute(
+                f"INSERT INTO tickets ({cols}) VALUES ({placeholders})", list(d.values())
+            )
+            self._conn.commit()
         return ticket
 
     def update(self, ticket_id: str, fields: dict) -> Optional[Ticket]:
@@ -102,13 +108,15 @@ class TicketStore:
         d = _ticket_to_row(updated)
         set_clause = ", ".join(f"{k} = ?" for k in d if k != "id")
         values = [v for k, v in d.items() if k != "id"] + [ticket_id]
-        self._conn.execute(f"UPDATE tickets SET {set_clause} WHERE id = ?", values)
-        self._conn.commit()
+        with self._lock:
+            self._conn.execute(f"UPDATE tickets SET {set_clause} WHERE id = ?", values)
+            self._conn.commit()
         return updated
 
     def delete(self, ticket_id: str) -> bool:
-        cur = self._conn.execute("DELETE FROM tickets WHERE id = ?", (ticket_id,))
-        self._conn.commit()
+        with self._lock:
+            cur = self._conn.execute("DELETE FROM tickets WHERE id = ?", (ticket_id,))
+            self._conn.commit()
         return cur.rowcount > 0
 
 
