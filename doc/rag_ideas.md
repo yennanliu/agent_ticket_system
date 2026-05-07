@@ -19,12 +19,11 @@ RAG directly addresses all four.
 
 **What**: Embed all repo files in chunks (~300–500 tokens). When the enricher runs for a specific ticket, retrieve the top-k most semantically relevant chunks using the ticket title + description as the query, instead of dumping 4KB of arbitrary file contents.
 
-**Stack**: ChromaDB (or FAISS) + OpenAI `text-embedding-3-small`
+**Stack**: OpenAI `text-embedding-3-small` + in-memory cosine similarity (no new deps — `openai` is already in the project)
 
 **Effort**: Medium (3–5 days)
-- New `app/indexer.py` to chunk & embed repo on demand
-- Swap `enricher._node_fetch_context` to call retriever instead of `read_repo`
-- Add a vector store (ChromaDB drops in easily alongside SQLite)
+- New `app/indexer.py` to chunk, embed, cache, and retrieve
+- Patch `enricher._node_fetch_context` to call indexer instead of brute-forcing `read_repo`
 
 **Pros**:
 - Direct fix for the enricher's most critical weakness — it currently doesn't know which files matter for a given ticket
@@ -33,8 +32,35 @@ RAG directly addresses all four.
 
 **Cons**:
 - Adds embedding latency (~1–3s per enrichment call for retrieval, plus upfront indexing time)
-- Requires managing a second data store (vector DB)
 - Index can go stale if repo files change between indexing and enrichment
+
+---
+
+#### Implementation Design: Async with graceful fallback
+
+Indexing a repo takes 5–30s (embedding API calls). Three approaches were considered:
+
+| # | Approach | Verdict |
+|---|---|---|
+| 1 | Sync with persistent cache — index once, block first call | First call blocks HTTP response; bad UX for an API |
+| 2 | **Background indexing with fallback** — async thread, brute-force until ready | **Chosen — zero disruption, quality improves silently** |
+| 3 | Separate service (Celery/worker) — dedicated indexer process | Overkill; adds ops complexity for no benefit at this scale |
+
+**Chosen design (Option 2):**
+
+```
+Enrichment call
+  ├─ index READY?  → semantic chunks → LLM          ✓ quality path
+  └─ index NOT YET? → submit background job
+                    → brute-force read_repo → LLM   ✓ fallback path
+```
+
+**Key properties:**
+- `RAG_ENABLED=false` (default) — zero behaviour change; opt-in via env var
+- `IndexService` runs a `ThreadPoolExecutor`; `submit()` is fire-and-forget
+- Cache keyed by `abs_path + mtime fingerprint` — auto-invalidates on file changes
+- No new dependencies — pure-Python cosine similarity over OpenAI embeddings
+- Eager trigger: index is also submitted when enrichment first misses, warming it for the next call
 
 ---
 

@@ -6,6 +6,7 @@ from typing import TypedDict, Optional
 from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, END
 
+from app.indexer import indexer
 from app.models import Ticket
 from app.repo_tools import read_repo
 from app.search_tools import find_refs
@@ -75,8 +76,24 @@ def _node_fetch_ticket(state: EnricherState, store: TicketStore) -> EnricherStat
     return state
 
 
+def _rag_enabled() -> bool:
+    return os.getenv("RAG_ENABLED", "false").lower() == "true"
+
+
 def _node_fetch_context(state: EnricherState) -> EnricherState:
-    state["repo_context"] = read_repo(state["source"])
+    source = state["source"]
+    repo = read_repo(source)
+
+    if _rag_enabled() and not source.startswith("http"):
+        ticket = state["ticket"]
+        query = f"{ticket['title']} {ticket.get('description', '')}"
+        chunks = indexer.retrieve(source, query)
+        if chunks is not None:
+            repo["file_contents"] = "\n\n".join(chunks)
+        else:
+            indexer.submit(source)  # warm index for next enrichment
+
+    state["repo_context"] = repo
     return state
 
 
