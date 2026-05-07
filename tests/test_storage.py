@@ -1,4 +1,3 @@
-import json
 import pytest
 from app.models import Ticket
 from app.storage import TicketStore
@@ -60,18 +59,17 @@ def test_delete_missing_id_returns_false(tmp_data_dir):
     assert store.delete("bad-id") is False
 
 
-def test_persists_to_json_file(tmp_data_dir, sample_ticket):
+def test_persists_to_sqlite_db(tmp_data_dir, sample_ticket):
     store = make_store(tmp_data_dir)
     store.create(sample_ticket)
-    json_path = tmp_data_dir / "tickets.json"
-    assert json_path.exists()
-    data = json.loads(json_path.read_text())
-    assert any(t["id"] == sample_ticket.id for t in data)
+    db_path = tmp_data_dir / "tickets.db"
+    assert db_path.exists()
 
 
-def test_reloads_from_json_on_init(tmp_data_dir, sample_ticket):
+def test_reloads_from_sqlite_on_init(tmp_data_dir, sample_ticket):
     store1 = make_store(tmp_data_dir)
     store1.create(sample_ticket)
-    # New store instance reads from the same file
+    store1._conn.close()
+    # New store instance connects to the same db file
     store2 = make_store(tmp_data_dir)
     assert store2.get(sample_ticket.id) is not None
