@@ -41,10 +41,13 @@ def _walk_file_tree(abs_source: str) -> list[str]:
     return paths
 
 
+def _tokenize(path: str) -> set[str]:
+    return set(re.split(r"[/._\-]", path.lower())) - {""}
+
+
 def _path_similarity(query: str, candidate: str) -> float:
     """Jaccard similarity on lowercase path tokens (split on /._-)."""
-    tokens = lambda s: set(re.split(r"[/._\-]", s.lower())) - {""}
-    q, c = tokens(query), tokens(candidate)
+    q, c = _tokenize(query), _tokenize(candidate)
     if not q or not c:
         return 0.0
     return len(q & c) / len(q | c)

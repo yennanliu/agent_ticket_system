@@ -64,7 +64,7 @@ def _fingerprint(abs_source: str) -> str:
     return h.hexdigest()
 
 
-class _IndexEntry:
+class _IndexEntry:  # pylint: disable=too-few-public-methods
     __slots__ = ("chunks",)
 
     def __init__(self, chunks: list[tuple[str, list[float]]]):
