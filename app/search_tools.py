@@ -6,6 +6,8 @@ _CODE_EXTS = {".py", ".js", ".ts", ".jsx", ".tsx", ".go", ".java", ".rb", ".rs",
               ".cpp", ".c", ".h", ".cs", ".swift", ".kt", ".php", ".sh"}
 _DOC_EXTS  = {".md", ".rst", ".txt", ".adoc", ".mdx"}
 _DESIGN_PATTERN = re.compile(r"design|spec|diagram|arch|figma|wireframe|mockup", re.I)
+_SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "dist", "build"}
+_SNIPPET_BYTES = 500
 
 
 def classify_file(path: str) -> str:
@@ -28,13 +30,58 @@ def _github_blob_url(source: str, file_path: str) -> Optional[str]:
     return f"{base}/blob/main/{file_path}"
 
 
-def _ddg_search(query: str, max_results: int = 3) -> list[dict]:
+def _walk_file_tree(abs_source: str) -> list[str]:
+    """Return relative paths of all non-skipped files under abs_source."""
+    paths: list[str] = []
+    for root, dirs, files in os.walk(abs_source):
+        dirs[:] = [d for d in dirs if d not in _SKIP_DIRS]
+        for fname in files:
+            fpath = os.path.join(root, fname)
+            paths.append(os.path.relpath(fpath, abs_source))
+    return paths
+
+
+def _path_similarity(query: str, candidate: str) -> float:
+    """Jaccard similarity on lowercase path tokens (split on /._-)."""
+    tokens = lambda s: set(re.split(r"[/._\-]", s.lower())) - {""}
+    q, c = tokens(query), tokens(candidate)
+    if not q or not c:
+        return 0.0
+    return len(q & c) / len(q | c)
+
+
+def _local_ref(file_path: str, abs_source: str, ref_type: str) -> Optional[dict]:
+    """
+    Resolve file_path against the local repo. Tries exact match first,
+    then falls back to highest Jaccard-similarity file in the tree.
+    Returns None if nothing plausible is found.
+    """
+    exact = os.path.join(abs_source, file_path)
+    if os.path.isfile(exact):
+        matched = file_path
+    else:
+        tree = _walk_file_tree(abs_source)
+        if not tree:
+            return None
+        matched = max(tree, key=lambda p: _path_similarity(file_path, p))
+        if _path_similarity(file_path, matched) == 0.0:
+            return None
+
+    abs_file = os.path.join(abs_source, matched)
+    snippet = ""
     try:
-        from duckduckgo_search import DDGS
-        results = DDGS().text(query, max_results=max_results)
-        return results or []
-    except Exception:
-        return []
+        with open(abs_file, encoding="utf-8", errors="ignore") as fh:
+            snippet = fh.read(_SNIPPET_BYTES)
+    except OSError:
+        pass
+
+    return {
+        "file": matched,
+        "ref_type": ref_type,
+        "ref_url": f"file://{abs_file}",
+        "title": matched,
+        "snippet": snippet,
+    }
 
 
 def find_refs(
@@ -45,7 +92,7 @@ def find_refs(
     """
     Build suggested_change_refs for the given related_files.
     GitHub sources: construct blob URL directly.
-    Local sources: DuckDuckGo search for relevant docs.
+    Local sources: resolve against the local file tree using path similarity.
     All errors are caught; returns partial results or [].
     """
     refs = []
@@ -64,19 +111,9 @@ def find_refs(
                         "title": file_path,
                     })
             else:
-                if ref_type == "code":
-                    query = f"{repo_name} {file_path} implementation reference"
-                else:
-                    query = f"{repo_name} {file_path} documentation"
-                results = _ddg_search(query, max_results=1)
-                if results:
-                    r = results[0]
-                    refs.append({
-                        "file": file_path,
-                        "ref_type": ref_type,
-                        "ref_url": r.get("href", ""),
-                        "title": r.get("title", file_path),
-                    })
+                ref = _local_ref(file_path, os.path.abspath(source), ref_type)
+                if ref:
+                    refs.append(ref)
         except Exception:
             continue
 
