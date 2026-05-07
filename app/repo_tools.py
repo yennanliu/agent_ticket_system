@@ -1,6 +1,6 @@
 import os
 from typing import Optional
-from github import Github
+from github import Github, GithubException
 
 _SKIP_DIRS = {".git", "node_modules", "__pycache__", "output", ".venv", "dist", "build"}
 _SOURCE_EXTS = {".md", ".py", ".js", ".ts", ".json", ".yaml", ".yml", ".toml", ".sh"}
@@ -65,7 +65,12 @@ def _read_github(url: str) -> dict:
     # Parse owner/repo from URL
     parts = url.rstrip("/").split("/")
     repo_id = f"{parts[-2]}/{parts[-1]}"
-    repo = g.get_repo(repo_id)
+    try:
+        repo = g.get_repo(repo_id)
+    except GithubException as e:
+        if e.status == 404:
+            raise ValueError(f"GitHub repository not found: {repo_id}") from e
+        raise ValueError(f"GitHub API error fetching {repo_id}: {e.data.get('message', str(e))}") from e
 
     readme = ""
     try:
