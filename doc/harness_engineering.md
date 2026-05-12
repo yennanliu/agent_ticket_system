@@ -1,303 +1,312 @@
-# Harness Engineering — Integration Plan
+# Harness Engineering — What to Build Inside the Ticket System
 
-**What is "harness engineering" here?**  
-Making this project a first-class citizen inside Claude Code's agent harness: hooks that react to local events, an MCP server so Claude can call ticket APIs as native tools, scheduled autonomous routines, and a Claude API migration so the agents use Claude models instead of GPT-4o.
-
----
-
-## 1. MCP Server — Expose Ticket APIs as Claude Tools
-
-### What
-Wrap the FastAPI endpoints as an MCP (Model Context Protocol) server so any running Claude Code session can create, query, update, and trigger agents on tickets directly — no manual `curl` or UI needed.
-
-### Why
-Right now Claude Code has zero awareness of this system at runtime. With an MCP server, Claude can say "create a ticket for X" or "run the healer on ticket Y" as a native tool call. This turns the ticket system from a standalone web app into a first-class tool in every agentic workflow.
-
-### What to implement
-
-**New file: `mcp_server.py`** (FastMCP or the `mcp` Python SDK)
-
-Expose these as tools:
-| Tool name | Maps to |
-|---|---|
-| `list_tickets` | `GET /api/tickets` |
-| `get_ticket` | `GET /api/tickets/{id}` |
-| `create_ticket` | `POST /api/tickets` |
-| `update_ticket` | `PUT /api/tickets/{id}` |
-| `delete_ticket` | `DELETE /api/tickets/{id}` |
-| `create_from_repo` | `POST /api/agents/create-from-repo` |
-| `enrich_ticket` | `POST /api/agents/enrich/{id}` |
-| `validate_ticket` | `POST /api/agents/validate/{id}` |
-| `heal_ticket` | `POST /api/agents/heal/{id}` |
-| `kickstart_ticket` | `POST /api/agents/kickstart/{id}` |
-| `split_ticket` | `POST /api/agents/split/{id}` |
-| `get_rag_status` | `GET /api/rag/status` |
-
-**Register in `.claude/settings.json`:**
-```json
-{
-  "mcpServers": {
-    "ticket-system": {
-      "command": "uv",
-      "args": ["run", "python", "mcp_server.py"],
-      "env": { "OPENAI_API_KEY": "${OPENAI_API_KEY}" }
-    }
-  }
-}
-```
-
-### Effort: **Medium** (2–3 days)
-- ~200 lines of MCP wrapper code
-- Needs `mcp` or `fastmcp` dependency added to `pyproject.toml`
-- Tests: one smoke test per tool verifying correct HTTP call is made
-
-### Comments
-The server can either call the FastAPI HTTP endpoints (simple, but requires the server to be running) or import and call the storage/agent functions directly (no HTTP round-trip, works standalone). Prefer the direct-import approach so the MCP server works without `uvicorn` running.
+**Scope:** Infrastructure improvements to the ticket system itself — making it reliable, observable, and production-grade as a platform. Nothing to do with Claude Code runtime.
 
 ---
 
-## 2. Hooks — React to Local Dev Events
+## 1. Async Agent Execution + Task Queue
 
-### What
-Claude Code hooks are shell commands that execute automatically on harness events (tool calls, session start/stop, etc.). Wire this project's agents to those events so tickets get created or updated in response to real engineering activity.
-
-### Why
-Today tickets are manually requested. Hooks make ticket creation ambient: a failing test automatically surfaces a ticket, a commit triggers enrichment, session end logs a summary ticket. Zero user friction.
+### Problem
+Every agent endpoint (`/api/agents/create-from-repo`, `/api/agents/heal/{id}`, etc.) runs synchronously inside the HTTP request. A creator or healer run takes 10–30 seconds. The HTTP client blocks, timeouts are likely on slow repos, and there is no way to track progress or cancel a run.
 
 ### What to implement
+Replace the synchronous `run_*(...)` call in each endpoint with a fire-and-forget background task. Return a `task_id` immediately. Add a polling endpoint to check status and fetch the result.
 
-**`.claude/settings.json` hook entries:**
+**Option A — FastAPI `BackgroundTasks` (no new deps):**
+- Sufficient for single-process deployments
+- No persistence: task state lost on restart
+- Good enough for the current SQLite + single-worker setup
 
-#### 2a. Post-bash hook — auto-create ticket on test failure
-```json
-{
-  "hooks": {
-    "PostToolUse": [{
-      "matcher": "Bash",
-      "hooks": [{
-        "type": "command",
-        "command": "uv run python scripts/hooks/on_test_failure.py"
-      }]
-    }]
-  }
-}
-```
+**Option B — ARQ (async Redis queue):**
+- Tasks survive restarts, can be retried, have explicit states
+- Requires Redis
+- Right choice if you expect concurrent users or multi-worker deployments
 
-**`scripts/hooks/on_test_failure.py`:**  
-Reads stdin (Claude Code passes tool result JSON). If the bash command was `pytest` and exit code != 0, POST to `/api/tickets` with a `bug` label and the failure output as description. Idempotent — check if a ticket with the same test name already exists first.
-
-#### 2b. Post-bash hook — auto-enrich on git commit
-Trigger enrichment on the most recently modified tickets when `git commit` is detected. Enricher already knows the repo path from `source_repo`.
-
-#### 2c. Stop hook — session summary ticket
-```json
-{
-  "hooks": {
-    "Stop": [{
-      "hooks": [{
-        "type": "command",
-        "command": "uv run python scripts/hooks/on_session_stop.py"
-      }]
-    }]
-  }
-}
-```
-
-Creates or updates a "session log" ticket summarising what was worked on. Uses the conversation transcript path that Claude Code passes in env.
-
-#### 2d. Pre-bash hook — block work on unvalidated tickets
-Optional: before running a bash command on files listed in a ticket's `related_files`, warn if that ticket's `validation_passed` is `False` or `None`. Informational only — does not block.
-
-### Effort: **Low–Medium** (1–2 days total)
-- Hook registration: 30 min (config only)
-- `on_test_failure.py`: ~80 lines, 1 day including edge cases
-- `on_session_stop.py`: ~60 lines, half a day
-- Git commit hook: ~50 lines, half a day
-
-### Comments
-Hook scripts must be fast (<1 s startup). Import only what you need; avoid loading LangGraph/LangChain in hooks. Use direct `httpx` calls to the running FastAPI server rather than importing agent code. If the server isn't running, the hook should exit silently (graceful degradation — existing CLAUDE.md principle).
-
----
-
-## 3. Scheduled Autonomous Routines
-
-### What
-Use Claude Code's `CronCreate` to schedule periodic runs of the healer, enricher, and validator so the backlog self-improves without manual intervention.
-
-### Why
-The heal loop and kickstart agent already exist — they just never run unless a human presses a button. Scheduling them makes the system genuinely autonomous: overnight, stale or low-scoring tickets get re-enriched and healed automatically.
-
-### What to implement
-
-Three routines, each as a Claude Code scheduled agent:
-
-#### 3a. Nightly Healer
-**Schedule:** `0 2 * * *` (2 AM daily)  
-**Prompt:** "Call `POST /api/agents/heal/{id}` for every ticket where `validation_passed` is false or `validation_score < 0.75`. Log results."
-
-Implemented as a small script `scripts/routines/nightly_heal.py` that the scheduled agent invokes via bash, or the agent uses the MCP `heal_ticket` tool directly.
-
-#### 3b. Hourly Enrichment Queue
-**Schedule:** `0 * * * *` (every hour)  
-**Prompt:** "Find all tickets with `status=draft` and empty `acceptance_criteria`. Run enrich on each."
-
-#### 3c. Weekly Validation Sweep
-**Schedule:** `0 9 * * 1` (Monday 9 AM)  
-**Prompt:** "Validate all `open` and `in_progress` tickets that haven't been validated in the past 7 days (check `updated_at`). Print a summary report."
-
-### Effort: **Low** (half a day)
-- Scheduling itself is just `CronCreate` calls
-- Scripts are thin wrappers (~40 lines each) calling the existing API
-- No new agent logic — reuse existing endpoints
-
-### Comments
-Scripts should be idempotent and add no state. If the FastAPI server isn't running, they should start a temporary in-process store and run the agents directly via `run_healer` / `run_enricher` imports. Env vars (`OPENAI_API_KEY`) must be set in the cron environment — document in CLAUDE.md.
-
----
-
-## 4. Claude API Migration — Replace OpenAI/LangChain
-
-### What
-Replace `langchain-openai` + GPT-4o in all five agents (creator, enricher, validator, healer, splitter) with the Anthropic SDK calling `claude-sonnet-4-6` directly.
-
-### Why
-- **Native to the harness**: Claude Code is Claude — using the same model family reduces context-switching and improves prompt coherence
-- **Prompt caching**: Anthropic SDK supports cache breakpoints; the repo context (which can be 50 KB) is a perfect cache candidate — reduces latency and cost on repeated enrichments
-- **No LangChain dependency**: removes 15+ transitive packages, simplifies the dependency tree
-- **Tool use**: Claude's native tool-use is cleaner than LangChain's wrapper for structured output
-
-### What to implement
-
-**Remove:** `langchain-openai`, `langchain-core` from `pyproject.toml`  
-**Add:** `anthropic>=0.40`
-
-**Pattern change in each agent** (same structure, different call):
-
-Before (LangChain):
+**New data model:**
 ```python
-from langchain_openai import ChatOpenAI
-llm = ChatOpenAI(model="gpt-4o", temperature=0.2)
-response = llm.invoke(prompt)
-content = response.content
+class AgentTask(BaseModel):
+    task_id: str        # UUID
+    agent: str          # "creator" | "enricher" | ...
+    status: str         # "queued" | "running" | "done" | "error"
+    ticket_ids: list[str]
+    created_at: datetime
+    finished_at: datetime | None
+    error: str
 ```
 
-After (Anthropic SDK with prompt caching):
+**New endpoints:**
+```
+POST /api/agents/create-from-repo  →  { task_id: "..." }   (201, returns immediately)
+GET  /api/agents/tasks/{task_id}   →  AgentTask + result
+GET  /api/agents/tasks             →  list of recent tasks
+DELETE /api/agents/tasks/{task_id} →  cancel if queued/running
+```
+
+**Effort:** Medium (2–3 days for Option A; 4–5 days for Option B with Redis)  
+**Why:** Without this, the system is not usable under any real load. A 30-second blocking HTTP call is unusable in a UI.  
+**Start with Option A** — migrate to B only when you need multi-worker or persistence across restarts.
+
+---
+
+## 2. Structured Observability (Metrics + Tracing)
+
+### Problem
+The current `AgentLogger` writes JSONL to a file. This is fine for viewing logs in the UI, but there is no way to aggregate durations, compare runs, alert on error rates, or trace a request across multiple agent calls.
+
+### What to implement
+
+#### 2a. Prometheus metrics endpoint
+Add `prometheus-fastapi-instrumentator` (1 line of setup). Exposes `GET /metrics` with:
+- `agent_runs_total{agent, status}` — counter
+- `agent_duration_seconds{agent}` — histogram
+- `tickets_total{status}` — gauge (recomputed from DB)
+- `validation_score_histogram{agent}` — score distribution
+
+**Effort:** Very Low (half a day, 1 dep, ~20 lines)
+
+#### 2b. Structured logging with correlation IDs
+Each agent run gets a `run_id` (already partially done via task_id from item 1). Pass it through every log call. The JSONL logger already exists — extend it to include `run_id` and `parent_run_id` (for healer's nested calls to enricher+validator).
+
+**Effort:** Low (1 day — touch 5 agent files + logger)
+
+#### 2c. OpenTelemetry tracing (optional, higher effort)
+Add `opentelemetry-instrumentation-fastapi`. Each agent graph node becomes a span. Useful for seeing where time is spent (fetch_context vs. LLM call vs. save). Export to Jaeger or OTLP.
+
+**Effort:** Medium (2 days)  
+**Comment:** Skip for now unless you're debugging performance. Metrics (2a) and correlation IDs (2b) give 80% of the value at 10% of the cost.
+
+---
+
+## 3. Retry + Error Recovery Infrastructure
+
+### Problem
+LLM calls fail. GitHub rate-limits. The OpenAI API returns 429s. Right now a single failure aborts the entire agent run and returns a 500 to the caller. There is no retry, no partial recovery, and no distinction between transient and permanent errors.
+
+### What to implement
+
+#### 3a. LLM call retry with exponential backoff
+Wrap every `llm.invoke(...)` call in a shared utility:
+
 ```python
-import anthropic
-client = anthropic.Anthropic()
-response = client.messages.create(
-    model="claude-sonnet-4-6",
-    max_tokens=2048,
-    system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
-    messages=[{
-        "role": "user",
-        "content": [
-            {"type": "text", "text": repo_context_block, "cache_control": {"type": "ephemeral"}},
-            {"type": "text", "text": task_prompt},
-        ]
-    }],
-)
-content = response.content[0].text
+# app/llm_utils.py
+import time
+
+def invoke_with_retry(llm, prompt, max_attempts=3, base_delay=2.0):
+    for attempt in range(max_attempts):
+        try:
+            return llm.invoke(prompt)
+        except RateLimitError:
+            if attempt == max_attempts - 1:
+                raise
+            time.sleep(base_delay * (2 ** attempt))
+        except (APIConnectionError, APITimeoutError):
+            if attempt == max_attempts - 1:
+                raise
+            time.sleep(base_delay)
 ```
 
-**Cache strategy:**
-- `repo_context` block → `cache_control: ephemeral` (5-min TTL, reused across multiple enrichments of the same repo)
-- System prompt (static) → also cached
-- Per-ticket fields (title, description) → NOT cached (changes per request)
+**Effort:** Low (half a day — one new file, 5 call sites to update)
 
-**Env var changes:**
-| Old | New |
-|---|---|
-| `OPENAI_API_KEY` | `ANTHROPIC_API_KEY` |
-| `OPENAI_MODEL` | `ANTHROPIC_MODEL` (default: `claude-sonnet-4-6`) |
+#### 3b. JSON parse retry
+The LLM sometimes returns malformed JSON. Currently this crashes the node. Add a second attempt with an explicit "fix your JSON" prompt:
 
-Keep `OPENAI_API_KEY` + `EMBEDDING_MODEL` for the RAG indexer (embeddings still use OpenAI `text-embedding-3-small` — no Claude equivalent yet).
+```python
+def parse_json_with_retry(llm, prompt, raw_response):
+    try:
+        return json.loads(strip_fences(raw_response))
+    except json.JSONDecodeError as e:
+        fix_prompt = f"Your response was not valid JSON: {e}. Original: {raw_response}\nReturn ONLY valid JSON."
+        raw2 = llm.invoke(fix_prompt).content.strip()
+        return json.loads(strip_fences(raw2))
+```
 
-**LangGraph stays:** LangGraph is model-agnostic; keep the graph structure, just swap the LLM call inside each `_llm_*` function.
+**Effort:** Very Low (a few hours)
 
-### Effort: **Medium** (2–3 days)
-- 5 agent files × ~20 lines changed each
-- Update all tests: mock `anthropic.Anthropic().messages.create` instead of `ChatOpenAI.invoke`
-- Update `.env.example`, CLAUDE.md env var table
-- Validate JSON parsing still works (Claude returns cleaner JSON, but code-fence stripping stays)
+#### 3c. Dead-letter storage for failed tasks
+When an agent run fails permanently (all retries exhausted), write the failure to a `failed_tasks` table in SQLite with the full input and error. Expose `GET /api/agents/failed` so you can inspect and replay them.
 
-### Comments
-Do not remove OpenAI entirely yet — the RAG indexer (`app/indexer.py`) still needs `openai` for embeddings. Can revisit when Anthropic releases an embedding model. Use `ANTHROPIC_API_KEY` env var; the SDK reads it automatically. Enable `prompt_caching` at the client level for automatic savings.
+**Effort:** Low (1 day)
 
 ---
 
-## 5. CLAUDE.md — Harness-Aware Documentation
+## 4. Database Migrations
 
-### What
-Extend `CLAUDE.md` to document the harness integration: MCP tools available, hook behavior, scheduled routines, and how Claude should interact with the ticket system during a session.
+### Problem
+`storage.py` runs `CREATE TABLE IF NOT EXISTS` at startup. Any schema change (new column, renamed field) requires manual SQLite migration or dropping and recreating the table — losing all data. This is already a maintenance problem (the current schema has 23 columns added iteratively with no migration trail).
 
-### Why
-CLAUDE.md is loaded into every session. Without it, Claude has no awareness of the MCP server, hook scripts, or scheduled routines — it will miss opportunities to use them.
+### What to implement
+Add **Alembic** for schema migrations.
 
-### What to add
+```
+uv add alembic
+alembic init alembic/
+```
 
-**New section: "MCP Tools"** — list all available tools with one-line descriptions.
+**Initial migration:** captures the current 23-column schema as `001_initial.py`.  
+**Future workflow:** every `Ticket` model field addition generates a migration:
+```bash
+alembic revision --autogenerate -m "add closure_score"
+alembic upgrade head
+```
 
-**New section: "Hooks"** — what each hook does, what events it fires on, where scripts live.
+Wire `alembic upgrade head` into the app startup in `main.py` (or a `make migrate` script).
 
-**New section: "Scheduled Routines"** — names, schedules, what they do.
-
-**New section: "Working with Tickets During a Session"** — recommended workflow:
-1. At session start, call `list_tickets` to see open work
-2. If writing code that relates to an existing ticket, call `get_ticket` for context
-3. If a test fails, check if `on_test_failure` hook already created a ticket before manually creating one
-4. Call `kickstart_ticket` on newly created manual tickets that have a `source_repo`
-
-**New guidance:** Tell Claude when NOT to use the ticket system (e.g., trivial one-line fixes don't need a ticket).
-
-### Effort: **Low** (2–4 hours)
-- Documentation only; no code changes
-- Should be written after items 1–4 are implemented
+**Effort:** Low (1 day to set up; near-zero per future migration)  
+**Why:** Without this, the first schema change in production destroys the ticket history.
 
 ---
 
-## 6. Permissions Configuration
+## 5. Authentication + Authorization
 
-### What
-Add an allowlist in `.claude/settings.json` so harness tool calls don't trigger permission prompts for routine read-only and local operations.
+### Problem
+Every endpoint is fully open. Anyone who can reach the server can delete all tickets, trigger expensive agent runs, or read all ticket data.
 
-### Why
-Every unapproved tool call interrupts agentic flow. Hook scripts, scheduled routines, and MCP calls should run silently for safe operations.
+### What to implement
+A minimal API key auth layer — not OAuth, not JWT, just a shared secret. This is appropriate for a single-team internal tool.
 
-### What to add
+**New env var:** `API_KEY` (required in production, optional in dev)
 
-```json
-{
-  "permissions": {
-    "allow": [
-      "Bash(uv run pytest*)",
-      "Bash(uv run python scripts/hooks/*)",
-      "Bash(uv run python scripts/routines/*)",
-      "Bash(git status)",
-      "Bash(git log*)",
-      "Bash(git diff*)",
-      "Read(/Users/jliu/agent_ticket_system/**)"
-    ]
-  }
-}
+**FastAPI dependency:**
+```python
+# app/auth.py
+from fastapi import Security, HTTPException
+from fastapi.security import APIKeyHeader
+
+_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+def require_api_key(key: str = Security(_header)):
+    expected = os.getenv("API_KEY")
+    if expected and key != expected:
+        raise HTTPException(status_code=401, detail="Invalid API key")
 ```
 
-Anything that writes tickets or calls agents keeps the default "ask" behavior to prevent unintended LLM spend.
+Apply selectively:
+- **Agent endpoints** (`/api/agents/*`): always require key (expensive operations)
+- **Write endpoints** (`POST`, `PUT`, `DELETE` on `/api/tickets`): require key
+- **Read endpoints** (`GET /api/tickets`): optional (can be open for dashboards)
+- **UI pages** (`/`, `/tickets`, etc.): open (browser-facing)
 
-### Effort: **Very Low** (30 min)
+**Effort:** Low (1 day — new file + dependency injection on ~10 endpoints)
+
+---
+
+## 6. Input Validation + Rate Limiting
+
+### Problem
+Agent endpoints accept arbitrary `repo_path` values, including paths like `../../../../etc/passwd`. There is no rate limiting — a single caller can trigger 100 concurrent creator runs, each costing real OpenAI tokens.
+
+### What to implement
+
+#### 6a. Path traversal guard
+```python
+# app/validators.py
+def validate_repo_path(path: str) -> str:
+    abs_path = os.path.realpath(path)
+    # Optionally enforce an allowlist of base dirs
+    if not os.path.isdir(abs_path):
+        raise ValueError(f"Not a directory: {path}")
+    return abs_path
+```
+
+Called at the top of every endpoint that accepts `repo_path`.
+
+**Effort:** Very Low (a few hours)
+
+#### 6b. Per-IP rate limiting on agent endpoints
+Add `slowapi` (thin wrapper around `limits`):
+
+```python
+from slowapi import Limiter
+limiter = Limiter(key_func=get_remote_address)
+
+@r.post("/create-from-repo")
+@limiter.limit("5/minute")
+def create_from_repo(request: Request, body: RepoSource):
+    ...
+```
+
+**Effort:** Very Low (half a day, 1 dep)
+
+---
+
+## 7. Webhook / Event Emission
+
+### Problem
+The ticket system is an island. When a ticket is created, enriched, or healed, nothing else knows. External tools (CI systems, Slack bots, other services) have no way to react to ticket state changes.
+
+### What to implement
+An outbound webhook system. On key events, POST a JSON payload to a configured URL.
+
+**New env vars:**
+```
+WEBHOOK_URL=https://...        # POST target
+WEBHOOK_SECRET=...             # HMAC-SHA256 signing key
+WEBHOOK_EVENTS=created,healed  # comma-separated allowlist
+```
+
+**Events to emit:**
+- `ticket.created` — after creator or manual POST
+- `ticket.enriched` — after enricher saves
+- `ticket.validated` — after validator, includes score
+- `ticket.healed` — after healer finishes, includes final score + iteration count
+- `ticket.status_changed` — approve, reject, manual status update
+
+**Implementation:**
+```python
+# app/events.py
+def emit(event: str, ticket: Ticket) -> None:
+    url = os.getenv("WEBHOOK_URL")
+    if not url or event not in _enabled_events():
+        return
+    payload = {"event": event, "ticket": ticket.model_dump(mode="json")}
+    # fire-and-forget in a thread; never blocks agent execution
+    threading.Thread(target=_post, args=(url, payload), daemon=True).start()
+```
+
+Called from each agent's save node. Silent on failure (existing graceful degradation principle).
+
+**Effort:** Low–Medium (1–2 days including HMAC signing and tests)
+
+---
+
+## 8. Health + Readiness Endpoints
+
+### Problem
+There is no health check. A load balancer or container orchestrator (Docker, k8s) cannot determine if the app is up, if the DB is reachable, or if the LLM API key is valid.
+
+### What to implement
+
+```
+GET /health        →  { status: "ok" }                         (always 200, liveness only)
+GET /ready         →  { status: "ok", db: "ok", llm: "ok" }    (checks dependencies, 503 if any fail)
+```
+
+`/ready` checks:
+- SQLite: can execute `SELECT 1`
+- LLM key: `OPENAI_API_KEY` is set (don't make an actual call — too slow)
+- RAG indexer: reports in-progress count if `RAG_ENABLED`
+
+**Effort:** Very Low (2–3 hours)
 
 ---
 
 ## Summary Table
 
-| Item | What | Why | Effort | Priority |
+| # | Item | Why | Effort | Priority |
 |---|---|---|---|---|
-| 1. MCP Server | Expose ticket API as Claude tools | Native tool use in every session | Medium (2–3 days) | **High** |
-| 2. Hooks | React to test failures, commits, session end | Ambient ticket creation, zero friction | Low–Medium (1–2 days) | **High** |
-| 3. Scheduled Routines | Nightly healer, hourly enrichment, weekly sweep | Autonomous backlog improvement | Low (0.5 days) | Medium |
-| 4. Claude API Migration | Replace OpenAI/LangChain with Anthropic SDK | Cache savings, harness alignment, fewer deps | Medium (2–3 days) | Medium |
-| 5. CLAUDE.md Updates | Document harness integration | Session-level awareness | Very Low (2–4 hrs) | Low (do last) |
-| 6. Permissions Config | Allowlist routine bash + read ops | Uninterrupted agentic flow | Very Low (30 min) | Low |
+| 1 | Async execution + task queue | Blocking HTTP on 30s LLM call is unusable | Medium (2–3 days) | **Critical** |
+| 2a | Prometheus metrics | Visibility into agent performance and error rates | Very Low (0.5 days) | **High** |
+| 2b | Correlation IDs in logs | Trace a ticket across nested agent calls | Low (1 day) | **High** |
+| 3a | LLM retry with backoff | Transient 429s and timeouts crash runs today | Low (0.5 days) | **High** |
+| 3b | JSON parse retry | Malformed LLM output crashes the node today | Very Low (0.5 days) | **High** |
+| 4 | Alembic migrations | Any schema change destroys production data today | Low (1 day) | **High** |
+| 5 | API key auth | Agent endpoints are completely open | Low (1 day) | Medium |
+| 6a | Path traversal guard | `repo_path` is unsanitized user input | Very Low (0.5 days) | Medium |
+| 6b | Rate limiting | Unlimited concurrent agent runs = unbounded cost | Very Low (0.5 days) | Medium |
+| 7 | Webhook / event emission | Ticket state changes are invisible to external systems | Low–Medium (1–2 days) | Low |
+| 2c | OpenTelemetry tracing | Deep span-level profiling | Medium (2 days) | Low (defer) |
+| 3c | Dead-letter storage | Replay failed tasks | Low (1 day) | Low |
+| 8 | Health + readiness endpoints | Required for any container deployment | Very Low (2 hrs) | Low |
 
-**Recommended order:** 6 → 2 → 1 → 3 → 4 → 5  
-Start with permissions (unblocks everything), then hooks (highest day-to-day value), then MCP (foundational for autonomous routines), then scheduling, then the API migration (most invasive), then doc.
+**Recommended order:** 3b → 3a → 4 → 1 → 2a+2b → 8 → 6a+6b → 5 → 7  
+Fix correctness first (retry, migrations), then unblock real usage (async), then add visibility (metrics, logs), then harden (auth, rate limiting, webhooks).
